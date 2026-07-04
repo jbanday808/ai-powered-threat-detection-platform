@@ -12,7 +12,7 @@ Reverse engineering was performed using IDA Pro to review strings, functions, an
 
 No live malware, executables, archives, or payloads are included in this repository.
 
-# Recruiter Quick Facts
+# Quick Facts
 
 | Category | Details |
 |----------|---------|
@@ -188,6 +188,18 @@ Reverse engineering helped identify what the malware was designed to do by revie
 | Operating Systems | Windows 11, Kali Linux |
 | Documentation | Markdown, GitHub |
 
+# Project Highlights
+
+- ✅ Investigated a Lumma Stealer credential theft malware sample in an isolated analysis lab.
+- ✅ Performed static analysis, dynamic analysis, and reverse engineering using IDA Pro.
+- ✅ Identified browser credential theft and password decryption functionality.
+- ✅ Created a custom YARA rule to detect Lumma Stealer–like malware.
+- ✅ Developed Indicators of Compromise (IOCs) for threat hunting.
+- ✅ Mapped malware behavior to the MITRE ATT&CK framework.
+- ✅ Created Splunk threat hunting queries for IOC detection.
+- ✅ Validated Microsoft Defender detection, quarantine, and remediation.
+- ✅ Documented the investigation using incident response and threat intelligence reports.
+
 ### Skills Applied
 
 - Malware Analysis
@@ -325,6 +337,25 @@ Key competencies demonstrated include:
 * Microsoft Defender Investigations
 * Splunk Threat Hunting
 * Technical Documentation
+
+# Portfolio Skills
+
+This project demonstrates experience with:
+
+- Malware Analysis
+- Reverse Engineering
+- Threat Hunting
+- Detection Engineering
+- Incident Response
+- Static Analysis
+- Dynamic Analysis
+- IOC Development
+- Microsoft Defender
+- Splunk Enterprise
+- YARA
+- MITRE ATT&CK
+- Threat Intelligence
+- Technical Documentation
 
 ### Simple Summary
 
