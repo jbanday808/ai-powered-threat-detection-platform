@@ -97,9 +97,7 @@ This timeline shows how the malware was investigated from initial identification
 
 # Project Overview
 
-Lumma Stealer is an information-stealing malware family designed to collect sensitive data from infected systems.
-
-This project demonstrates how a Cyber Intrusion Analyst can safely investigate malware, perform reverse engineering, document findings, create reusable detections, and explain technical results in a clear way.
+This project demonstrates an end-to-end malware investigation workflow, including static analysis, reverse engineering, dynamic analysis, detection engineering, threat hunting, and incident reporting.
 
 ### Summary
 
@@ -174,17 +172,15 @@ Reverse engineering helped identify what the malware was designed to do by revie
 
 # Project Highlights
 
-- ✅ Investigated a Lumma Stealer credential theft malware sample in an isolated analysis lab.
+- ✅ Investigated a Lumma Stealer credential theft malware sample in an isolated malware analysis lab.
 - ✅ Performed static analysis, dynamic analysis, and reverse engineering using IDA Pro.
-- ✅ Identified browser credential theft and password decryption functionality.
-- ✅ Created a custom YARA rule to detect Lumma Stealer–like malware.
-- ✅ Developed Indicators of Compromise (IOCs) for threat hunting.
+- ✅ Developed a custom YARA rule for malware detection.
+- ✅ Created Indicators of Compromise (IOCs) and Splunk threat hunting queries.
 - ✅ Mapped malware behavior to the MITRE ATT&CK framework.
-- ✅ Created Splunk threat hunting queries for IOC detection.
-- ✅ Validated Microsoft Defender detection, quarantine, and remediation.
-- ✅ Documented the investigation using incident response and threat intelligence reports.
+- ✅ Validated Microsoft Defender detection and remediation.
+- ✅ Produced incident response, threat intelligence, and technical documentation.
 
-### Skills Applied
+### Core Skills
 
 - Malware Analysis
 - Reverse Engineering
@@ -193,15 +189,14 @@ Reverse engineering helped identify what the malware was designed to do by revie
 - Incident Response
 - IOC Development
 - MITRE ATT&CK Mapping
-- Microsoft Defender Investigation
-- Splunk Threat Hunting
-- Technical Documentation
+- Splunk Enterprise
+- Microsoft Defender
 
 # Key Findings
 
 ## Reverse Engineering Findings
 
-Evidence:
+Analyst Assessment:
 
 * `main.getChromeLogins`
 * `main.GetChromiumMasterKeys`
@@ -211,7 +206,7 @@ Evidence:
 * `main.findLsassProcess`
 * `main.impersonateSystem`
 
-Explanation:
+Analyst Assessment:
 
 Reverse engineering showed that the malware contained functions related to browser credential theft, password decryption, system discovery, and privilege-related activity.
 
@@ -225,7 +220,7 @@ Evidence:
 * `main.getEdgeLogins`
 * `main.GetChromiumMasterKeys`
 
-Explanation:
+Analyst Assessment:
 
 Reverse engineering identified functions that target saved browser credentials from Chrome and Edge.
 
@@ -236,7 +231,7 @@ Evidence:
 * `main.loginPBE.Decrypt`
 * `main.DPAPI`
 
-Explanation:
+Analyst Assessment:
 
 Reverse engineering identified functions that may help the malware unlock protected password data stored on the computer.
 
@@ -247,7 +242,7 @@ Evidence:
 * `main.findLsassProcess`
 * `main.NtQuerySystemHandles`
 
-Explanation:
+Analyst Assessment:
 
 The malware looks at running processes and system information to better understand the infected computer.
 
@@ -259,7 +254,7 @@ Evidence:
 * `main.getSystemToken`
 * `main.impersonateSystem`
 
-Explanation:
+Analyst Assessment:
 
 The malware contains functions that may help it request higher access on the system.
 
@@ -267,7 +262,7 @@ The malware contains functions that may help it request higher access on the sys
 
 Microsoft Defender detected, blocked, quarantined, and removed the malware sample.
 
-Explanation:
+Analyst Assessment:
 
 The security tool identified the file as malicious and stopped it from continuing to run.
 
