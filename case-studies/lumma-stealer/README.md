@@ -79,21 +79,19 @@ This case study demonstrates the complete workflow used by a Cyber Intrusion Ana
 
 # Investigation Timeline
 
-| Phase    | Activity                    |
-| -------- | --------------------------- |
-| Phase 1  | Malware Intelligence Review |
-| Phase 2  | Static Analysis             |
-| Phase 3  | Reverse Engineering         |
-| Phase 4  | Dynamic Analysis            |
-| Phase 5  | Credential Theft Review     |
-| Phase 6  | MITRE ATT&CK Mapping        |
-| Phase 7  | IOC Development             |
-| Phase 8  | YARA Detection Development  |
-| Phase 9  | Splunk Threat Hunting       |
-| Phase 10 | Incident Documentation      |
-| Phase 11 | Final Assessment            |
+| Phase | Activity |
+|--------|----------|
+| Phase 1 | Threat Intelligence Review |
+| Phase 2 | Static Analysis |
+| Phase 3 | Reverse Engineering |
+| Phase 4 | Dynamic Analysis |
+| Phase 5 | MITRE ATT&CK Mapping |
+| Phase 6 | Detection Engineering |
+| Phase 7 | Threat Hunting |
+| Phase 8 | Incident Reporting |
 
-### Simple Summary
+
+### Summary
 
 This timeline shows how the malware was investigated from initial identification through reverse engineering, detection development, threat hunting, and final reporting.
 
@@ -103,7 +101,7 @@ Lumma Stealer is an information-stealing malware family designed to collect sens
 
 This project demonstrates how a Cyber Intrusion Analyst can safely investigate malware, perform reverse engineering, document findings, create reusable detections, and explain technical results in a clear way.
 
-### Simple Summary
+### Summary
 
 This project shows how an analyst studies malware, identifies what it is designed to steal, validates detections, and creates defensive content to help find similar threats.
 
@@ -139,7 +137,7 @@ This project shows how an analyst studies malware, identifies what it is designe
 * DPAPI-Related Function Review
 * Privilege-Related Function Review
 
-### Simple Summary
+### Summary
 
 Reverse engineering helped identify what the malware was designed to do by reviewing its internal strings and functions.
 
@@ -173,20 +171,6 @@ Reverse engineering helped identify what the malware was designed to do by revie
 | YARA               | Malware detection rule development                    |
 | Splunk             | Threat hunting query development                      |
 | MITRE ATT&CK       | Mapping malware behavior to known attacker techniques |
-
-# Technologies Used
-
-| Category | Technologies |
-|----------|--------------|
-| SIEM | Splunk Enterprise |
-| Malware Analysis | IDA Pro, Noriben, Process Monitor |
-| Detection Engineering | YARA |
-| Threat Intelligence | MalwareBazaar, VirusTotal |
-| Endpoint Security | Microsoft Defender |
-| Threat Hunting | Splunk SPL |
-| Frameworks | MITRE ATT&CK |
-| Operating Systems | Windows 11, Kali Linux |
-| Documentation | Markdown, GitHub |
 
 # Project Highlights
 
@@ -227,11 +211,9 @@ Evidence:
 * `main.findLsassProcess`
 * `main.impersonateSystem`
 
-Simple explanation:
+Explanation:
 
 Reverse engineering showed that the malware contained functions related to browser credential theft, password decryption, system discovery, and privilege-related activity.
-
-Non-technical explanation:
 
 This means the malware was designed to search for valuable information, especially saved browser passwords, and attempt to access protected data on the computer.
 
@@ -243,7 +225,7 @@ Evidence:
 * `main.getEdgeLogins`
 * `main.GetChromiumMasterKeys`
 
-Simple explanation:
+Explanation:
 
 Reverse engineering identified functions that target saved browser credentials from Chrome and Edge.
 
@@ -254,7 +236,7 @@ Evidence:
 * `main.loginPBE.Decrypt`
 * `main.DPAPI`
 
-Simple explanation:
+Explanation:
 
 Reverse engineering identified functions that may help the malware unlock protected password data stored on the computer.
 
@@ -265,7 +247,7 @@ Evidence:
 * `main.findLsassProcess`
 * `main.NtQuerySystemHandles`
 
-Simple explanation:
+Explanation:
 
 The malware looks at running processes and system information to better understand the infected computer.
 
@@ -277,7 +259,7 @@ Evidence:
 * `main.getSystemToken`
 * `main.impersonateSystem`
 
-Simple explanation:
+Explanation:
 
 The malware contains functions that may help it request higher access on the system.
 
@@ -285,7 +267,7 @@ The malware contains functions that may help it request higher access on the sys
 
 Microsoft Defender detected, blocked, quarantined, and removed the malware sample.
 
-Simple explanation:
+Explanation:
 
 The security tool identified the file as malicious and stopped it from continuing to run.
 
@@ -357,7 +339,7 @@ This project demonstrates experience with:
 - Threat Intelligence
 - Technical Documentation
 
-### Simple Summary
+### Summary
 
 This project shows the complete workflow used by security analysts to investigate malware, perform reverse engineering, validate detections, document findings, and develop defensive security content.
 
