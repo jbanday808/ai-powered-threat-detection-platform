@@ -12,6 +12,25 @@ Reverse engineering was performed using IDA Pro to review strings, functions, an
 
 No live malware, executables, archives, or payloads are included in this repository.
 
+# Recruiter Quick Facts
+
+| Category | Details |
+|----------|---------|
+| Project Type | Malware Investigation & Threat Hunting Case Study |
+| Malware Family | Lumma Stealer / SalatStealer |
+| Investigation Status | Complete |
+| Primary Objective | Investigate credential theft malware and develop reusable detection content |
+| Lab Environment | Isolated Malware Analysis Lab |
+| Primary Skills | Malware Analysis, Reverse Engineering, Threat Hunting, Detection Engineering, Incident Response |
+| Detection Content | Custom YARA Rule, IOC Development, Splunk Threat Hunting Queries |
+| Framework | MITRE ATT&CK |
+| Analysis Types | Static Analysis, Dynamic Analysis, Reverse Engineering |
+| Outcome | Successfully analyzed malware behavior, validated detections, mapped ATT&CK techniques, documented findings, and developed reusable detection content. |
+
+### Why This Project Matters
+
+This case study demonstrates the complete workflow used by a Cyber Intrusion Analyst to investigate malware, identify attacker behavior, develop detections, document findings, and communicate results to both technical and non-technical audiences.
+
 # Investigation Dashboard
 
 | Category                   | Status        |
@@ -154,6 +173,33 @@ Reverse engineering helped identify what the malware was designed to do by revie
 | YARA               | Malware detection rule development                    |
 | Splunk             | Threat hunting query development                      |
 | MITRE ATT&CK       | Mapping malware behavior to known attacker techniques |
+
+# Technologies Used
+
+| Category | Technologies |
+|----------|--------------|
+| SIEM | Splunk Enterprise |
+| Malware Analysis | IDA Pro, Noriben, Process Monitor |
+| Detection Engineering | YARA |
+| Threat Intelligence | MalwareBazaar, VirusTotal |
+| Endpoint Security | Microsoft Defender |
+| Threat Hunting | Splunk SPL |
+| Frameworks | MITRE ATT&CK |
+| Operating Systems | Windows 11, Kali Linux |
+| Documentation | Markdown, GitHub |
+
+### Skills Applied
+
+- Malware Analysis
+- Reverse Engineering
+- Threat Hunting
+- Detection Engineering
+- Incident Response
+- IOC Development
+- MITRE ATT&CK Mapping
+- Microsoft Defender Investigation
+- Splunk Threat Hunting
+- Technical Documentation
 
 # Key Findings
 
