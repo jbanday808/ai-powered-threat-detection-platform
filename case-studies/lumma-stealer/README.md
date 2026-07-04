@@ -198,7 +198,7 @@ Reverse engineering helped identify what the malware was designed to do by revie
 
 ## MalwareBazaar
 
-![MalwareBazaar](screenshots/01-malwarebazaar.png)
+![MalwareBazaar](screenshots/LummaStealer_01_MalwareBazaar_Sample_Details.png)
 
 **Purpose:** Identified the malware sample, verified file hashes, and gathered threat intelligence before analysis.
 
@@ -206,7 +206,7 @@ Reverse engineering helped identify what the malware was designed to do by revie
 
 ## IDA Pro Reverse Engineering
 
-![IDA Pro](screenshots/06-ida-functions.png)
+![IDA Pro](screenshots/LummaStealer_06_IDA_Credential_Collection_Functions.png)
 
 **Purpose:** Reviewed strings and functions to identify browser credential theft, password decryption, and privilege-related behavior.
 
@@ -214,7 +214,7 @@ Reverse engineering helped identify what the malware was designed to do by revie
 
 ## Microsoft Defender Detection
 
-![Microsoft Defender](screenshots/09-defender.png)
+![Microsoft Defender](screenshots/LummaStealer_09_Defender_Threat_Classification.png)
 
 **Purpose:** Validated that Microsoft Defender detected, quarantined, and removed the malware sample.
 
@@ -222,10 +222,9 @@ Reverse engineering helped identify what the malware was designed to do by revie
 
 ## YARA Detection Validation
 
-![YARA](screenshots/13-yara-validation.png)
+![YARA](screenshots/LummaStealer_13_YARA_Detection_Validation.png)
 
 **Purpose:** Verified that the custom YARA rule successfully detected the Lumma Stealer sample using malware-specific indicators.
-
 ---
 
 # Key Findings
