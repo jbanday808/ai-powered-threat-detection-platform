@@ -172,7 +172,7 @@ Reverse engineering helped identify what the malware was designed to do by revie
 
 # Project Highlights
 
-- ✅ Investigated a Lumma Stealer credential theft malware sample in an isolated malware analysis lab.
+- ✅ Investigated a Lumma Stealer credential theft malware sample in an isolated analysis lab.
 - ✅ Performed static analysis, dynamic analysis, and reverse engineering using IDA Pro.
 - ✅ Developed a custom YARA rule for malware detection.
 - ✅ Created Indicators of Compromise (IOCs) and Splunk threat hunting queries.
@@ -191,6 +191,42 @@ Reverse engineering helped identify what the malware was designed to do by revie
 - MITRE ATT&CK Mapping
 - Splunk Enterprise
 - Microsoft Defender
+
+---
+
+# Investigation Evidence
+
+## MalwareBazaar
+
+![MalwareBazaar](screenshots/01-malwarebazaar.png)
+
+**Purpose:** Identified the malware sample, verified file hashes, and gathered threat intelligence before analysis.
+
+---
+
+## IDA Pro Reverse Engineering
+
+![IDA Pro](screenshots/06-ida-functions.png)
+
+**Purpose:** Reviewed strings and functions to identify browser credential theft, password decryption, and privilege-related behavior.
+
+---
+
+## Microsoft Defender Detection
+
+![Microsoft Defender](screenshots/09-defender.png)
+
+**Purpose:** Validated that Microsoft Defender detected, quarantined, and removed the malware sample.
+
+---
+
+## YARA Detection Validation
+
+![YARA](screenshots/13-yara-validation.png)
+
+**Purpose:** Verified that the custom YARA rule successfully detected the Lumma Stealer sample using malware-specific indicators.
+
+---
 
 # Key Findings
 
