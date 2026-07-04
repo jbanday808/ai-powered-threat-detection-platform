@@ -225,6 +225,7 @@ Reverse engineering helped identify what the malware was designed to do by revie
 ![YARA](screenshots/LummaStealer_13_YARA_Detection_Validation.png)
 
 **Purpose:** Verified that the custom YARA rule successfully detected the Lumma Stealer sample using malware-specific indicators.
+
 ---
 
 # Key Findings
