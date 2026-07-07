@@ -1,186 +1,166 @@
-# Incident Report – GootLoader
+# GootLoader Incident Report
 
-## Executive Summary
+## Incident Summary
 
-This report documents a controlled malware analysis investigation of a GootLoader JavaScript sample inside an isolated lab.
+A GootLoader JavaScript malware sample named `Legal_Case_Documents_2026.js` was analyzed in an isolated malware analysis lab. The investigation identified obfuscated JavaScript, hidden string reconstruction, execution through `wscript.exe`, Windows DLL loading, registry queries, file activity, and a quick process exit. No child processes, domains, IP addresses, or persistence mechanisms were observed during the investigation.
 
-The sample executed through Windows Script Host, showed limited local activity, and exited quickly.
+Simple explanation:
+This investigation confirmed that the file behaved like an obfuscated JavaScript malware sample designed to hide its real instructions.
 
-No child processes, persistence, network indicators, or second-stage execution were observed during the lab investigation.
-
----
-
-## Incident Overview
+## Incident Details
 
 | Field | Details |
 | --- | --- |
-| Incident Type | Malware Analysis Case Study |
+| Incident Type | Malware Investigation |
 | Malware Family | GootLoader |
-| File Type | JavaScript |
-| Sample Name | `Legal_Case_Documents_2026.js` |
-| SHA-256 | `53f8a46c948c968fe753a5f723bdf99d3b3d141dc3dec3d8e36480975c7ce879` |
-| Environment | Isolated Malware Analysis Lab |
-| Status | Analysis Complete |
-
----
-
-## Scope
-
-This was a controlled lab investigation, not a real enterprise compromise.
-
-The investigation focused on confirmed behavior observed during safe analysis.
-
-Scope included:
-
-* Static analysis
-* Dynamic analysis
-* IOC review
-* Microsoft Defender log review
-* MITRE ATT&CK mapping
-* YARA and Sigma detection development
-
----
-
-## Detection Summary
-
-| Detection Area | Result |
-| --- | --- |
-| MalwareBazaar | Sample identified |
-| VirusTotal | File reputation reviewed |
-| YARA | Custom rule matched sample |
-| Sigma | Suspicious JavaScript execution rule created |
-| Microsoft Defender | No confirmed detection for this execution |
-| Network IOCs | None observed |
-
----
-
-## Observed Activity
-
-| Activity | Observation |
-| --- | --- |
-| Script execution | Observed through `wscript.exe` |
-| DLL loading | Observed |
-| Registry queries | Observed |
-| File activity | Observed |
-| Process exit | Observed |
-| Child processes | Not observed |
-| Persistence | Not observed |
-| Network traffic | No domains or IPs observed |
-
----
-
-## Timeline of Events
-
-| Phase | Event |
-| --- | --- |
-| 1 | Sample obtained from MalwareBazaar |
-| 2 | Hash and file details verified using VirusTotal |
-| 3 | Static JavaScript analysis performed |
-| 4 | Obfuscated functions and variables identified |
-| 5 | Sample executed in isolated Windows VM |
-| 6 | Process Monitor captured `wscript.exe` activity |
-| 7 | Microsoft Defender logs reviewed |
-| 8 | Custom YARA rule created and validated |
-| 9 | MITRE ATT&CK mapping completed |
-| 10 | Findings documented |
-
----
-
-## Impact Assessment
-
-Because this investigation was performed in an isolated lab, no production systems were affected.
-
-No data loss, credential theft, lateral movement, persistence, or network-based indicators were observed.
-
-| Impact Area | Result |
-| --- | --- |
-| Production systems affected | No |
-| Data loss | Not observed |
-| Credential theft | Not observed |
-| Lateral movement | Not observed |
-| Persistence | Not observed |
-| Network-based IOCs | None observed |
-
----
-
-## Root Cause
-
-This was not a real user infection.
-
-For this case study, the root cause was controlled execution of a known malware sample for defensive research.
-
----
-
-## Containment Actions
-
-* Used an isolated malware analysis VM.
-* Took a VMware snapshot before execution.
-* Avoided storing live malware in the public repository.
-* Reviewed Microsoft Defender logs.
-* Documented findings and detections.
-
----
-
-## Eradication and Recovery
-
-Since this was a lab environment, recovery would consist of reverting to the clean VMware snapshot.
-
-Analysis artifacts could also be removed if needed.
-
----
-
-## MITRE ATT&CK Mapping
-
-| Tactic | Technique | ID |
-| --- | --- | --- |
-| Execution | Command and Scripting Interpreter: JavaScript | T1059.007 |
-| Defense Evasion | Obfuscated Files or Information | T1027 |
-
----
-
-## Indicators of Compromise
-
-| Type | Value |
-| --- | --- |
+| Severity | High |
+| Status | Closed |
+| Affected Environment | Controlled Windows malware analysis lab |
+| Primary File | `Legal_Case_Documents_2026.js` |
 | SHA-256 | `53f8a46c948c968fe753a5f723bdf99d3b3d141dc3dec3d8e36480975c7ce879` |
 | SHA-1 | `7b468a279606b62b0abe1a3e14aa16f0c9e6b93d` |
 | MD5 | `95238ad5a91d721c6e8fdf4c36187798` |
-| File Name | `Legal_Case_Documents_2026.js` |
-| Process | `wscript.exe` |
-| Domains | None observed |
-| IP Addresses | None observed |
+| Execution Process | `wscript.exe` |
+| Network Domains | None observed |
+| Network IP Addresses | None observed |
 
----
+## Step 1: Initial Detection
 
-## Recommendations
+A suspicious JavaScript file was identified and analyzed inside an isolated malware analysis lab.
 
-* Monitor suspicious JavaScript execution through `wscript.exe` and `cscript.exe`.
-* Alert on JavaScript launched from user folders, Downloads, Temp, or malware staging folders.
-* Use YARA to scan suspicious JavaScript files.
-* Review Microsoft Defender and endpoint logs for script execution.
-* Block or restrict Windows Script Host where not required.
-* Train users to avoid opening unexpected document-themed script files.
+Simple explanation:
+This step confirmed that the file was suspicious and needed further investigation.
 
----
+## Step 2: Indicator Collection
 
-## Analyst Conclusion
+The sample name, file hashes, execution process, Microsoft Defender findings, and observed Indicators of Compromise were collected.
 
-The investigation confirmed an obfuscated GootLoader JavaScript sample and documented its static and limited dynamic behavior.
+Simple explanation:
+Indicators are unique fingerprints that help analysts identify the same malware on other systems.
 
-The sample executed through `wscript.exe`, performed limited local activity, and exited quickly in the isolated lab.
+## Step 3: Threat Intelligence Review
 
-No network IOCs, persistence, child processes, or second-stage payload execution were observed.
+MalwareBazaar, VirusTotal, and Microsoft Defender findings were reviewed to validate the malware family and known characteristics.
 
-The investigation still produced valuable defensive content, including YARA and Sigma rules.
+Simple explanation:
+Threat intelligence helps confirm whether the file has been seen before and how dangerous it may be.
 
----
+## Step 4: Static Analysis
 
-## References
+The JavaScript source code was analyzed to identify obfuscation techniques, injected functions, hidden string reconstruction, and suspicious code patterns.
 
-* [MalwareBazaar](https://bazaar.abuse.ch/)
-* [VirusTotal](https://www.virustotal.com/)
-* [MITRE ATT&CK](https://attack.mitre.org/)
-* [Microsoft Sysinternals Process Monitor](https://learn.microsoft.com/sysinternals/downloads/procmon)
-* [Microsoft Defender](https://learn.microsoft.com/microsoft-365/security/defender/)
-* [YARA Documentation](https://yara.readthedocs.io/)
-* [Sigma Documentation](https://sigmahq.io/)
+Simple explanation:
+Static analysis examines the file without relying only on what happens when it runs.
+
+## Step 5: Dynamic Analysis
+
+Controlled runtime behavior was analyzed inside an isolated Windows lab while monitoring activity with Process Monitor and Microsoft Defender.
+
+Observed behavior included:
+
+* `wscript.exe` execution
+* Windows DLL loading
+* Registry queries
+* File activity
+* Quick process exit
+
+Simple explanation:
+Dynamic analysis shows what the malware does while it is running in a safe environment.
+
+## Step 6: Behavior Review
+
+The observed execution flow was documented to verify whether additional malicious activity occurred.
+
+Confirmed observations:
+
+* JavaScript executed through Windows Script Host (`wscript.exe`)
+* Registry queries observed
+* File activity observed
+* Process exited quickly
+* No child processes observed
+* No persistence observed
+* No network domains or IP addresses observed
+
+Simple explanation:
+This step records everything the malware actually did during testing.
+
+## Step 7: MITRE ATT&CK Mapping
+
+Confirmed behavior was mapped to MITRE ATT&CK techniques.
+
+* T1059.007 – Command and Scripting Interpreter: JavaScript
+* T1027 – Obfuscated Files or Information
+
+Simple explanation:
+MITRE ATT&CK helps describe malware behavior using a common industry framework.
+
+## Step 8: Detection Development
+
+Defensive detection content was created, including:
+
+* Custom YARA rule
+* Sigma rule
+* Suricata rule
+* IOC list
+* Splunk threat hunting queries
+
+Simple explanation:
+Detection content helps security teams identify similar threats more quickly.
+
+## Step 9: Containment Recommendations
+
+Recommended actions:
+
+* Block the SHA-256 hash.
+* Search endpoints for `Legal_Case_Documents_2026.js`.
+* Review Windows Script Host (`wscript.exe`) activity.
+* Review Microsoft Defender detections.
+* Investigate any systems where the sample is discovered.
+
+Simple explanation:
+Containment helps stop the malware from affecting additional systems.
+
+## Step 10: Eradication Recommendations
+
+Recommended actions:
+
+* Remove the malicious JavaScript file.
+* Confirm Microsoft Defender completed remediation if detected.
+* Perform a full antivirus scan.
+* Review for additional suspicious scripts.
+* Verify no related artifacts remain.
+
+Simple explanation:
+Eradication removes the malware and confirms the system has been cleaned.
+
+## Step 11: Recovery Recommendations
+
+Recommended actions:
+
+* Confirm endpoint protection is enabled.
+* Continue monitoring for suspicious script execution.
+* Verify no repeated detections occur.
+* Update detection rules as needed.
+* Maintain regular security monitoring.
+
+Simple explanation:
+Recovery ensures the system is safe before returning to normal operation.
+
+## Step 12: Lessons Learned
+
+Key lessons:
+
+* Obfuscated JavaScript can hide malicious behavior.
+* Static and dynamic analysis complement each other.
+* Microsoft Defender logs provide valuable investigation evidence.
+* YARA, Sigma, Splunk, and Suricata improve detection capabilities.
+* MITRE ATT&CK strengthens investigation reporting.
+
+Simple explanation:
+Each investigation helps analysts improve future malware detection and response.
+
+## Final Incident Status
+
+Status: Closed
+
+The GootLoader JavaScript sample was successfully analyzed in an isolated malware analysis lab. Static and dynamic analysis were completed, Microsoft Defender findings were reviewed, custom YARA, Sigma, Suricata, and Splunk detections were developed, MITRE ATT&CK techniques were mapped, and the investigation was fully documented. No network domains, IP addresses, child processes, or persistence mechanisms were observed during this controlled analysis.

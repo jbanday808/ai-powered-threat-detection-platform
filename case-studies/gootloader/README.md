@@ -130,6 +130,40 @@ This project analyzed a GootLoader JavaScript sample in an isolated lab. The inv
 
 This project studied a harmful JavaScript file in a safe lab and turned the findings into defensive documentation.
 
+# Investigation Diagrams
+
+These diagrams provide a simple visual overview of how the GootLoader malware is built and what happened when it was executed inside the isolated malware analysis lab. They are designed for readers with little or no cybersecurity experience.
+
+---
+
+## Static Execution Flow
+
+![GootLoader Static Execution Flow](screenshots/GootLoader_Static_Execution_Diagram.png)
+
+### Explanation
+
+The Static Execution Flow shows how the JavaScript file hides its real instructions before it runs. The malware breaks its code into many small pieces and rebuilds them only when needed, making it more difficult for security tools and analysts to understand what it is doing.
+
+### Simple Summary
+
+Before the malware runs, it hides its real code so it is harder to detect.
+
+---
+
+## Dynamic Execution Flow
+
+![GootLoader Dynamic Execution Flow](screenshots/GootLoader_Dynamic_Execution_Diagram.png)
+
+### Explanation
+
+The Dynamic Execution Flow shows what happened after the JavaScript file was opened inside the isolated Windows lab. The investigation observed Windows Script Host (`wscript.exe`) starting the script, loading Windows components, reading the JavaScript file, querying the Windows Registry, closing file handles, and then exiting. No child processes, domains, IP addresses, or persistence mechanisms were observed.
+
+### Simple Summary
+
+When the file was opened, it briefly interacted with Windows, checked some system information, and then exited without showing additional malicious activity during this analysis.
+
+---
+
 # Investigation Objectives
 
 * Safely analyze a GootLoader JavaScript sample in an isolated lab.
