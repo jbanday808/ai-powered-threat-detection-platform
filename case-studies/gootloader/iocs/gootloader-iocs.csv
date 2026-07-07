@@ -1,0 +1,17 @@
+IOC_Type,IOC_Value,Description,Confidence,Source
+SHA256,53f8a46c948c968fe753a5f723bdf99d3b3d141dc3dec3d8e36480975c7ce879,Original GootLoader JavaScript sample hash,High,"VirusTotal, MalwareBazaar"
+SHA1,7b468a279606b62b0abe1a3e14aa16f0c9e6b93d,Original GootLoader JavaScript sample hash,High,VirusTotal
+MD5,95238ad5a91d721c6e8fdf4c36187798,Original GootLoader JavaScript sample hash,High,VirusTotal
+Filename,Legal_Case_Documents_2026.js,Filename used during malware analysis,High,Malware Analysis
+Original Filename,53f8a46c948c968fe753a5f723bdf99d3b3d141dc3dec3d8e36480975c7ce879.js,Original sample filename,High,MalwareBazaar
+File Type,JavaScript,Malware sample file type,High,Static Analysis
+Malware Family,GootLoader,Malware family identified during analysis,High,MalwareBazaar
+Process,wscript.exe,Windows Script Host process observed during dynamic analysis,High,Process Monitor
+MITRE Technique,T1059.007,Command and Scripting Interpreter: JavaScript,High,MITRE ATT&CK
+MITRE Technique,T1027,Obfuscated Files or Information,High,MITRE ATT&CK
+# No domains were observed during analysis.
+# No IP addresses were observed during analysis.
+# No URLs were observed during analysis.
+# No persistence mechanisms were confirmed.
+# No child processes were observed.
+# IOC list reflects confirmed evidence only.

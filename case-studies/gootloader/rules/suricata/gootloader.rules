@@ -1,0 +1,25 @@
+# GootLoader Suricata Rules
+# Author: James Banday
+# Date: 2026-07-05
+# Purpose: Defensive detection research for GootLoader-style JavaScript delivery.
+#
+# Limitation:
+# No network domains, IP addresses, URLs, C2 traffic, payload downloads, or
+# second-stage network behavior were observed during this investigation.
+#
+# YARA and Sigma are the primary detection methods for this case study.
+# This Suricata rule is a low-confidence research rule for suspicious
+# document-themed JavaScript download patterns only.
+
+alert http any any -> any any (
+    msg:"MALWARE Possible GootLoader-style JavaScript document-themed download";
+    flow:to_client,established;
+    http.uri;
+    content:".js"; nocase;
+    pcre:"/((legal|case|document|documents).{0,80}\.js|\.js.{0,80}(legal|case|document|documents))/Ui";
+    classtype:trojan-activity;
+    sid:1001001;
+    rev:1;
+    metadata: malware_family GootLoader, attack_target Client_Endpoint, deployment Perimeter, confidence Low;
+    reference:url,attack.mitre.org/techniques/T1059/007/;
+)

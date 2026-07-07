@@ -1,0 +1,54 @@
+title: Suspicious JavaScript Execution Using Windows Script Host
+id: 0c9f3b91-5f2d-4cc7-9c46-4c01d22d4d8f
+status: experimental
+description: Detects suspicious JavaScript execution similar to the observed GootLoader sample executed through Windows Script Host.
+author: James Banday
+date: 2026-07-05
+references:
+    - https://attack.mitre.org/techniques/T1059/007/
+    - https://bazaar.abuse.ch/
+    - https://www.virustotal.com/
+tags:
+    - attack.execution
+    - attack.t1059.007
+    - malware.gootloader
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    # Windows Script Host is important because the analyzed GootLoader sample
+    # executed through wscript.exe. cscript.exe is included because it is the
+    # console-based Windows Script Host interpreter for the same script types.
+    selection_script_host:
+        Image|endswith:
+            - '\wscript.exe'
+            - '\cscript.exe'
+
+    # JavaScript execution is suspicious when it appears in unexpected user or
+    # download paths. The observed sample was a JavaScript file analyzed as
+    # Legal_Case_Documents_2026.js.
+    selection_javascript:
+        CommandLine|contains:
+            - '.js'
+            - '.jse'
+
+    # This rule relates to GootLoader by detecting the confirmed host behavior:
+    # JavaScript execution through Windows Script Host. It does not include
+    # unobserved behaviors such as PowerShell, cmd.exe, mshta.exe, rundll32.exe,
+    # network activity, persistence, scheduled tasks, or child processes.
+    condition: selection_script_host and selection_javascript
+fields:
+    - UtcTime
+    - Image
+    - CommandLine
+    - ParentImage
+    - ParentCommandLine
+    - User
+    - CurrentDirectory
+    - ProcessId
+falsepositives:
+    - Enterprise logon scripts
+    - Administrative JavaScript scripts
+    - Software deployment scripts
+    - Internal IT automation
+level: medium
