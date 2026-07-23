@@ -1,0 +1,40 @@
+Turla Neuron / DarkNeuron Network Evidence Inventory
+Generated: 2026-07-22
+
+Fields: repository-relative path | size | SHA-256 | type | evidence category | purpose | classification | usability status
+
+1. case-studies/turla-neuron/results/dynamic/turla_neuron_dynamic_analysis.md | 22598 bytes | 3b28553465554b20adcf11a28efdaa8d8899689806a0aff8237f8a7f7d5af16b | Markdown | http_sys/socket_state/ssl_binding/url_acl | Consolidated local listener and Windows observations | supporting_context | usable_supporting
+2. case-studies/turla-neuron/results/noriben/turla_neuron_noriben_analysis.md | 16963 bytes | e48754a407678312771cfd183087269872a9999dd7a1845433c1e75ef92fe2ad | Markdown | noriben | Records empty Network Traffic and Unique Hosts sections | confirmed_by_noriben | usable_supporting
+3. case-studies/turla-neuron/results/procmon/turla_neuron_procmon_analysis.md | 12147 bytes | 1eae7b6cfe5d960255a295dac3ac60b86fc15090093b8ec22352ea6574b3b86f | Markdown | evidence_limitation | Documents unusable raw PML and absence of recoverable network events | evidence_limitation | usable_supporting
+4. case-studies/turla-neuron/results/dnspy/turla_neuron_dnspy_analysis.md | 20320 bytes | 0f096040b980ce5f32cee0943aa2bbfd819bb74898780c92c712a2ba8dea029a | Markdown | static_decompilation | Documents listener and protocol-processing capabilities | confirmed_statically | usable_supporting
+5. case-studies/turla-neuron/results/static/turla_neuron_static_analysis.md | 17288 bytes | 573017513632799ff56d2ed5706c4e0a489ece6952199bdcc83aee0476cc6b5c | Markdown | static_decompilation | Corroborates embedded listener and protocol artifacts | confirmed_statically | usable_supporting
+6. case-studies/turla-neuron/reports/incident-report.md | 42637 bytes | 661810c68473f4cafdfe5b65e278da5316d4443309da05615a1930a0a56677dc | Markdown | supporting context | Consolidated case evidence and limitations | supporting_context | usable_supporting
+7. case-studies/turla-neuron/iocs/turla_neuron_iocs.md | 10967 bytes | 122a9c9dc164b04339e58810512d40dd0986bf46f2badd03b99dad4921faa515 | Markdown | detection context | Network indicator confidence and scope | detection_recommendation | usable_supporting
+8. case-studies/turla-neuron/screenshots/Pre-Noriben_Turla_Neuron_Snapshot.png | 21684 bytes | b86d5455c87cf0f4471adb3f8d84ee4e079f28d3461e6699084bcff8e0709ace | PNG | screenshot | Pre-execution safety control | supporting_context | usable_primary
+9. case-studies/turla-neuron/screenshots/TurlaNeuron_08_dnSpy_Service_OnStart_HTTPS_Listener.png | 119456 bytes | deb7090bf47cc9732b07db68f175343c88d190549f759cda0574000b33ddb962 | PNG | static_decompilation | Listener creation and request-handler evidence | confirmed_statically | usable_primary
+10. case-studies/turla-neuron/screenshots/TurlaNeuron_10_dnSpy_SendResponse_Request_Validation.png | 216508 bytes | 4fdc3be165316fb3010db538584d05ebca53c80bdaf8d808a6041aab69e93294 | PNG | static_decompilation | Request parsing, fields, and validation GUID | confirmed_statically | usable_primary
+11. case-studies/turla-neuron/screenshots/TurlaNeuron_11_dnSpy_Cadata_RC4_Remote_Storage_Command_Channel.png | 147877 bytes | 5e83a17bf8fd74ae6bc6b5be5710f0b1e3fcb80cf425cf12f17c3239d34fcd59 | PNG | static_decompilation | Encoded and encrypted protocol capability | confirmed_statically | usable_primary
+12. case-studies/turla-neuron/screenshots/TurlaNeuron_23_Noriben_Filtered_Timeline_Activity.png | 187565 bytes | 0de7e7d2a195e8b49798776855fcc0127f517f6b73083bf73cb015d3de1c7a25 | PNG | noriben screenshot | Supports processed activity context; does not contain packet data | supporting_context | usable_supporting
+13. case-studies/turla-neuron/screenshots/TurlaNeuron_25_Dynamic_HTTPsys_EWS_Exchange_URL_Registration.png | 74853 bytes | 413edd3d4b9fcd1cf505b1575ac620b90c6429127842c8516a3ddc6f184b1ebc | PNG | http_sys screenshot | Active queue, service association, URL, and zero request counters | confirmed_by_http_sys | usable_primary
+14. case-studies/turla-neuron/results/network/*.pcap | not present | unavailable | PCAP | packet_capture | Raw packet capture | evidence_limitation | missing
+15. case-studies/turla-neuron/results/network/*.pcapng | not present | unavailable | PCAPNG | packet_capture | Raw packet capture | evidence_limitation | missing
+16. case-studies/turla-neuron/results/network/*.etl | not present | unavailable | ETL | packet_capture | Windows network trace | evidence_limitation | missing
+17. case-studies/turla-neuron/results/network/HTTPsys_ServiceState.txt | not present | unavailable | text | http_sys | Standalone HTTP.sys service-state export | evidence_limitation | missing
+18. case-studies/turla-neuron/results/network/HTTPsys_URL_ACLs.txt | not present | unavailable | text | url_acl | Standalone URL reservation export | evidence_limitation | missing
+19. case-studies/turla-neuron/results/network/SSL_Certificate_Bindings.txt | not present | unavailable | text | ssl_binding | Standalone SSL binding export | evidence_limitation | missing
+20. case-studies/turla-neuron/results/network/Socket_State.txt | not present | unavailable | text | socket_state | Standalone netstat or Get-NetTCPConnection export | evidence_limitation | missing
+
+Inventory summary
+- Records inventoried: 20
+- Present source files: 13
+- Present usable primary files: 6
+- Present usable supporting files: 7
+- Missing raw or standalone network evidence records: 7
+- Packet capture available: no
+
+Evidence boundary
+- The HTTP.sys screenshot is the primary runtime listener evidence.
+- Socket, SSL-binding, and URL-ACL results survive through the dynamic analysis rather than standalone raw text files.
+- Protocol fields and GUIDs are static decompilation evidence, not captured packet contents.
+- Noriben recorded no external traffic or unique remote host.
+- No evidence was copied into results/network or modified in place.

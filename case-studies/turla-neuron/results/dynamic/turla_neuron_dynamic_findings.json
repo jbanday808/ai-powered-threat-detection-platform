@@ -1,0 +1,243 @@
+{
+  "case": {
+    "incident_id": "MAL-2026-0721-NEURON",
+    "family": "Turla Neuron",
+    "alias": "DarkNeuron",
+    "sample": "Microsoft.Exchange.Service.exe",
+    "sha256": "d1d7a96fcadc137e80ad866c838502713db9cdfe59939342b8e3beacf9c7fe29",
+    "analyst": "James Banday",
+    "analysis_date": "2026-07-22",
+    "analysis_type": "controlled_dynamic"
+  },
+  "environment": {
+    "platform": "Windows virtual machine",
+    "network_isolated": true,
+    "snapshot_created": true,
+    "production_system": false
+  },
+  "execution": {
+    "argument": "-install",
+    "command": "C:\\Malware\\TurlaNeuron\\Microsoft.Exchange.Service.exe -install",
+    "duration_seconds": null
+  },
+  "findings": [
+    {
+      "id": "DYN-001",
+      "category": "laboratory_controls",
+      "summary": "A pre-execution VMware snapshot was created and the Windows network adapter was disabled.",
+      "classification": "supporting_context",
+      "confidence": "high",
+      "artifacts": ["Pre-Noriben snapshot", "network-isolated Windows VM"],
+      "evidence": ["case-studies/turla-neuron/screenshots/Pre-Noriben_Turla_Neuron_Snapshot.png", "case-studies/turla-neuron/reports/incident-report.md"],
+      "limitations": ["A standalone network-adapter export was not retained in the repository."]
+    },
+    {
+      "id": "DYN-002",
+      "category": "controlled_execution",
+      "summary": "Microsoft.Exchange.Service.exe was intentionally run with the -install argument in the isolated VM.",
+      "classification": "observed_dynamically",
+      "confidence": "high",
+      "artifacts": ["Microsoft.Exchange.Service.exe", "-install"],
+      "evidence": ["case-studies/turla-neuron/reports/incident-report.md", "case-studies/turla-neuron/results/noriben/turla_neuron_noriben_analysis.md"],
+      "limitations": ["C:\\Malware\\TurlaNeuron\\ is a laboratory path and not a universal IOC."]
+    },
+    {
+      "id": "DYN-003",
+      "category": "installer_activity",
+      "summary": "The filtered Noriben timeline associated the executable with .NET installer log and state artifacts.",
+      "classification": "confirmed_by_noriben",
+      "confidence": "high",
+      "artifacts": ["InstallUtil.InstallLog", "Microsoft.Exchange.Service.InstallLog", "Microsoft.Exchange.Service.InstallState"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_23_Noriben_Filtered_Timeline_Activity.png"],
+      "limitations": ["The filtered timeline is processed evidence and does not replace the unusable raw PML.", "These filenames may also occur during legitimate .NET installation."]
+    },
+    {
+      "id": "DYN-004",
+      "category": "service_installation",
+      "summary": "The installer successfully registered MSExchangeService and committed the assembly.",
+      "classification": "confirmed_by_windows_artifact",
+      "confidence": "high",
+      "artifacts": ["MSExchangeService", "Microsoft Exchange Service", "Microsoft.Exchange.Service.exe"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_26_Dynamic_Installer_Log_Service_Success.png"],
+      "limitations": ["The installed assembly path shown in the log is laboratory-specific."]
+    },
+    {
+      "id": "DYN-005",
+      "category": "service_runtime",
+      "summary": "MSExchangeService started and was observed running as a Windows service.",
+      "classification": "confirmed_by_direct_observation",
+      "confidence": "high",
+      "artifacts": ["MSExchangeService", "Running", "services.exe"],
+      "evidence": ["case-studies/turla-neuron/reports/incident-report.md", "case-studies/turla-neuron/screenshots/TurlaNeuron_25_Dynamic_HTTPsys_EWS_Exchange_URL_Registration.png"],
+      "limitations": ["Process IDs are temporary laboratory evidence and are not universal IOCs."]
+    },
+    {
+      "id": "DYN-006",
+      "category": "service_persistence",
+      "summary": "The service Registry configuration set automatic startup, LocalSystem execution, and a dedicated service process.",
+      "classification": "confirmed_by_windows_artifact",
+      "confidence": "high",
+      "artifacts": ["HKLM\\SYSTEM\\CurrentControlSet\\Services\\MSExchangeService", "Start=2", "Type=16", "ObjectName=LocalSystem", "DelayedAutoStart=0", "DisplayName=Microsoft Exchange Service"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_28_Dynamic_Service_Registry_Persistence.png"],
+      "limitations": ["The laboratory ImagePath may differ on another system."]
+    },
+    {
+      "id": "DYN-007",
+      "category": "event_log_registration",
+      "summary": "The installer registered MSExchangeService as a Windows Application Event Log source.",
+      "classification": "confirmed_by_windows_artifact",
+      "confidence": "high",
+      "artifacts": ["HKLM\\SYSTEM\\CurrentControlSet\\Services\\EventLog\\Application\\MSExchangeService", "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\EventLogMessages.dll"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_27_Dynamic_MSExchangeService_EventLog_Source.png"],
+      "limitations": ["No matching Application events from MSExchangeService were found during the run."]
+    },
+    {
+      "id": "DYN-008",
+      "category": "storage_creation",
+      "summary": "The LocalSystem service created a MachineGuid-derived directory under C:\\Windows\\Temp.",
+      "classification": "confirmed_by_direct_observation",
+      "confidence": "high",
+      "artifacts": ["C:\\Windows\\Temp\\{GUID}"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_24_Dynamic_HostSpecific_SYSTEM_Storage_Directory.png"],
+      "limitations": ["The observed laboratory directory was empty.", "The exact laboratory MachineGuid is environmental and not a universal IOC."]
+    },
+    {
+      "id": "DYN-009",
+      "category": "registry_activity",
+      "summary": "The monitored executable wrote four values under the current user's Internet Settings ZoneMap key.",
+      "classification": "confirmed_by_noriben",
+      "confidence": "medium",
+      "artifacts": ["ZoneMap", "AutoDetect=0", "IntranetName=1", "ProxyBypass=1", "UNCAsIntranet=1"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_22_Dynamic_ZoneMap_Registry_Modifications.png", "case-studies/turla-neuron/screenshots/TurlaNeuron_23_Noriben_Filtered_Timeline_Activity.png"],
+      "limitations": ["No pre-execution Registry export proves whether the values changed or were rewritten.", "The values are not reliable standalone IOCs."]
+    },
+    {
+      "id": "DYN-010",
+      "category": "listener_registration",
+      "summary": "An active HTTP.sys request queue was attached to MSExchangeService for HTTPS://*:443/EWS/EXCHANGE/.",
+      "classification": "confirmed_by_windows_artifact",
+      "confidence": "high",
+      "artifacts": ["HTTPS://*:443/EWS/EXCHANGE/", "MSExchangeService", "Microsoft.Exchange.Service.exe"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_25_Dynamic_HTTPsys_EWS_Exchange_URL_Registration.png"],
+      "limitations": ["The wildcard URL is a local listener prefix, not a remote destination.", "No SSL certificate binding or Neuron-specific persistent URL ACL was observed."]
+    },
+    {
+      "id": "DYN-011",
+      "category": "network_observation",
+      "summary": "The HTTP.sys queue recorded zero arrived and zero rejected requests during the isolated run.",
+      "classification": "not_observed",
+      "confidence": "high",
+      "artifacts": ["Requests arrived=0", "Requests rejected=0"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_25_Dynamic_HTTPsys_EWS_Exchange_URL_Registration.png"],
+      "limitations": ["The disabled adapter limited external exposure.", "A local listener does not demonstrate external communication."]
+    },
+    {
+      "id": "DYN-012",
+      "category": "raw_capture_limitation",
+      "summary": "The retained malware-run Procmon PML was not usable as primary event evidence.",
+      "classification": "evidence_limitation",
+      "confidence": "high",
+      "artifacts": ["reported 976-byte PML", "reported 124-byte re-export CSV", "zero exported events"],
+      "evidence": ["case-studies/turla-neuron/results/noriben/turla_neuron_noriben_analysis.md"],
+      "limitations": ["The remaining evidence could not establish whether the PML was empty, truncated, or overwritten."]
+    },
+    {
+      "id": "DYN-013",
+      "category": "defender_detection",
+      "summary": "Microsoft Defender identified and quarantined the sample as Trojan:MSIL/DarkNeuron.B!dha.",
+      "classification": "cleanup_verified",
+      "confidence": "high",
+      "artifacts": ["Trojan:MSIL/DarkNeuron.B!dha", "Quarantined", "Threat ID 2147724727"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_29_Defender_DarkNeuron_Quarantined_RecycleBin.png", "case-studies/turla-neuron/screenshots/TurlaNeuron_30_Defender_DarkNeuron_Detection_and_Remediation_History.png"],
+      "limitations": ["Random Defender quarantine filenames and Recycle Bin paths are temporary artifacts, not malware IOCs."]
+    },
+    {
+      "id": "DYN-014",
+      "category": "defender_remediation",
+      "summary": "Defender history recorded successful handling with ActionSuccess=True and ThreatStatusErrorCode=0.",
+      "classification": "cleanup_verified",
+      "confidence": "high",
+      "artifacts": ["ActionSuccess=True", "ThreatStatusErrorCode=0", "Threat ID 2147724727"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_30_Defender_DarkNeuron_Detection_and_Remediation_History.png"],
+      "limitations": ["Historical detections remaining visible do not mean the malware remained active."]
+    },
+    {
+      "id": "DYN-015",
+      "category": "cleanup_verification",
+      "summary": "The former sample path no longer existed after remediation.",
+      "classification": "cleanup_verified",
+      "confidence": "high",
+      "artifacts": ["Sample present=False"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_31_Defender_DarkNeuron_Inactive_Cleanup_Verification.png"],
+      "limitations": ["This finding describes the restored or cleaned state."]
+    },
+    {
+      "id": "DYN-016",
+      "category": "cleanup_verification",
+      "summary": "MSExchangeService was absent after remediation.",
+      "classification": "cleanup_verified",
+      "confidence": "high",
+      "artifacts": ["MSExchangeService absent"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_31_Defender_DarkNeuron_Inactive_Cleanup_Verification.png"],
+      "limitations": ["This finding describes the restored or cleaned state."]
+    },
+    {
+      "id": "DYN-017",
+      "category": "cleanup_verification",
+      "summary": "The final targeted Defender scan reported IsActive=False and no currently affected resources.",
+      "classification": "cleanup_verified",
+      "confidence": "high",
+      "artifacts": ["IsActive=False", "DidThreatExecute=False", "no affected resources"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_32_Defender_Final_Scan_Threat_Inactive.png"],
+      "limitations": ["DidThreatExecute=False in the cleaned Defender record does not negate the earlier intentional laboratory execution."]
+    }
+  ],
+  "service_activity": ["DYN-004", "DYN-005", "DYN-006", "DYN-007"],
+  "registry_activity": ["DYN-006", "DYN-007", "DYN-009"],
+  "file_activity": ["DYN-003"],
+  "listener_activity": ["DYN-010"],
+  "storage_activity": ["DYN-008"],
+  "network_activity": ["DYN-011"],
+  "remediation": ["DYN-013", "DYN-014", "DYN-015", "DYN-016", "DYN-017"],
+  "not_observed": [
+    {"behavior": "External C2 connection", "status": "not_observed"},
+    {"behavior": "External C2 IP address", "status": "not_observed"},
+    {"behavior": "External C2 domain", "status": "not_observed"},
+    {"behavior": "Inbound attacker request", "status": "not_observed"},
+    {"behavior": "Remote attacker command execution", "status": "not_observed"},
+    {"behavior": "File upload command", "status": "not_observed"},
+    {"behavior": "File download command", "status": "not_observed"},
+    {"behavior": "Data exfiltration", "status": "not_observed"},
+    {"behavior": "Lateral movement", "status": "not_observed"},
+    {"behavior": "Production-system impact", "status": "not_observed"}
+  ],
+  "evidence_limitations": [
+    "No usable raw malware-run PML remained.",
+    "No external attacker requests were received.",
+    "No external C2 infrastructure was identified.",
+    "No remote command execution or file-transfer command was observed.",
+    "No hidden encrypted malware configuration was confirmed dynamically.",
+    "The ZoneMap pre-execution baseline was unavailable.",
+    "The host-specific directory was empty.",
+    "Process IDs, the MachineGuid, laboratory paths, and timestamps are environmental."
+  ],
+  "evidence_files": [
+    "case-studies/turla-neuron/results/noriben/turla_neuron_noriben_analysis.md",
+    "case-studies/turla-neuron/results/dnspy/turla_neuron_dnspy_analysis.md",
+    "case-studies/turla-neuron/results/static/turla_neuron_static_analysis.md",
+    "case-studies/turla-neuron/reports/incident-report.md",
+    "case-studies/turla-neuron/detections/sigma/win_system_turla_neuron_service_install.yml",
+    "case-studies/turla-neuron/screenshots/Pre-Noriben_Turla_Neuron_Snapshot.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_22_Dynamic_ZoneMap_Registry_Modifications.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_23_Noriben_Filtered_Timeline_Activity.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_24_Dynamic_HostSpecific_SYSTEM_Storage_Directory.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_25_Dynamic_HTTPsys_EWS_Exchange_URL_Registration.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_26_Dynamic_Installer_Log_Service_Success.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_27_Dynamic_MSExchangeService_EventLog_Source.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_28_Dynamic_Service_Registry_Persistence.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_29_Defender_DarkNeuron_Quarantined_RecycleBin.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_30_Defender_DarkNeuron_Detection_and_Remediation_History.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_31_Defender_DarkNeuron_Inactive_Cleanup_Verification.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_32_Defender_Final_Scan_Threat_Inactive.png"
+  ]
+}

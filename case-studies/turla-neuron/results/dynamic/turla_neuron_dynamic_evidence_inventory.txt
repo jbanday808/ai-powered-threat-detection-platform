@@ -1,0 +1,35 @@
+Turla Neuron / DarkNeuron Dynamic Evidence Inventory
+Generated: 2026-07-22
+Scope: Source evidence referenced by the consolidated dynamic-analysis package.
+
+Fields: relative path | size (bytes) | SHA-256 | file type | evidence source | purpose | classification | usability status
+
+1. case-studies/turla-neuron/results/noriben/turla_neuron_noriben_analysis.md | 16963 | e48754a407678312771cfd183087269872a9999dd7a1845433c1e75ef92fe2ad | Markdown/UTF-8 | processed Noriben analysis | Summarizes timeline, baseline, background noise, and raw-PML limitation | noriben | usable_supporting
+2. case-studies/turla-neuron/results/dnspy/turla_neuron_dnspy_analysis.md | 20320 | 0f096040b980ce5f32cee0943aa2bbfd819bb74898780c92c712a2ba8dea029a | Markdown/UTF-8 | dnSpy static analysis | Corroborates code capabilities without presenting them as runtime observations | static_corroboration | usable_supporting
+3. case-studies/turla-neuron/results/static/turla_neuron_static_analysis.md | 17288 | 573017513632799ff56d2ed5706c4e0a489ece6952199bdcc83aee0476cc6b5c | Markdown/UTF-8 | static-analysis summary | Confirms sample identity and separates static capability from dynamic behavior | static_corroboration | usable_supporting
+4. case-studies/turla-neuron/reports/incident-report.md | 42637 | 661810c68473f4cafdfe5b65e278da5316d4443309da05615a1930a0a56677dc | Markdown/UTF-8 | consolidated incident report | Supplies laboratory context and correlated observations | powershell | usable_supporting
+5. case-studies/turla-neuron/detections/sigma/win_system_turla_neuron_service_install.yml | 1751 | eeb5084f83671007e47e1b68284312d0c282a6d112347057d4c5f2731ffb1254 | YAML/ASCII | Sigma detection | Connects observed service installation to Event ID 7045 detection | static_corroboration | usable_supporting
+6. case-studies/turla-neuron/screenshots/Pre-Noriben_Turla_Neuron_Snapshot.png | 21684 | b86d5455c87cf0f4471adb3f8d84ee4e079f28d3461e6699084bcff8e0709ace | PNG 740x291 RGBA | VMware screenshot | Documents pre-execution restore point | screenshot | usable_primary
+7. case-studies/turla-neuron/screenshots/TurlaNeuron_22_Dynamic_ZoneMap_Registry_Modifications.png | 26364 | dc10dcaedf3d500efb14f251be3601ad70d1417a05582e120fd689f53f0277a7 | PNG 754x213 RGBA | Registry/PowerShell screenshot | Shows four ZoneMap values written during monitoring | registry | usable_primary
+8. case-studies/turla-neuron/screenshots/TurlaNeuron_23_Noriben_Filtered_Timeline_Activity.png | 187565 | 0de7e7d2a195e8b49798776855fcc0127f517f6b73083bf73cb015d3de1c7a25 | PNG 1363x857 RGBA | Noriben timeline screenshot | Correlates executable with installer and Registry activity | noriben | usable_primary
+9. case-studies/turla-neuron/screenshots/TurlaNeuron_24_Dynamic_HostSpecific_SYSTEM_Storage_Directory.png | 18556 | e83c0d86f8c7d02772c5cbbc7da714247a3dfeed015884bd311240009fa51439 | PNG 712x219 RGBA | filesystem/PowerShell screenshot | Shows empty MachineGuid-derived LocalSystem storage directory | powershell | usable_primary
+10. case-studies/turla-neuron/screenshots/TurlaNeuron_25_Dynamic_HTTPsys_EWS_Exchange_URL_Registration.png | 74853 | 413edd3d4b9fcd1cf505b1575ac620b90c6429127842c8516a3ddc6f184b1ebc | PNG 992x1056 RGBA | HTTP.sys service-state screenshot | Shows active EWS listener queue and zero request counters | http_sys | usable_primary
+11. case-studies/turla-neuron/screenshots/TurlaNeuron_26_Dynamic_Installer_Log_Service_Success.png | 42333 | a2d05f1b61781ba09afe5418191d3237837fd46e15048a0ba78da1bbb1f2f09b | PNG 777x378 RGBA | .NET installer-log screenshot | Confirms successful service installation, Event Log source creation, and commit | installer_log | usable_primary
+12. case-studies/turla-neuron/screenshots/TurlaNeuron_27_Dynamic_MSExchangeService_EventLog_Source.png | 36515 | f9d85d62a2e041b35a3b74f1f69b7795163d14441e6149ddb9f697dda06313f1 | PNG 951x312 RGBA | Registry/PowerShell screenshot | Shows Application Event Log source configuration | registry | usable_primary
+13. case-studies/turla-neuron/screenshots/TurlaNeuron_28_Dynamic_Service_Registry_Persistence.png | 48485 | 198202a21eb94a9bd8329180a301001fedf10353c19feb9988ff01b9cae1b2e2 | PNG 955x490 RGBA | service Registry screenshot | Shows automatic LocalSystem service persistence and ImagePath | registry | usable_primary
+14. case-studies/turla-neuron/screenshots/TurlaNeuron_29_Defender_DarkNeuron_Quarantined_RecycleBin.png | 25313 | 96301419dec124ad5fc0bb7559f03d2f42b544a5a1cf3008683ab551233aba1a | PNG 368x316 RGBA | Microsoft Defender screenshot | Shows DarkNeuron classification and quarantine status | defender | usable_primary
+15. case-studies/turla-neuron/screenshots/TurlaNeuron_30_Defender_DarkNeuron_Detection_and_Remediation_History.png | 101845 | 2656b822304a05d60f8362a3b3828f06ad33400d41abab206056843013653441 | PNG 973x1108 RGBA | Microsoft Defender screenshot | Shows successful remediation history and Threat ID | defender | usable_primary
+16. case-studies/turla-neuron/screenshots/TurlaNeuron_31_Defender_DarkNeuron_Inactive_Cleanup_Verification.png | 77190 | a09f23384c240189ea2adcf5322ec84831d1d006366841c0fb6d4ba8b6b9eb21 | PNG 982x672 RGBA | PowerShell/Defender screenshot | Confirms sample and service absence and inactive threat state | defender | usable_primary
+17. case-studies/turla-neuron/screenshots/TurlaNeuron_32_Defender_Final_Scan_Threat_Inactive.png | 36031 | f7e1b860360296d069235df11da8c056beb5ed2c793c6b0d0deaec18d07895ab | PNG 878x293 RGBA | Microsoft Defender screenshot | Confirms final targeted scan and inactive state | defender | usable_primary
+18. retained malware-run Procmon PML (not present in repository) | reported approximately 976 | unavailable | PML | Procmon raw capture | Intended raw malware-run event evidence | noriben | corrupted_or_unusable
+
+Inventory summary
+- Records inventoried: 18
+- Present source files: 17
+- Usable primary evidence files: 12
+- Usable supporting files: 5
+- Missing or unusable raw captures: 1
+- Separate results/network evidence found: none
+- Separate results/sysmon evidence found: none
+
+Integrity note: Hashes describe the referenced source files at inventory time. No source evidence was copied into results/dynamic or modified. This inventory and the validation report are administrative outputs and are not self-hashed.

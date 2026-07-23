@@ -1,0 +1,13 @@
+hunt_id,title,priority,status,host_scope,start_time,end_time,data_sources,query_reference,findings_count,outcome,analyst,notes
+HUNT-001,Exact Sample Present,Critical,not_started,<HOST_SCOPE>,<HUNT_START_TIME>,<HUNT_END_TIME>,File inventory and hashes,Exact File Hunt,,,<ANALYST>,No production hunt results recorded
+HUNT-002,Turla Neuron Service Persistence,High,not_started,<HOST_SCOPE>,<HUNT_START_TIME>,<HUNT_END_TIME>,Windows System log and service inventory,Service Installation Hunt,,,<ANALYST>,Correlate Event ID 7045 with filename
+HUNT-003,Exchange-Themed Service on Non-Exchange Host,High,not_started,<HOST_SCOPE>,<HUNT_START_TIME>,<HUNT_END_TIME>,Service inventory and CMDB,Exchange-Themed Service Hunt,,,<ANALYST>,Verify authorized Exchange role
+HUNT-004,Suspicious Service Process Tree,High,not_started,<HOST_SCOPE>,<HUNT_START_TIME>,<HUNT_END_TIME>,EDR process telemetry,Process Tree Hunt,,,<ANALYST>,services.exe parent alone is normal
+HUNT-005,HTTP.sys EWS Listener,High,not_started,<HOST_SCOPE>,<HUNT_START_TIME>,<HUNT_END_TIME>,HTTP.sys state and listener inventory,HTTP.sys Listener Hunt,,,<ANALYST>,PID 4 and port 443 alone are not malicious
+HUNT-006,Service Registry Persistence,High,not_started,<HOST_SCOPE>,<HUNT_START_TIME>,<HUNT_END_TIME>,Registry telemetry and endpoint state,Service Registry Hunt,,,<ANALYST>,Review ImagePath Start Type and ObjectName
+HUNT-007,Event Log Source Registration,Medium,not_started,<HOST_SCOPE>,<HUNT_START_TIME>,<HUNT_END_TIME>,Registry telemetry and endpoint state,Event Log Source Hunt,,,<ANALYST>,Correlate with service and file
+HUNT-008,MachineGuid-Based Temporary Storage,Medium,not_started,<HOST_SCOPE>,<HUNT_START_TIME>,<HUNT_END_TIME>,File telemetry and endpoint state,Temporary Storage Hunt,,,<ANALYST>,GUID directories are common
+HUNT-009,Protocol Artifacts,High,not_started,<HOST_SCOPE>,<HUNT_START_TIME>,<HUNT_END_TIME>,Endpoint memory proxy reverse-proxy or decrypted logs,Protocol Artifact Hunt,,,<ANALYST>,Require multiple fields or known GUID
+HUNT-010,Defender DarkNeuron Detection,High,not_started,<HOST_SCOPE>,<HUNT_START_TIME>,<HUNT_END_TIME>,Microsoft Defender history,Defender History Hunt,,,<ANALYST>,Distinguish active and historical records
+HUNT-011,Installer Artifacts,Medium,not_started,<HOST_SCOPE>,<HUNT_START_TIME>,<HUNT_END_TIME>,File telemetry and endpoint inventory,Installer Artifact Hunt,,,<ANALYST>,Normal .NET installation can create similar files
+HUNT-012,Supporting ZoneMap Activity,Low,not_started,<HOST_SCOPE>,<HUNT_START_TIME>,<HUNT_END_TIME>,Registry telemetry,ZoneMap Supporting Hunt,,,<ANALYST>,Values are supporting context only

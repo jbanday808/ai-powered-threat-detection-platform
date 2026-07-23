@@ -1,0 +1,83 @@
+Turla Neuron / DarkNeuron Dynamic Package Validation
+Validation date: 2026-07-22
+
+Package checks
+1. Markdown analysis file exists: PASS
+2. Timeline CSV exists: PASS
+3. JSON findings file exists: PASS
+4. Evidence inventory exists: PASS
+5. JSON parses successfully: PASS
+6. Every CSV row has exactly twelve columns: PASS (26 data rows)
+7. No duplicate CSV rows exist: PASS (0 duplicates)
+8. JSON finding IDs are unique: PASS (17 unique IDs)
+9. No duplicate JSON finding objects exist: PASS (0 duplicates)
+10. Every Markdown image path exists: PASS (12 of 12)
+11. SHA-256 appears in Markdown and JSON: PASS
+12. Required core dynamic findings appear: PASS
+    - MSExchangeService
+    - Microsoft Exchange Service
+    - Microsoft.Exchange.Service.exe
+    - LocalSystem
+    - Automatic
+    - HTTPS://*:443/EWS/EXCHANGE/
+    - C:\Windows\Temp\{GUID}
+    - Microsoft.Exchange.Service.InstallLog
+    - Microsoft.Exchange.Service.InstallState
+    - EventLog\Application\MSExchangeService
+    - ZoneMap
+    - AutoDetect
+    - IntranetName
+    - ProxyBypass
+    - UNCAsIntranet
+13. PML evidence limitation is documented: PASS
+14. No external C2 IP or domain was invented: PASS
+15. No successful attacker command execution is claimed: PASS
+16. No data exfiltration is claimed: PASS
+17. No lateral movement is claimed: PASS
+18. No process ID is promoted as a universal IOC: PASS
+19. Exact laboratory MachineGuid is not promoted as a universal IOC: PASS
+20. Defender quarantine filename is not promoted as an IOC: PASS
+21. PID 4 is not classified as the malware process: PASS
+22. Static capabilities are not misrepresented as dynamically observed: PASS
+23. No malware executable exists in results/dynamic: PASS
+24. .gitkeep was removed only after all five package files existed: PASS
+25. Referenced source evidence files remain unmodified: PASS
+
+Cross-file and safety checks
+- JSON parse command: PASS
+- CSV header columns: 12
+- CSV data rows: 26
+- JSON findings: 17
+- Markdown local image references: 12
+- Unique screenshots embedded: 12
+- Broken image paths: 0
+- Markdown repository-relative document links: 6 references / 5 unique paths
+- Broken repository-relative document links: 0
+- Duplicate CSV rows: 0
+- Duplicate JSON IDs: 0
+- Duplicate JSON finding objects: 0
+- Unsupported affirmative claims (attacker communication, C2 connection, exfiltration, production compromise, customer impact, lateral movement): 0
+- Raw PML usability: corrupted_or_unusable
+- Evidence inventory records: 18 (17 present source files and 1 missing/unusable raw-capture record)
+- Source evidence integrity: the recorded SHA-256 values still match all 17 present source files
+
+Not-observed behaviors explicitly documented in Markdown and JSON
+- External C2 connection
+- External C2 IP address
+- External C2 domain
+- Inbound attacker request
+- Remote attacker command execution
+- File upload command
+- File download command
+- Data exfiltration
+- Lateral movement
+- Production-system impact
+
+Evidence gaps
+- The retained malware-run PML was unavailable in the repository and reported as too small to contain exportable events.
+- No separate network or Sysmon evidence package was present.
+- No pre-execution ZoneMap Registry export was retained.
+- No external requests or communications occurred in the isolated run.
+- No remote command, file-transfer, or hidden encrypted-configuration activity was observed.
+
+Final result: PASS

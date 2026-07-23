@@ -1,0 +1,301 @@
+{
+  "name": "Turla Neuron Sample-Specific ATT&CK Mapping",
+  "description": "Direct sample mappings and explicitly separated candidates for Microsoft.Exchange.Service.exe. No group-level techniques are included.",
+  "domain": "enterprise-attack",
+  "versions": {
+    "layer": "4.5",
+    "attack": "19",
+    "navigator": "5.3.2"
+  },
+  "filters": {
+    "platforms": [
+      "Windows"
+    ]
+  },
+  "sorting": 3,
+  "layout": {
+    "layout": "side",
+    "aggregateFunction": "average",
+    "showID": true,
+    "showName": true,
+    "showAggregateScores": false,
+    "countUnscored": false
+  },
+  "hideDisabled": false,
+  "techniques": [
+    {
+      "techniqueID": "T1543.003",
+      "score": 100,
+      "color": "#8b0000",
+      "comment": "Classification: statically_and_dynamically_confirmed; confidence: high; evidence: ../results/dnspy/turla_neuron_dnspy_analysis.md; ../results/dynamic/turla_neuron_dynamic_analysis.md; ../screenshots/TurlaNeuron_26_Dynamic_Installer_Log_Service_Success.png; ../screenshots/TurlaNeuron_28_Dynamic_Service_Registry_Persistence.png; detection: ../detections/sigma/win_system_turla_neuron_service_install.yml; ../detections/yara/turla_neuron_v2.yar; ../detections/soar/README.md; ../detections/threat-hunting/README.md; limitation: installed, started, automatic, LocalSystem",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "scope",
+          "value": "sample"
+        },
+        {
+          "name": "mapping_id",
+          "value": "SAMPLE-001"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1036.004",
+      "score": 100,
+      "color": "#8b0000",
+      "comment": "Classification: statically_and_dynamically_confirmed; confidence: high; evidence: ../results/dnspy/turla_neuron_dnspy_analysis.md; ../results/dynamic/turla_neuron_dynamic_analysis.md; ../screenshots/TurlaNeuron_28_Dynamic_Service_Registry_Persistence.png; detection: ../detections/yara/turla_neuron_v2.yar; ../detections/soar/README.md; ../detections/threat-hunting/README.md; limitation: Exchange-themed service identity observed",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "scope",
+          "value": "sample"
+        },
+        {
+          "name": "mapping_id",
+          "value": "SAMPLE-002"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1059.003",
+      "score": 50,
+      "color": "#f6c85f",
+      "comment": "Classification: capability_only; confidence: high; evidence: ../results/dnspy/turla_neuron_dnspy_analysis.md; ../screenshots/TurlaNeuron_12_dnSpy_CommandScript_Type0_Command_Execution.png; ../screenshots/TurlaNeuron_13_dnSpy_CommandScript_Type0_Execution_and_Output_Capture.png; detection: ../detections/yara/turla_neuron_v2.yar; ../detections/threat-hunting/README.md; limitation: not exercised through an attacker request",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "scope",
+          "value": "sample"
+        },
+        {
+          "name": "mapping_id",
+          "value": "SAMPLE-003"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1112",
+      "score": 100,
+      "color": "#8b0000",
+      "comment": "Classification: statically_and_dynamically_confirmed; confidence: high; evidence: ../results/dnspy/turla_neuron_dnspy_analysis.md; ../results/dynamic/turla_neuron_dynamic_analysis.md; ../results/noriben/turla_neuron_noriben_analysis.md; ../screenshots/TurlaNeuron_22_Dynamic_ZoneMap_Registry_Modifications.png; ../screenshots/TurlaNeuron_27_Dynamic_MSExchangeService_EventLog_Source.png; ../screenshots/TurlaNeuron_28_Dynamic_Service_Registry_Persistence.png; detection: ../detections/sigma/win_system_turla_neuron_service_install.yml; ../detections/soar/README.md; ../detections/threat-hunting/README.md; limitation: service/Event Log/ZoneMap activity observed; hidden configuration not observed",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "scope",
+          "value": "sample"
+        },
+        {
+          "name": "mapping_id",
+          "value": "SAMPLE-004"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1012",
+      "score": 75,
+      "color": "#e67e22",
+      "comment": "Classification: confirmed_statically; confidence: high; evidence: ../results/dnspy/turla_neuron_dnspy_analysis.md; ../screenshots/TurlaNeuron_16_dnSpy_Config_Registry_Search_and_Decryption.png; detection: ../detections/threat-hunting/README.md; limitation: not confirmed dynamically",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "scope",
+          "value": "sample"
+        },
+        {
+          "name": "mapping_id",
+          "value": "SAMPLE-005"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1071.001",
+      "score": 100,
+      "color": "#8b0000",
+      "comment": "Classification: statically_and_dynamically_confirmed; confidence: high; evidence: ../results/dnspy/turla_neuron_dnspy_analysis.md; ../results/network/turla_neuron_network_analysis.md; ../screenshots/TurlaNeuron_08_dnSpy_Service_OnStart_HTTPS_Listener.png; ../screenshots/TurlaNeuron_25_Dynamic_HTTPsys_EWS_Exchange_URL_Registration.png; detection: ../detections/yara/turla_neuron_v2.yar; ../detections/soar/README.md; ../detections/threat-hunting/README.md; limitation: local listener observed; zero requests; no external session",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "scope",
+          "value": "sample"
+        },
+        {
+          "name": "mapping_id",
+          "value": "SAMPLE-006"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1573.001",
+      "score": 75,
+      "color": "#e67e22",
+      "comment": "Classification: confirmed_statically; confidence: high; evidence: ../results/dnspy/turla_neuron_dnspy_analysis.md; ../screenshots/TurlaNeuron_19_dnSpy_RC4_EncryptScript_Implementation.png; detection: ../detections/yara/turla_neuron_v2.yar; ../detections/threat-hunting/README.md; limitation: no encrypted attacker session captured",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "scope",
+          "value": "sample"
+        },
+        {
+          "name": "mapping_id",
+          "value": "SAMPLE-007"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1573.002",
+      "score": 75,
+      "color": "#e67e22",
+      "comment": "Classification: confirmed_statically; confidence: high; evidence: ../results/dnspy/turla_neuron_dnspy_analysis.md; ../results/reverse-engineering/turla_neuron_reverse_engineering.md; detection: ../detections/yara/turla_neuron_v2.yar; ../detections/threat-hunting/README.md; limitation: no RSA session captured",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "scope",
+          "value": "sample"
+        },
+        {
+          "name": "mapping_id",
+          "value": "SAMPLE-008"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1132.001",
+      "score": 75,
+      "color": "#e67e22",
+      "comment": "Classification: confirmed_statically; confidence: high; evidence: ../results/dnspy/turla_neuron_dnspy_analysis.md; ../results/network/turla_neuron_network_analysis.md; detection: ../detections/yara/turla_neuron_v2.yar; ../detections/threat-hunting/README.md; limitation: no encoded request observed on wire",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "scope",
+          "value": "sample"
+        },
+        {
+          "name": "mapping_id",
+          "value": "SAMPLE-009"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1140",
+      "score": 75,
+      "color": "#e67e22",
+      "comment": "Classification: confirmed_statically; confidence: high; evidence: ../results/dnspy/turla_neuron_dnspy_analysis.md; ../results/reverse-engineering/turla_neuron_reverse_engineering.md; detection: ../detections/yara/turla_neuron_v2.yar; ../detections/threat-hunting/README.md; limitation: no attacker payload received",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "scope",
+          "value": "sample"
+        },
+        {
+          "name": "mapping_id",
+          "value": "SAMPLE-010"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1105",
+      "score": 50,
+      "color": "#f6c85f",
+      "comment": "Classification: capability_only; confidence: medium; evidence: ../results/dnspy/turla_neuron_dnspy_analysis.md; ../screenshots/TurlaNeuron_14_dnSpy_CommandScript_Types1_2_File_Transfer.png; detection: ../detections/yara/turla_neuron_v2.yar; ../detections/threat-hunting/README.md; limitation: not observed; no network file transfer",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "scope",
+          "value": "sample"
+        },
+        {
+          "name": "mapping_id",
+          "value": "SAMPLE-011"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1005",
+      "score": 25,
+      "color": "#b7b7b7",
+      "comment": "Classification: candidate_mapping; confidence: medium; evidence: ../results/dnspy/turla_neuron_dnspy_analysis.md; ../screenshots/TurlaNeuron_14_dnSpy_CommandScript_Types1_2_File_Transfer.png; detection: ../detections/threat-hunting/README.md; limitation: not exercised",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "scope",
+          "value": "candidate"
+        },
+        {
+          "name": "mapping_id",
+          "value": "CAND-001"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1074.001",
+      "score": 25,
+      "color": "#b7b7b7",
+      "comment": "Classification: candidate_mapping; confidence: low; evidence: ../results/dynamic/turla_neuron_dynamic_analysis.md; ../screenshots/TurlaNeuron_24_Dynamic_HostSpecific_SYSTEM_Storage_Directory.png; detection: ../detections/threat-hunting/README.md; limitation: directory observed empty; staging not observed",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "scope",
+          "value": "candidate"
+        },
+        {
+          "name": "mapping_id",
+          "value": "CAND-002"
+        }
+      ]
+    }
+  ],
+  "gradient": {
+    "colors": [
+      "#b7b7b7",
+      "#f6c85f",
+      "#e67e22",
+      "#8b0000"
+    ],
+    "minValue": 0,
+    "maxValue": 100
+  },
+  "legendItems": [
+    {
+      "label": "Statically and dynamically confirmed",
+      "color": "#8b0000"
+    },
+    {
+      "label": "Confirmed statically",
+      "color": "#e67e22"
+    },
+    {
+      "label": "Capability only",
+      "color": "#f6c85f"
+    },
+    {
+      "label": "Candidate",
+      "color": "#b7b7b7"
+    }
+  ],
+  "metadata": [
+    {
+      "name": "incident_id",
+      "value": "MAL-2026-0721-NEURON"
+    },
+    {
+      "name": "sample_sha256",
+      "value": "d1d7a96fcadc137e80ad866c838502713db9cdfe59939342b8e3beacf9c7fe29"
+    },
+    {
+      "name": "generated",
+      "value": "2026-07-22"
+    }
+  ],
+  "links": [
+    {
+      "label": "Human-readable mapping",
+      "url": "turla_neuron_attack_mapping.md"
+    }
+  ],
+  "showTacticRowBackground": false,
+  "tacticRowBackground": "#dddddd",
+  "selectTechniquesAcrossTactics": true,
+  "selectSubtechniquesWithParent": false,
+  "selectVisibleTechniques": false
+}

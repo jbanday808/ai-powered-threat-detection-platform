@@ -1,0 +1,74 @@
+{
+  "case": {
+    "incident_id": "MAL-2026-0721-NEURON",
+    "family": "Turla Neuron",
+    "alias": "DarkNeuron",
+    "author": "James Banday",
+    "date_created": "2026-07-22"
+  },
+  "alert_sources": [
+    {"id": "SRC-001", "type": "sigma", "name": "Service installation", "reference": "../sigma/win_system_turla_neuron_service_install.yml", "confidence": "high"},
+    {"id": "SRC-002", "type": "yara", "name": "Turla_Neuron_Exact", "reference": "../yara/turla_neuron_v2.yar", "confidence": "high"},
+    {"id": "SRC-003", "type": "yara", "name": "Turla_Neuron_Behavior", "reference": "../yara/turla_neuron_v2.yar", "confidence": "medium"},
+    {"id": "SRC-004", "type": "antivirus", "name": "Trojan:MSIL/DarkNeuron.B!dha", "reference": null, "confidence": "high"},
+    {"id": "SRC-005", "type": "edr", "name": "Process or service alert", "reference": null, "confidence": "variable"},
+    {"id": "SRC-006", "type": "host_telemetry", "name": "HTTP.sys or local-listener telemetry", "reference": null, "confidence": "medium"},
+    {"id": "SRC-007", "type": "analyst_submission", "name": "IOC match", "reference": "../../iocs/turla_neuron_iocs.md", "confidence": "variable"}
+  ],
+  "normalized_fields": [
+    {"canonical": "endpoint.id", "accepted": ["host_id", "device_id", "computer", "asset_id"], "required": false},
+    {"canonical": "endpoint.hostname", "accepted": ["hostname", "computer_name", "device_name"], "required": false},
+    {"canonical": "file.name", "accepted": ["filename", "file_name", "image_name"], "required": false},
+    {"canonical": "file.path", "accepted": ["path", "file_path", "image_path"], "required": false},
+    {"canonical": "file.sha256", "accepted": ["sha256", "file_hash", "hash_sha256"], "required": false},
+    {"canonical": "service.name", "accepted": ["service_name", "ServiceName"], "required": false},
+    {"canonical": "service.display_name", "accepted": ["display_name", "DisplayName"], "required": false},
+    {"canonical": "detection.name", "accepted": ["rule_name", "threat_name", "alert_name"], "required": true},
+    {"canonical": "detection.time", "accepted": ["timestamp", "event_time", "created_at"], "required": true}
+  ],
+  "indicators": [
+    {"type": "sha256", "value": "d1d7a96fcadc137e80ad866c838502713db9cdfe59939342b8e3beacf9c7fe29", "weight": 50, "scope": "sample-specific"},
+    {"type": "filename", "value": "Microsoft.Exchange.Service.exe", "weight": 15, "scope": "supporting"},
+    {"type": "service_name", "value": "MSExchangeService", "weight": 25, "scope": "family-associated"},
+    {"type": "listener_prefix", "value": "https://*:443/ews/exchange/", "weight": 25, "scope": "local-host behavior"},
+    {"type": "uri_path", "value": "/ews/exchange/", "weight": 15, "scope": "supporting"},
+    {"type": "validation_guid", "value": "f2949bab-240a-46ca-a455-6f504367ba7d", "weight": 20, "scope": "embedded identifier"},
+    {"type": "fallback_guid", "value": "8d963325-01b8-4671-8e82-d0904275ab06", "weight": 20, "scope": "embedded identifier"}
+  ],
+  "action_levels": {
+    "automatic_read_only": {
+      "approval_required": false,
+      "modifies_endpoint": false,
+      "examples": ["normalize", "enrich", "collect metadata", "calculate severity", "notify"]
+    },
+    "approval_required_containment": {
+      "approval_required": true,
+      "modifies_endpoint": true,
+      "examples": ["isolate", "block", "stop service", "suspend", "quarantine", "temporary firewall restriction"]
+    },
+    "approval_required_remediation": {
+      "approval_required": true,
+      "modifies_endpoint": true,
+      "examples": ["delete confirmed malware", "remove confirmed service", "restore", "reimage"]
+    }
+  },
+  "outcome_mapping": [
+    {"outcome": "true_positive_active", "criteria": "Correlated evidence shows active malicious file, service, persistence, or listener."},
+    {"outcome": "true_positive_contained", "criteria": "Active threat confirmed and approved containment completed."},
+    {"outcome": "true_positive_remediated", "criteria": "Approved remediation completed and cleanup verification passed."},
+    {"outcome": "historical_detection_only", "criteria": "Historical records exist but current file, service, listener association, and active threat are absent."},
+    {"outcome": "authorized_lab_activity", "criteria": "Activity is confirmed as approved isolated analysis or testing."},
+    {"outcome": "legitimate_exchange_service", "criteria": "Asset and software provenance establish an authorized Exchange service."},
+    {"outcome": "false_positive", "criteria": "Evidence disproves the suspected malicious match."},
+    {"outcome": "insufficient_evidence", "criteria": "Available evidence cannot support a reliable disposition."}
+  ],
+  "safety_assertions": [
+    "No listener interaction is performed.",
+    "No protocol message is generated.",
+    "Port 443 alone does not increase severity.",
+    "PID 4/System is not classified as malware.",
+    "Historical Defender records alone do not prove active infection.",
+    "Permanent deletion requires evidence preservation and explicit approval.",
+    "Exchange role and software provenance are checked before service action."
+  ]
+}

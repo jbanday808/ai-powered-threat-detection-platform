@@ -1,0 +1,61 @@
+Turla Neuron / DarkNeuron Procmon Package Validation
+Validation date: 2026-07-22
+
+Directory transition
+1. results/sysmon/ was empty or contained only .gitkeep before renaming: PASS (completely empty)
+2. results/procmon/ exists: PASS
+3. Markdown analysis exists: PASS
+4. CSV findings file exists: PASS
+5. JSON findings file exists: PASS
+6. Evidence inventory exists: PASS
+7. JSON parses successfully: PASS
+8. Every CSV row contains exactly eleven columns: PASS (16 data rows)
+9. CSV contains no duplicate rows: PASS (0 duplicates)
+10. JSON IDs are unique: PASS (24 unique IDs)
+11. Referenced screenshots and links exist: PASS (14 references, 11 unique paths, 0 broken)
+12. Sample SHA-256 appears in Markdown and JSON: PASS
+13. PML SHA-256 appears in Markdown and JSON: PASS
+14. PML size is documented as 976 bytes: PASS
+15. Exported event count is documented as zero: PASS
+16. PML is explicitly classified as unusable: PASS (corrupted_or_unusable)
+17. No raw events are invented: PASS
+18. No external C2 address is invented: PASS
+19. No successful attacker command execution is claimed: PASS
+20. No data exfiltration is claimed: PASS
+21. No process ID is promoted as a universal IOC: PASS
+22. Background processes are not classified as Turla Neuron: PASS
+23. No malware executable exists under results/procmon/: PASS
+24. .gitkeep was removed only after package creation: PASS (not applicable; the original empty sysmon directory contained no .gitkeep)
+25. Existing source evidence remained unchanged: PASS
+
+Structural results
+- Markdown files: 1
+- CSV findings: 16
+- JSON finding/recovery/background IDs: 24
+- Evidence inventory records: 13
+- Present inventory source files: 11
+- Missing or unusable raw/recovery records: 2
+- Markdown image references: 1
+- Markdown local references: 14
+- Broken local paths: 0
+- Duplicate CSV rows: 0
+- Duplicate JSON IDs: 0
+- Malware-run PML: corrupted_or_unusable
+- Baseline PML: reported usable, but not retained in the repository
+- References changed from results/sysmon/ to results/procmon/: 0 (none existed)
+
+Evidence-boundary checks
+- Processed Noriben findings are not represented as recovered raw PML events: PASS
+- Supporting Registry and installer screenshots are labeled as separate Windows evidence: PASS
+- Procmon exit code 0 is not treated as proof of source events: PASS
+- Possible PML failure causes are labeled as possibilities: PASS
+- No attacker request, external C2 infrastructure, or observed exfiltration is claimed: PASS
+
+Evidence limitations
+- The 976-byte PML and approximately 124-byte zero-event CSV are absent from the repository.
+- The recorded PML SHA-256 cannot be recalculated from a present file.
+- The baseline PML and baseline Noriben outputs are not retained.
+- No raw malware-run process, file, Registry, stack-trace, or complete timing stream is recoverable.
+- The exact PML failure mechanism is unknown.
+
+Final result: PASS

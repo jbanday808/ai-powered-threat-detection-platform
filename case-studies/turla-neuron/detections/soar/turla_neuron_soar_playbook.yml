@@ -1,0 +1,313 @@
+name: Turla Neuron Detection and Response
+id: 3998ee56-a66e-43f4-a6b9-9056c8e91147
+version: 1.0
+status: test
+author: James Banday
+date_created: 2026-07-22
+description: >
+  Vendor-neutral SOAR playbook for triaging and responding to
+  Turla Neuron or DarkNeuron-related alerts.
+case:
+  incident_id: MAL-2026-0721-NEURON
+  family: Turla Neuron
+  alias: DarkNeuron
+inputs:
+  - name: alert
+    required: true
+    description: Normalized or raw security alert from a supported source.
+  - name: endpoint
+    required: false
+    description: Endpoint identifier supplied by the organization's approved connector.
+  - name: file
+    required: false
+    description: File path, name, and hashes when present in the source alert.
+  - name: asset_context
+    required: false
+    description: CMDB role, owner, criticality, and authorized-lab status.
+  - name: analyst_context
+    required: false
+    description: Analyst notes and prior case disposition.
+constants:
+  sample_filename: Microsoft.Exchange.Service.exe
+  sha256: d1d7a96fcadc137e80ad866c838502713db9cdfe59939342b8e3beacf9c7fe29
+  service_name: MSExchangeService
+  display_name: Microsoft Exchange Service
+  defender_detection: Trojan:MSIL/DarkNeuron.B!dha
+  defender_threat_id: 2147724727
+  listener_prefix: https://*:443/ews/exchange/
+  uri_path: /ews/exchange/
+  validation_guid: f2949bab-240a-46ca-a455-6f504367ba7d
+  fallback_encryption_guid: 8d963325-01b8-4671-8e82-d0904275ab06
+severity_model:
+  base_score: 0
+  additions:
+    exact_sha256_match: 50
+    defender_active_detection: 40
+    sigma_service_install_match: 35
+    yara_behavioral_match: 30
+    service_registry_and_image_match: 30
+    http_sys_queue_and_service_match: 25
+    suspicious_service_child_process: 20
+    multiple_correlated_indicators: 15
+  reductions:
+    historical_detection_inactive: 30
+    authorized_lab_activity: 100
+    verified_legitimate_exchange_service: 100
+  thresholds:
+    informational:
+      minimum: 0
+      maximum: 19
+    low:
+      minimum: 20
+      maximum: 39
+    medium:
+      minimum: 40
+      maximum: 59
+    high:
+      minimum: 60
+      maximum: 79
+    critical:
+      minimum: 80
+      maximum: 100
+  cap: 100
+  floor: 0
+workflow:
+  - id: intake
+    name: Accept alert and establish case
+    action_level: automatic_read_only
+    requires_approval: false
+    actions:
+      - Preserve the original alert payload and source metadata.
+      - Create or update a case using an organization-assigned identifier.
+      - Record source, timestamps, detection rule, and endpoint reference.
+    outputs:
+      - original_alert
+      - case_record
+  - id: normalize
+    name: Normalize indicators and entities
+    action_level: automatic_read_only
+    requires_approval: false
+    actions:
+      - Normalize file hashes to lowercase hexadecimal.
+      - Normalize service, filename, path, host, and detection-name fields.
+      - Deduplicate indicators without discarding source provenance.
+      - Mark port 443 and PID 4 as context rather than malware indicators.
+    outputs:
+      - normalized_indicators
+      - normalized_entities
+  - id: asset_context
+    name: Determine asset role and authorized activity
+    action_level: automatic_read_only
+    requires_approval: false
+    actions:
+      - Query asset inventory for system role and business criticality.
+      - Determine whether the endpoint is an authorized Exchange server.
+      - Determine whether the alert is approved malware-analysis or security-test activity.
+    outputs:
+      - is_exchange_server
+      - is_authorized_lab
+      - asset_criticality
+  - id: file_enrichment
+    name: Enrich file evidence
+    action_level: automatic_read_only
+    requires_approval: false
+    actions:
+      - Calculate available file hashes through the approved endpoint connector.
+      - Compare SHA-256 with the known analyzed sample.
+      - Query approved internal IOC and reputation sources.
+      - Record signer, size, path, first-seen, and last-seen metadata.
+    outputs:
+      - file_enrichment
+      - exact_hash_match
+  - id: persistence_enrichment
+    name: Investigate service persistence
+    action_level: automatic_read_only
+    requires_approval: false
+    actions:
+      - Query MSExchangeService configuration and current state.
+      - Query ImagePath, DisplayName, ObjectName, Start, Type, and description.
+      - Query the service and Application Event Log source Registry keys.
+      - Correlate service installation telemetry with the executable.
+    outputs:
+      - service_evidence
+      - registry_evidence
+  - id: listener_enrichment
+    name: Investigate local listener state
+    action_level: automatic_read_only
+    requires_approval: false
+    actions:
+      - Query local socket state for port 443.
+      - Query HTTP.sys request queues and registered URLs.
+      - Correlate the queue with MSExchangeService and the process image.
+      - Record request counters, SSL binding state, and URL ACL state when available.
+    safety:
+      - Do not send any request to the listener.
+      - Do not classify port 443 alone as malicious.
+      - Do not classify PID 4 or System as malware.
+    outputs:
+      - listener_evidence
+  - id: defender_enrichment
+    name: Query antivirus state
+    action_level: automatic_read_only
+    requires_approval: false
+    actions:
+      - Query current Defender threat state.
+      - Query historical detection and remediation records.
+      - Distinguish an active detection from historical inactive records.
+    outputs:
+      - antivirus_evidence
+      - threat_active
+  - id: preserve_evidence
+    name: Preserve evidence before disruptive action
+    action_level: automatic_read_only
+    requires_approval: false
+    actions:
+      - Collect alert, process, service, Registry, listener, and antivirus metadata.
+      - Store evidence in an approved evidence repository.
+      - Generate a SHA-256 manifest and record collection timestamps.
+      - Record unavailable or failed collections explicitly.
+    outputs:
+      - evidence_manifest
+      - collection_status
+  - id: calculate_severity
+    name: Calculate severity and confidence
+    action_level: automatic_read_only
+    requires_approval: false
+    actions:
+      - Apply the documented additive and reduction scores.
+      - Record every score reason and cap the result at 100.
+      - Generate response recommendations without taking disruptive action.
+    outputs:
+      - severity_score
+      - severity_label
+      - score_reasons
+  - id: notify
+    name: Notify analyst
+    action_level: automatic_read_only
+    requires_approval: false
+    actions:
+      - Send a case notification through an approved organizational channel.
+      - Include evidence summary, confidence, asset role, and recommended next step.
+    outputs:
+      - notification_record
+  - id: disposition_gate
+    name: Analyst disposition
+    action_level: approval_required_containment
+    requires_approval: true
+    allowed_decisions:
+      - proceed_to_containment
+      - historical_detection_only
+      - authorized_lab_activity
+      - legitimate_exchange_service
+      - false_positive
+      - insufficient_evidence
+    safety:
+      - A service name or Exchange-themed display name alone is insufficient for containment.
+  - id: containment_approval
+    name: Containment approval gate
+    action_level: approval_required_containment
+    requires_approval: true
+    prerequisites:
+      - Evidence preservation completed or exception documented.
+      - Asset role and business impact reviewed.
+      - Approver identity and rationale recorded.
+    permitted_actions:
+      - Isolate the endpoint.
+      - Block the exact SHA-256.
+      - Block the filename only with endpoint and path scope.
+      - Disable or stop MSExchangeService.
+      - Suspend the suspicious process.
+      - Quarantine the executable.
+      - Add temporary firewall restrictions.
+    safety:
+      - Do not automatically stop a legitimate Exchange service.
+      - Every selected action must be logged with result and rollback guidance.
+  - id: remediation_approval
+    name: Remediation approval gate
+    action_level: approval_required_remediation
+    requires_approval: true
+    prerequisites:
+      - Containment result reviewed.
+      - Required forensic evidence preserved.
+      - Recovery plan and business owner approval recorded.
+    permitted_actions:
+      - Delete the confirmed malware file.
+      - Remove the confirmed malicious service.
+      - Delete confirmed malicious service Registry keys.
+      - Remove the confirmed malicious Event Log source.
+      - Remove confirmed host-specific storage artifacts.
+      - Remove confirmed malicious persistence.
+      - Restore from a clean snapshot.
+      - Reimage the host.
+    safety:
+      - Never perform permanent deletion before evidence preservation.
+      - Do not delete artifacts based only on broad names, port 443, or PID 4.
+  - id: verify_cleanup
+    name: Verify containment and remediation
+    action_level: automatic_read_only
+    requires_approval: false
+    actions:
+      - Verify the confirmed malicious file is absent or quarantined.
+      - Verify the confirmed malicious service and Registry persistence are absent.
+      - Verify no HTTP.sys queue remains associated with the service.
+      - Query antivirus state and distinguish active from historical records.
+      - Recalculate severity using post-action evidence.
+    outputs:
+      - cleanup_verification
+      - residual_risk
+  - id: update_report
+    name: Update incident documentation
+    action_level: automatic_read_only
+    requires_approval: false
+    actions:
+      - Append evidence references, decisions, approvals, actions, and results.
+      - Document limitations and all not-observed behaviors.
+      - Generate a final evidence manifest.
+    outputs:
+      - incident_report_update
+  - id: close_case
+    name: Close or retain the case
+    action_level: approval_required_remediation
+    requires_approval: true
+    allowed_decisions:
+      - true_positive_active
+      - true_positive_contained
+      - true_positive_remediated
+      - historical_detection_only
+      - authorized_lab_activity
+      - legitimate_exchange_service
+      - false_positive
+      - insufficient_evidence
+outcomes:
+  - true_positive_active
+  - true_positive_contained
+  - true_positive_remediated
+  - historical_detection_only
+  - authorized_lab_activity
+  - legitimate_exchange_service
+  - false_positive
+  - insufficient_evidence
+evidence_requirements:
+  - Preserve the original alert and normalized indicator provenance.
+  - Preserve file hash, signer, size, and path metadata when available.
+  - Preserve service configuration and service Registry evidence.
+  - Preserve HTTP.sys queue state and local socket metadata without probing the listener.
+  - Preserve Defender current state and historical detection records separately.
+  - Generate a SHA-256 evidence manifest before permanent remediation.
+  - Record unavailable evidence and connector failures.
+safety_controls:
+  - Automatic actions are read-only or case-management operations.
+  - Containment and remediation require explicit recorded analyst approval.
+  - Evidence collection precedes permanent deletion.
+  - Never interact with the malware listener or generate protocol fields.
+  - Never treat port 443 or PID 4/System as malicious by itself.
+  - Never remove an Exchange-themed service based only on its name.
+  - Historical Defender records alone do not prove active infection.
+  - No real credentials, tenant identifiers, endpoints, or tokens are embedded.
+references:
+  - ../sigma/win_system_turla_neuron_service_install.yml
+  - ../yara/turla_neuron_v2.yar
+  - ../../iocs/turla_neuron_iocs.md
+  - ../../reports/incident-report.md
+  - ../../results/dynamic/turla_neuron_dynamic_analysis.md
+  - ../../results/network/turla_neuron_network_analysis.md

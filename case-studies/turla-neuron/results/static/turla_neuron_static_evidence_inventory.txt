@@ -1,0 +1,110 @@
+Turla Neuron Static Evidence Inventory
+======================================
+
+Inventory scope:
+- Static evidence used by the summary package
+- Source artifacts remain in their original repository locations
+- Present evidence files: 11
+- Missing historical artifact records: 1
+- Total inventory records: 12
+
+1. case-studies/turla-neuron/screenshots/TurlaNeuron_01_VirusTotal_SHA256_and_File_Details.png
+   File size: 186941 bytes
+   SHA-256: c9143075c16f53d7d47f992697a042e3b984c45681501f716787db5bb3895ebd
+   File type: PNG image
+   Purpose: Sample identity, hashes, public detections, and metadata
+   Evidence category: sample_intelligence
+   Usability status: usable_supporting
+
+2. case-studies/turla-neuron/screenshots/TurlaNeuron_02_PE_and_DotNet_File_Metadata.png
+   File size: 380292 bytes
+   SHA-256: 0d5da146ddeabe3756b27bd0ff9330475778f242ca5a7f20d83a5a0568cce4ec
+   File type: PNG image
+   Purpose: PE32, architecture, size, subsystem, and version metadata
+   Evidence category: file_metadata
+   Usability status: usable_primary
+
+3. case-studies/turla-neuron/screenshots/TurlaNeuron_03_Refined_YARA_v2_Rule_Source_Code.png
+   File size: 326916 bytes
+   SHA-256: e59fc260560759063a0a231ef596a554b04c969e5d5088b6e8b9b0acd9383875
+   File type: PNG image
+   Purpose: Exact and behavioral YARA source-rule evidence
+   Evidence category: detection_engineering
+   Usability status: usable_supporting
+
+4. case-studies/turla-neuron/screenshots/TurlaNeuron_04_Compiled_YARA_v2_Exact_and_Behavioral_Matches.png
+   File size: 360824 bytes
+   SHA-256: 93fba97981b4a66f4dece2eaf986d3404562314bbbb9632655b02fd5dee50b52
+   File type: PNG image
+   Purpose: Preserved exact and behavioral compiled-rule match output
+   Evidence category: detection_validation
+   Usability status: usable_primary
+
+5. case-studies/turla-neuron/screenshots/TurlaNeuron_04_Refined_YARA_v2_Rule_Source_Code.png
+   File size: 328322 bytes
+   SHA-256: 1ce0e4679d1547a58fdc883e3f9369db9a0df4f5c35c90604ad915b599f9cae9
+   File type: PNG image
+   Purpose: Alternate YARA source-rule capture
+   Evidence category: detection_engineering
+   Usability status: usable_supporting
+
+6. case-studies/turla-neuron/results/dnspy/turla_neuron_dnspy_analysis.md
+   File size: 20320 bytes
+   SHA-256: 0f096040b980ce5f32cee0943aa2bbfd819bb74898780c92c712a2ba8dea029a
+   File type: Markdown; UTF-8 text
+   Purpose: Detailed method-level .NET reverse-engineering analysis
+   Evidence category: reverse_engineering
+   Usability status: usable_primary
+
+7. case-studies/turla-neuron/results/dnspy/turla_neuron_dnspy_findings.json
+   File size: 11205 bytes
+   SHA-256: 2c44126d37bccfb78a8b63919dabd75911875e29c1037cdf86c3f8255d5923dc
+   File type: JSON; UTF-8 text
+   Purpose: Structured dnSpy findings and evidence paths
+   Evidence category: reverse_engineering
+   Usability status: usable_primary
+
+8. case-studies/turla-neuron/detections/yara/turla_neuron_v2.yar
+   File size: 1610 bytes
+   SHA-256: 3da489920da0ea526196d8e1a9af16218f8f053f2913e608fce547a39b055dc5
+   File type: YARA source; ASCII text
+   Purpose: Current exact and behavioral detection logic
+   Evidence category: detection_engineering
+   Usability status: usable_primary
+
+9. case-studies/turla-neuron/results/yara/turla_neuron_v2.compiled
+   File size: unavailable
+   SHA-256: unavailable
+   File type: Compiled YARA rule
+   Purpose: Historical compiled validation artifact
+   Evidence category: detection_validation
+   Usability status: missing
+
+10. case-studies/turla-neuron/iocs/turla_neuron_iocs.md
+    File size: 10967 bytes
+    SHA-256: 122a9c9dc164b04339e58810512d40dd0986bf46f2badd03b99dad4921faa515
+    File type: Markdown; UTF-8 text
+    Purpose: Indicator confidence and deployment context
+    Evidence category: indicator_analysis
+    Usability status: usable_supporting
+
+11. case-studies/turla-neuron/reports/incident-report.md
+    File size: 42637 bytes
+    SHA-256: 661810c68473f4cafdfe5b65e278da5316d4443309da05615a1930a0a56677dc
+    File type: Markdown; UTF-8 text
+    Purpose: Static-to-dynamic correlation and overall conclusions
+    Evidence category: correlated_reporting
+    Usability status: usable_supporting
+
+12. case-studies/turla-neuron/references/turla_neuron_references.md
+    File size: 10681 bytes
+    SHA-256: a66309b9b222feb3c50d64a34383cf418f5748686ac0dda90296493c307b530c
+    File type: Markdown; UTF-8 text
+    Purpose: Training, threat reporting, tool, detection, and ATT&CK references
+    Evidence category: reference_context
+    Usability status: usable_supporting
+
+Inventory notes:
+- No source artifact was copied into results/static.
+- The compiled YARA file is missing from the current repository state; its preserved screenshot remains usable validation evidence.
+- The malware executable is not present in this directory.

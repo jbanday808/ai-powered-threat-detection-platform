@@ -1,0 +1,59 @@
+Turla Neuron Noriben Evidence Package Validation
+================================================
+
+1. Markdown analysis file exists: PASS
+2. CSV event summary exists: PASS
+3. JSON findings file exists: PASS
+4. Evidence inventory exists: PASS
+5. JSON parses successfully: PASS
+6. Every CSV row has exactly eleven columns: PASS
+   Summarized events: 22
+7. Duplicate CSV rows: None
+8. Duplicate JSON finding objects: None
+   JSON findings: 22
+   JSON finding IDs unique: PASS
+9. Every referenced screenshot exists: PASS
+   Screenshots referenced: 7
+10. SHA-256 appears in Markdown and JSON: PASS
+11. Core findings are documented: PASS
+    - MSExchangeService
+    - Microsoft.Exchange.Service.exe
+    - Microsoft.Exchange.Service.InstallLog
+    - Microsoft.Exchange.Service.InstallState
+    - ZoneMap
+    - AutoDetect
+    - IntranetName
+    - ProxyBypass
+    - UNCAsIntranet
+12. PML limitation is documented: PASS
+13. No external C2 IP address or domain was invented: PASS
+14. No successful attacker command execution is claimed: PASS
+15. No data exfiltration is claimed: PASS
+16. No process ID is promoted as a universal IOC: PASS
+17. The exact MachineGuid is explicitly excluded as a universal IOC: PASS
+18. No malware sample exists under results/noriben: PASS
+19. Background-noise processes are classified as non-malicious: PASS
+    Background-noise entries: 8
+20. All pre-existing raw evidence files remain unchanged: PASS
+    Raw Noriben files discovered before package creation: 0
+
+Inventory validation:
+- Substantive files inventoried: 3
+- Analysis Markdown SHA-256 matches inventory: PASS
+- Event-summary CSV SHA-256 matches inventory: PASS
+- Findings JSON SHA-256 matches inventory: PASS
+- Inventory and validation files are administrative package-control files and are not self-hashed as evidence inputs.
+
+Raw PML usability status: corrupted_or_unusable
+- The reported retained PML was 976 bytes.
+- Re-export reportedly produced a 124-byte CSV with zero events.
+- Neither file is present in the repository.
+- The exact failure mechanism could not be proven.
+
+Evidence gaps:
+- No raw Noriben report, CSV, timeline CSV, log, or PML is stored in the repository.
+- No attacker request or external C2 infrastructure was observed.
+- File-transfer and hidden-configuration capabilities were not exercised dynamically.
+- No pre-execution ZoneMap export is retained.
+
+Final result: PASS

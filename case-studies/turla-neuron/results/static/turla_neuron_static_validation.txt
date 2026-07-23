@@ -1,0 +1,59 @@
+Turla Neuron Static Evidence Package Validation
+===============================================
+
+1. Markdown analysis exists: PASS
+2. CSV findings file exists: PASS
+3. JSON findings file exists: PASS
+4. Evidence inventory exists: PASS
+5. JSON parses successfully: PASS
+6. Every CSV row has exactly nine columns: PASS
+   Static findings: 41
+7. Duplicate CSV rows: None
+8. Duplicate JSON artifacts: None
+   Embedded artifacts: 16
+   Capabilities: 8
+   Artifact/capability IDs unique: PASS
+9. Every Markdown link points to an existing repository file: PASS
+   Markdown links checked: 24
+10. MD5, SHA-1, and SHA-256 appear in Markdown and JSON: PASS
+11. Core artifacts appear: PASS
+    - MSExchangeService
+    - Microsoft Exchange Service
+    - Microsoft.Exchange.Service.exe
+    - https://*:443/ews/exchange/
+    - cadataKey
+    - cadata
+    - cadataSig
+    - ExecCMD
+    - KillOldThread
+    - EncryptScript
+12. YARA validation documents both required rules: PASS
+    - Turla_Neuron_Exact
+    - Turla_Neuron_Behavior
+13. No external C2 IP address or domain was invented: PASS
+14. No successful attacker command execution is claimed: PASS
+15. No data exfiltration is claimed: PASS
+16. No laboratory process ID is promoted as an IOC: PASS
+17. No exact laboratory MachineGuid is promoted as a universal IOC: PASS
+18. No malware executable exists in results/static: PASS
+19. Static and dynamic classifications remain distinct: PASS
+20. .gitkeep handling: PASS
+    - No .gitkeep existed in results/static before package creation.
+    - No .gitkeep removal was necessary.
+
+Evidence inventory:
+- Total inventory records: 12
+- Present evidence files: 11
+- Missing historical artifacts: 1
+- Missing artifact: case-studies/turla-neuron/results/yara/turla_neuron_v2.compiled
+- Preserved compiled-match screenshot remains usable: PASS
+
+Evidence limitations:
+- Static analysis does not prove execution or attacker use.
+- Decompiled code may differ from the original source.
+- No external C2 infrastructure or attacker request was identified.
+- No private RSA key was recovered.
+- Command, file-transfer, and hidden-configuration capabilities were not all exercised dynamically.
+- Laboratory paths and identifiers are not universal IOCs.
+
+Final result: PASS

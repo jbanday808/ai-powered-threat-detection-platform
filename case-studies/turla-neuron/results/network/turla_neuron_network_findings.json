@@ -1,0 +1,144 @@
+{
+  "case": {
+    "incident_id": "MAL-2026-0721-NEURON",
+    "family": "Turla Neuron",
+    "alias": "DarkNeuron",
+    "sample": "Microsoft.Exchange.Service.exe",
+    "sha256": "d1d7a96fcadc137e80ad866c838502713db9cdfe59939342b8e3beacf9c7fe29",
+    "analyst": "James Banday",
+    "analysis_date": "2026-07-22",
+    "analysis_type": "network"
+  },
+  "environment": {
+    "network_adapter_disabled": true,
+    "internet_access": false,
+    "inbound_simulation_used": false,
+    "packet_capture_available": false
+  },
+  "listener": {
+    "protocol": "https",
+    "port": 443,
+    "prefix": "https://*:443/ews/exchange/",
+    "uri_path": "/ews/exchange/",
+    "http_sys_queue_active": true,
+    "service": "MSExchangeService",
+    "requests_arrived": 0,
+    "requests_rejected": 0
+  },
+  "protocol_fields": [
+    {"id": "NET-001", "name": "cid", "classification": "confirmed_statically", "observed_on_wire": false},
+    {"id": "NET-002", "name": "cadataKey", "classification": "confirmed_statically", "observed_on_wire": false},
+    {"id": "NET-003", "name": "cadata", "classification": "confirmed_statically", "observed_on_wire": false},
+    {"id": "NET-004", "name": "cadataSig", "classification": "confirmed_statically", "observed_on_wire": false}
+  ],
+  "embedded_identifiers": [
+    {"id": "NET-005", "type": "validation_guid", "value": "f2949bab-240a-46ca-a455-6f504367ba7d", "classification": "confirmed_statically"},
+    {"id": "NET-006", "type": "fallback_encryption_guid", "value": "8d963325-01b8-4671-8e82-d0904275ab06", "classification": "confirmed_statically"}
+  ],
+  "socket_observations": [
+    {
+      "id": "NET-007",
+      "local_address": "::",
+      "local_port": 443,
+      "state": "Listen",
+      "owning_process": 4,
+      "classification": "confirmed_by_socket_state",
+      "interpretation": "HTTP.sys kernel socket; PID 4/System is not Turla Neuron and is not an IOC."
+    },
+    {
+      "id": "NET-008",
+      "local_address": "0.0.0.0",
+      "local_port": 443,
+      "state": "LISTENING",
+      "owning_process": 4,
+      "classification": "confirmed_by_socket_state",
+      "interpretation": "HTTP.sys kernel socket; request-queue evidence is needed for application attribution."
+    }
+  ],
+  "http_sys_findings": [
+    {
+      "id": "NET-009",
+      "summary": "Active request queue with one attached process and one registered URL.",
+      "classification": "confirmed_by_http_sys",
+      "service": "MSExchangeService",
+      "process_image": "C:\\Malware\\TurlaNeuron\\Microsoft.Exchange.Service.exe",
+      "registered_url": "HTTPS://*:443/EWS/EXCHANGE/",
+      "requests_arrived": 0,
+      "requests_rejected": 0,
+      "cache_hits": 0,
+      "limitations": ["The process path is laboratory-specific.", "The listener prefix is local and not a remote destination."]
+    },
+    {
+      "id": "NET-010",
+      "summary": "No SSL certificate binding was observed for 0.0.0.0:443.",
+      "classification": "evidence_limitation",
+      "limitations": ["Other binding forms were not exhaustively excluded.", "No successful TLS session is claimed."]
+    },
+    {
+      "id": "NET-011",
+      "summary": "No Turla Neuron-specific persistent URL ACL was observed.",
+      "classification": "not_observed",
+      "limitations": ["Runtime URL registration is different from a persistent URL reservation.", "Other legitimate reservations were not attributed to the malware."]
+    }
+  ],
+  "network_traffic": [
+    {
+      "id": "NET-012",
+      "source": "Noriben Network Traffic section",
+      "result": "empty",
+      "classification": "confirmed_by_noriben"
+    },
+    {
+      "id": "NET-013",
+      "source": "Noriben Unique Hosts section",
+      "result": "empty",
+      "classification": "confirmed_by_noriben"
+    }
+  ],
+  "not_observed": [
+    {"id": "NET-014", "behavior": "Inbound request", "status": "not_observed"},
+    {"id": "NET-015", "behavior": "Outbound connection", "status": "not_observed"},
+    {"id": "NET-016", "behavior": "External C2 IP", "status": "not_observed"},
+    {"id": "NET-017", "behavior": "External C2 domain", "status": "not_observed"},
+    {"id": "NET-018", "behavior": "DNS lookup attributed to the malware", "status": "not_observed"},
+    {"id": "NET-019", "behavior": "TLS session", "status": "not_observed"},
+    {"id": "NET-020", "behavior": "HTTP request captured", "status": "not_observed"},
+    {"id": "NET-021", "behavior": "HTTP response captured", "status": "not_observed"},
+    {"id": "NET-022", "behavior": "Attacker command", "status": "not_observed"},
+    {"id": "NET-023", "behavior": "File transfer", "status": "not_observed"},
+    {"id": "NET-024", "behavior": "Data exfiltration", "status": "not_observed"},
+    {"id": "NET-025", "behavior": "Lateral movement", "status": "not_observed"},
+    {"id": "NET-026", "behavior": "Production network impact", "status": "not_observed"}
+  ],
+  "detection_recommendations": [
+    {"id": "NET-027", "recommendation": "Detect /ews/exchange/ listener registrations on non-Exchange systems.", "classification": "detection_recommendation"},
+    {"id": "NET-028", "recommendation": "Correlate HTTP.sys port-443 queues with MSExchangeService and Microsoft.Exchange.Service.exe.", "classification": "detection_recommendation"},
+    {"id": "NET-029", "recommendation": "Where decrypted visibility exists, correlate the URI with at least two request field names or the validation GUID.", "classification": "detection_recommendation"},
+    {"id": "NET-030", "recommendation": "Preserve socket state, HTTP.sys output, and packet evidence before containment.", "classification": "detection_recommendation"}
+  ],
+  "evidence_limitations": [
+    "The VM network adapter was disabled and no inbound test request was sent.",
+    "No PCAP, PCAPNG, or ETL packet capture exists.",
+    "No TLS handshake, DNS activity, request body, or response body was captured.",
+    "No external C2 IP address or domain was identified.",
+    "Static request fields were not observed on the wire.",
+    "The raw Procmon PML was unusable and contained no recoverable network events.",
+    "The SSL-binding check covered 0.0.0.0:443 and does not prove all possible bindings were absent.",
+    "Laboratory paths and process IDs are environmental."
+  ],
+  "evidence_files": [
+    "case-studies/turla-neuron/results/dynamic/turla_neuron_dynamic_analysis.md",
+    "case-studies/turla-neuron/results/noriben/turla_neuron_noriben_analysis.md",
+    "case-studies/turla-neuron/results/procmon/turla_neuron_procmon_analysis.md",
+    "case-studies/turla-neuron/results/dnspy/turla_neuron_dnspy_analysis.md",
+    "case-studies/turla-neuron/results/static/turla_neuron_static_analysis.md",
+    "case-studies/turla-neuron/reports/incident-report.md",
+    "case-studies/turla-neuron/iocs/turla_neuron_iocs.md",
+    "case-studies/turla-neuron/screenshots/Pre-Noriben_Turla_Neuron_Snapshot.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_08_dnSpy_Service_OnStart_HTTPS_Listener.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_10_dnSpy_SendResponse_Request_Validation.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_11_dnSpy_Cadata_RC4_Remote_Storage_Command_Channel.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_23_Noriben_Filtered_Timeline_Activity.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_25_Dynamic_HTTPsys_EWS_Exchange_URL_Registration.png"
+  ]
+}

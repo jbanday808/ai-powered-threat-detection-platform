@@ -1,0 +1,71 @@
+Turla Neuron / DarkNeuron Reverse-Engineering Package Validation
+Validation date: 2026-07-22
+
+Package files
+1. Integrated analysis exists: PASS
+2. Execution-flow document exists: PASS
+3. Function map exists: PASS
+4. Command map exists: PASS
+5. Protocol map exists: PASS
+6. JSON findings file exists: PASS
+7. JSON parses successfully: PASS
+8. .gitkeep removed only after all seven files existed: PASS
+
+Structured-data checks
+- Function-map entries: 13
+- Function-map columns per row: 11 (PASS)
+- Function-map duplicate rows: 0 (PASS)
+- Command-map entries: 7
+- Command-map columns per row: 9 (PASS)
+- Command-map duplicate rows: 0 (PASS)
+- Protocol-map entries: 8
+- Protocol-map columns per row: 10 (PASS)
+- Protocol-map duplicate rows: 0 (PASS)
+- JSON IDs: 22 unique (PASS)
+- Duplicate JSON IDs: 0 (PASS)
+- Duplicate JSON ID-bearing objects: 0 (PASS)
+
+Evidence and link checks
+- Markdown repository-relative references: 18
+- Broken Markdown references: 0
+- Requested screenshots 05 through 28 present: 24 of 24 (PASS)
+- Sample SHA-256 appears in analysis and JSON: PASS
+- No malware executable exists in results/reverse-engineering/: PASS
+
+Core reconstruction checks
+- Program.Main install, uninstall, and service branches: documented
+- MSExchangeService configuration and immediate start: documented
+- OnStart listener and storage thread: documented
+- OnStop web-server stop and thread abort: documented
+- HTTP.sys / PID 4 / service association: documented accurately
+- cid, cadataKey, cadata, and cadataSig: documented
+- Both embedded GUIDs: documented
+- Numeric command types 0 through 6: documented
+- Config.FindConfig and Config.WriteConfig: documented
+- RC4-style EncryptScript: documented
+- RSA context and missing private key: documented cautiously
+- MachineGuid-derived storage and five-minute loop: documented
+
+Evidence-boundary checks
+- Static capabilities are not represented as observed network traffic: PASS
+- Command execution and file-transfer capabilities are marked not exercised: PASS
+- Hidden encrypted Registry configuration is not claimed dynamically: PASS
+- Storage cleanup is not claimed dynamically: PASS
+- External C2 IP or domain is not invented: PASS
+- Successful attacker communication is not claimed: PASS
+- Data exfiltration and production impact are not claimed: PASS
+- PID 4 is not classified as malware: PASS
+- Wildcard listener is identified as local rather than remote: PASS
+- Seven-day retention and duplicate-task avoidance are not promoted: PASS
+- Exact laboratory MachineGuid is not promoted as a universal IOC: PASS
+
+Evidence limitations
+- Decompiled output is not original source and no debug symbols were available.
+- No attacker request or complete protocol session was captured.
+- No private RSA key was recovered.
+- No command, file transfer, hidden configuration, or cleanup action was dynamically exercised.
+- The malware-run Procmon PML was unusable.
+- The dynamically observed storage directory was empty.
+- Laboratory paths, process IDs, timestamps, and MachineGuid are environmental.
+
+Final result: PASS

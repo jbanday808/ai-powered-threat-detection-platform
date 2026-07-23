@@ -1,0 +1,71 @@
+Turla Neuron MITRE ATT&CK Package Validation
+Generated: 2026-07-22
+Method: Python standard-library structural, consistency, official-ID, reference-set, and link checks
+
+Required checks:
+1. MITRE ATT&CK directory exists: PASS
+2. README exists: PASS
+3. Main mapping Markdown exists: PASS
+4. Mapping CSV exists: PASS
+5. Mapping JSON exists: PASS
+6. Both Navigator layers exist: PASS
+7. History and activity file exists: PASS
+8. Reference matrix exists: PASS
+9. Every JSON file parses successfully: PASS (3 JSON files)
+10. CSV rows contain exactly thirteen columns: PASS (81 data rows)
+11. No duplicate CSV rows: PASS
+12. No duplicate sample technique IDs: PASS (11 unique)
+13. No duplicate group technique IDs: PASS (68 unique)
+14. Every technique ID uses valid ATT&CK formatting and exists in official STIX: PASS (missing=[])
+15. Every technique has an official MITRE URL: PASS
+16. Every sample mapping has local evidence: PASS
+17. Every group mapping identifies MITRE G0010 as source: PASS
+18. Static and dynamic findings remain distinct: PASS
+19. Candidate mappings are separate and not confirmed: PASS
+20. T1105 is not presented as dynamically observed: PASS
+21. Command execution is not presented as attacker-exercised: PASS
+22. External C2 communication is recorded as not observed: PASS
+23. No C2 IP or domain was invented: PASS
+24. No data exfiltration was claimed: PASS
+25. No lateral movement was claimed: PASS
+26. PID 4 is not classified as malware: PASS
+27. Port 443 is not malicious by itself: PASS
+28. LocalSystem is not malicious by itself: PASS
+29. Laboratory MachineGuid is not a group IOC: PASS
+30. Turla Neuron is not automatically equated with LightNeuron: PASS
+31. Kazuar, ApolloShadow, and STOCKSTAY are not described as analyzed sample: PASS
+32. Current activity uses dated public-reporting assessment: PASS
+33. Current activity is not inferred only from MITRE modification date: PASS
+34. Latest activity-status source is dated June 25, 2026: PASS
+35. Every external source appears in reference matrix: PASS (corrected URL-token boundary check; missing=[])
+36. Every internal relative Markdown link exists: PASS (45 links checked; missing=[])
+37. Navigator technique IDs match corresponding Markdown/CSV/JSON sets: PASS (sample=11, candidate=2, group=68)
+38. No malware executable exists in mitre-attack: PASS
+39. No packages were installed: PASS (Only Python standard library and existing curl were used; no package manager invoked)
+40. No source evidence was modified: PASS (Edits limited to mitre-attack/ and the root Turla Neuron README navigation)
+
+Additional cross-format results:
+- Sample Navigator JSON/schema/parity validation: PASS
+- Group Navigator JSON/schema/parity validation: PASS
+- Sample Markdown/CSV/JSON/Navigator consistency: PASS
+- Candidate Markdown/CSV/JSON/Navigator consistency: PASS
+- Group Markdown/CSV/JSON/Navigator consistency: PASS
+- No duplicate scope and technique-ID combinations: PASS
+- Unsupported-claim phrase scan: PASS
+
+- Sample mappings total: 11
+- Confirmed sample mappings (excluding capability-only): 9
+- Capability-only sample mappings: 2
+- Candidate mappings: 2
+- Group-level techniques: 68
+- CSV mappings: 81
+- MITRE G0010 version: 5.1
+- MITRE G0010 last modified: 2026-01-20
+- Group mapping completeness: complete
+- ATT&CK / Navigator / layer versions: 19 / 5.3.2 / 4.5
+- Navigator validation scope: JSON structure and technique-set parity only; the Navigator UI was not opened.
+- Unsupported phrase hits: []
+- External reference URLs missing from matrix: []
+- Broken local links: []
+
+FINAL RESULT: PASS

@@ -4,5 +4,12 @@ __pycache__/
 .terraform/
 *.tfstate
 *.tfstate.*
-
 .vscode/
+# Turla Neuron malware samples
+case-studies/turla-neuron/**/*.exe
+case-studies/turla-neuron/**/*.dll
+case-studies/turla-neuron/**/*.bin
+case-studies/turla-neuron/**/*.malware
+case-studies/turla-neuron/**/original/
+case-studies/turla-neuron/**/samples/
+case-studies/turla-neuron/**/quarantine/

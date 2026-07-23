@@ -1,0 +1,1942 @@
+{
+  "case": {
+    "incident_id": "MAL-2026-0721-NEURON",
+    "family": "Turla Neuron",
+    "alias": "DarkNeuron",
+    "sample": "Microsoft.Exchange.Service.exe",
+    "sha256": "d1d7a96fcadc137e80ad866c838502713db9cdfe59939342b8e3beacf9c7fe29",
+    "analyst": "James Banday",
+    "analysis_date": "2026-07-22"
+  },
+  "sample_mapping": [
+    {
+      "mapping_id": "SAMPLE-001",
+      "tactics": [
+        "Persistence",
+        "Privilege Escalation"
+      ],
+      "technique_id": "T1543.003",
+      "technique_name": "Create or Modify System Process: Windows Service",
+      "subtechnique": true,
+      "evidence_classification": "statically_and_dynamically_confirmed",
+      "confidence": "high",
+      "dynamic_status": "installed, started, automatic, LocalSystem",
+      "evidence_references": [
+        "../results/dnspy/turla_neuron_dnspy_analysis.md",
+        "../results/dynamic/turla_neuron_dynamic_analysis.md",
+        "../screenshots/TurlaNeuron_26_Dynamic_Installer_Log_Service_Success.png",
+        "../screenshots/TurlaNeuron_28_Dynamic_Service_Registry_Persistence.png"
+      ],
+      "detection_references": [
+        "../detections/sigma/win_system_turla_neuron_service_install.yml",
+        "../detections/yara/turla_neuron_v2.yar",
+        "../detections/soar/README.md",
+        "../detections/threat-hunting/README.md"
+      ],
+      "mitre_url": "https://attack.mitre.org/techniques/T1543/003/",
+      "notes": "The -install branch and Windows artifacts confirm service persistence."
+    },
+    {
+      "mapping_id": "SAMPLE-002",
+      "tactics": [
+        "Stealth"
+      ],
+      "technique_id": "T1036.004",
+      "technique_name": "Masquerading: Masquerade Task or Service",
+      "subtechnique": true,
+      "evidence_classification": "statically_and_dynamically_confirmed",
+      "confidence": "high",
+      "dynamic_status": "Exchange-themed service identity observed",
+      "evidence_references": [
+        "../results/dnspy/turla_neuron_dnspy_analysis.md",
+        "../results/dynamic/turla_neuron_dynamic_analysis.md",
+        "../screenshots/TurlaNeuron_28_Dynamic_Service_Registry_Persistence.png"
+      ],
+      "detection_references": [
+        "../detections/yara/turla_neuron_v2.yar",
+        "../detections/soar/README.md",
+        "../detections/threat-hunting/README.md"
+      ],
+      "mitre_url": "https://attack.mitre.org/techniques/T1036/004/",
+      "notes": "Legitimate-looking Exchange service identity; the name alone is not sufficient."
+    },
+    {
+      "mapping_id": "SAMPLE-003",
+      "tactics": [
+        "Execution"
+      ],
+      "technique_id": "T1059.003",
+      "technique_name": "Command and Scripting Interpreter: Windows Command Shell",
+      "subtechnique": true,
+      "evidence_classification": "capability_only",
+      "confidence": "high",
+      "dynamic_status": "not exercised through an attacker request",
+      "evidence_references": [
+        "../results/dnspy/turla_neuron_dnspy_analysis.md",
+        "../screenshots/TurlaNeuron_12_dnSpy_CommandScript_Type0_Command_Execution.png",
+        "../screenshots/TurlaNeuron_13_dnSpy_CommandScript_Type0_Execution_and_Output_Capture.png"
+      ],
+      "detection_references": [
+        "../detections/yara/turla_neuron_v2.yar",
+        "../detections/threat-hunting/README.md"
+      ],
+      "mitre_url": "https://attack.mitre.org/techniques/T1059/003/",
+      "notes": "cmd.exe /c with redirected stdout/stderr exists in code; no attacker command ran."
+    },
+    {
+      "mapping_id": "SAMPLE-004",
+      "tactics": [
+        "Defense Impairment",
+        "Persistence"
+      ],
+      "technique_id": "T1112",
+      "technique_name": "Modify Registry",
+      "subtechnique": false,
+      "evidence_classification": "statically_and_dynamically_confirmed",
+      "confidence": "high",
+      "dynamic_status": "service/Event Log/ZoneMap activity observed; hidden configuration not observed",
+      "evidence_references": [
+        "../results/dnspy/turla_neuron_dnspy_analysis.md",
+        "../results/dynamic/turla_neuron_dynamic_analysis.md",
+        "../results/noriben/turla_neuron_noriben_analysis.md",
+        "../screenshots/TurlaNeuron_22_Dynamic_ZoneMap_Registry_Modifications.png",
+        "../screenshots/TurlaNeuron_27_Dynamic_MSExchangeService_EventLog_Source.png",
+        "../screenshots/TurlaNeuron_28_Dynamic_Service_Registry_Persistence.png"
+      ],
+      "detection_references": [
+        "../detections/sigma/win_system_turla_neuron_service_install.yml",
+        "../detections/soar/README.md",
+        "../detections/threat-hunting/README.md"
+      ],
+      "mitre_url": "https://attack.mitre.org/techniques/T1112/",
+      "notes": "Different Registry activities served persistence, event-source, ZoneMap, and configuration purposes."
+    },
+    {
+      "mapping_id": "SAMPLE-005",
+      "tactics": [
+        "Discovery"
+      ],
+      "technique_id": "T1012",
+      "technique_name": "Query Registry",
+      "subtechnique": false,
+      "evidence_classification": "confirmed_statically",
+      "confidence": "high",
+      "dynamic_status": "not confirmed dynamically",
+      "evidence_references": [
+        "../results/dnspy/turla_neuron_dnspy_analysis.md",
+        "../screenshots/TurlaNeuron_16_dnSpy_Config_Registry_Search_and_Decryption.png"
+      ],
+      "detection_references": [
+        "../detections/threat-hunting/README.md"
+      ],
+      "mitre_url": "https://attack.mitre.org/techniques/T1012/",
+      "notes": "Recursive HKCU\\SOFTWARE search and value reads are present in code."
+    },
+    {
+      "mapping_id": "SAMPLE-006",
+      "tactics": [
+        "Command and Control"
+      ],
+      "technique_id": "T1071.001",
+      "technique_name": "Application Layer Protocol: Web Protocols",
+      "subtechnique": true,
+      "evidence_classification": "statically_and_dynamically_confirmed",
+      "confidence": "high",
+      "dynamic_status": "local listener observed; zero requests; no external session",
+      "evidence_references": [
+        "../results/dnspy/turla_neuron_dnspy_analysis.md",
+        "../results/network/turla_neuron_network_analysis.md",
+        "../screenshots/TurlaNeuron_08_dnSpy_Service_OnStart_HTTPS_Listener.png",
+        "../screenshots/TurlaNeuron_25_Dynamic_HTTPsys_EWS_Exchange_URL_Registration.png"
+      ],
+      "detection_references": [
+        "../detections/yara/turla_neuron_v2.yar",
+        "../detections/soar/README.md",
+        "../detections/threat-hunting/README.md"
+      ],
+      "mitre_url": "https://attack.mitre.org/techniques/T1071/001/",
+      "notes": "The wildcard HTTPS prefix is local listener configuration, not a remote C2 destination."
+    },
+    {
+      "mapping_id": "SAMPLE-007",
+      "tactics": [
+        "Command and Control"
+      ],
+      "technique_id": "T1573.001",
+      "technique_name": "Encrypted Channel: Symmetric Cryptography",
+      "subtechnique": true,
+      "evidence_classification": "confirmed_statically",
+      "confidence": "high",
+      "dynamic_status": "no encrypted attacker session captured",
+      "evidence_references": [
+        "../results/dnspy/turla_neuron_dnspy_analysis.md",
+        "../screenshots/TurlaNeuron_19_dnSpy_RC4_EncryptScript_Implementation.png"
+      ],
+      "detection_references": [
+        "../detections/yara/turla_neuron_v2.yar",
+        "../detections/threat-hunting/README.md"
+      ],
+      "mitre_url": "https://attack.mitre.org/techniques/T1573/001/",
+      "notes": "RC4-style processing supports encrypted command and response data."
+    },
+    {
+      "mapping_id": "SAMPLE-008",
+      "tactics": [
+        "Command and Control"
+      ],
+      "technique_id": "T1573.002",
+      "technique_name": "Encrypted Channel: Asymmetric Cryptography",
+      "subtechnique": true,
+      "evidence_classification": "confirmed_statically",
+      "confidence": "high",
+      "dynamic_status": "no RSA session captured",
+      "evidence_references": [
+        "../results/dnspy/turla_neuron_dnspy_analysis.md",
+        "../results/reverse-engineering/turla_neuron_reverse_engineering.md"
+      ],
+      "detection_references": [
+        "../detections/yara/turla_neuron_v2.yar",
+        "../detections/threat-hunting/README.md"
+      ],
+      "mitre_url": "https://attack.mitre.org/techniques/T1573/002/",
+      "notes": "Embedded 1024-bit RSA public key, exponent 65537, OAEP; no private key recovered."
+    },
+    {
+      "mapping_id": "SAMPLE-009",
+      "tactics": [
+        "Command and Control"
+      ],
+      "technique_id": "T1132.001",
+      "technique_name": "Data Encoding: Standard Encoding",
+      "subtechnique": true,
+      "evidence_classification": "confirmed_statically",
+      "confidence": "high",
+      "dynamic_status": "no encoded request observed on wire",
+      "evidence_references": [
+        "../results/dnspy/turla_neuron_dnspy_analysis.md",
+        "../results/network/turla_neuron_network_analysis.md"
+      ],
+      "detection_references": [
+        "../detections/yara/turla_neuron_v2.yar",
+        "../detections/threat-hunting/README.md"
+      ],
+      "mitre_url": "https://attack.mitre.org/techniques/T1132/001/",
+      "notes": "Base64 request, response, and file-content processing is present."
+    },
+    {
+      "mapping_id": "SAMPLE-010",
+      "tactics": [
+        "Stealth"
+      ],
+      "technique_id": "T1140",
+      "technique_name": "Deobfuscate/Decode Files or Information",
+      "subtechnique": false,
+      "evidence_classification": "confirmed_statically",
+      "confidence": "high",
+      "dynamic_status": "no attacker payload received",
+      "evidence_references": [
+        "../results/dnspy/turla_neuron_dnspy_analysis.md",
+        "../results/reverse-engineering/turla_neuron_reverse_engineering.md"
+      ],
+      "detection_references": [
+        "../detections/yara/turla_neuron_v2.yar",
+        "../detections/threat-hunting/README.md"
+      ],
+      "mitre_url": "https://attack.mitre.org/techniques/T1140/",
+      "notes": "Base64 and RC4-style decoding transform protected input before processing."
+    },
+    {
+      "mapping_id": "SAMPLE-011",
+      "tactics": [
+        "Command and Control"
+      ],
+      "technique_id": "T1105",
+      "technique_name": "Ingress Tool Transfer",
+      "subtechnique": false,
+      "evidence_classification": "capability_only",
+      "confidence": "medium",
+      "dynamic_status": "not observed; no network file transfer",
+      "evidence_references": [
+        "../results/dnspy/turla_neuron_dnspy_analysis.md",
+        "../screenshots/TurlaNeuron_14_dnSpy_CommandScript_Types1_2_File_Transfer.png"
+      ],
+      "detection_references": [
+        "../detections/yara/turla_neuron_v2.yar",
+        "../detections/threat-hunting/README.md"
+      ],
+      "mitre_url": "https://attack.mitre.org/techniques/T1105/",
+      "notes": "Remote protocol file read/write capability exists, but transfer was not exercised."
+    }
+  ],
+  "candidate_mappings": [
+    {
+      "mapping_id": "CAND-001",
+      "tactics": [
+        "Collection"
+      ],
+      "technique_id": "T1005",
+      "technique_name": "Data from Local System",
+      "subtechnique": false,
+      "evidence_classification": "candidate_mapping",
+      "confidence": "medium",
+      "dynamic_status": "not exercised",
+      "evidence_references": [
+        "../results/dnspy/turla_neuron_dnspy_analysis.md",
+        "../screenshots/TurlaNeuron_14_dnSpy_CommandScript_Types1_2_File_Transfer.png"
+      ],
+      "detection_references": [
+        "../detections/threat-hunting/README.md"
+      ],
+      "mitre_url": "https://attack.mitre.org/techniques/T1005/",
+      "notes": "Type 2 reads local bytes, but collection intent and use are not established."
+    },
+    {
+      "mapping_id": "CAND-002",
+      "tactics": [
+        "Collection"
+      ],
+      "technique_id": "T1074.001",
+      "technique_name": "Data Staged: Local Data Staging",
+      "subtechnique": true,
+      "evidence_classification": "candidate_mapping",
+      "confidence": "low",
+      "dynamic_status": "directory observed empty; staging not observed",
+      "evidence_references": [
+        "../results/dynamic/turla_neuron_dynamic_analysis.md",
+        "../screenshots/TurlaNeuron_24_Dynamic_HostSpecific_SYSTEM_Storage_Directory.png"
+      ],
+      "detection_references": [
+        "../detections/threat-hunting/README.md"
+      ],
+      "mitre_url": "https://attack.mitre.org/techniques/T1074/001/",
+      "notes": "Host-specific storage exists, but no staged data was present."
+    }
+  ],
+  "not_observed": [
+    {
+      "activity": "external_c2_connection",
+      "status": "not_observed",
+      "reason": "Network disabled, Noriben network sections empty, HTTP.sys request count zero."
+    },
+    {
+      "activity": "exfiltration_over_c2",
+      "status": "not_observed",
+      "reason": "No external session or transferred data."
+    },
+    {
+      "activity": "lateral_movement",
+      "status": "not_observed",
+      "reason": "No supporting process, network, or authentication evidence."
+    },
+    {
+      "activity": "credential_theft",
+      "status": "not_observed",
+      "reason": "No sample or runtime evidence."
+    },
+    {
+      "activity": "process_injection",
+      "status": "not_observed",
+      "reason": "No sample or runtime evidence."
+    },
+    {
+      "activity": "spearphishing",
+      "status": "not_observed",
+      "reason": "Delivery was outside the controlled analysis scope."
+    },
+    {
+      "activity": "successful_attacker_command",
+      "status": "not_observed",
+      "reason": "No inbound request arrived."
+    },
+    {
+      "activity": "network_delivered_file_transfer",
+      "status": "not_observed",
+      "reason": "No inbound or outbound file transfer occurred."
+    }
+  ],
+  "group_context": {
+    "name": "Turla",
+    "attack_id": "G0010",
+    "associated_names": [
+      "IRON HUNTER",
+      "Group 88",
+      "Waterbug",
+      "WhiteBear",
+      "Snake",
+      "Krypton",
+      "Venomous Bear",
+      "Secret Blizzard",
+      "BELUGASTURGEON"
+    ],
+    "mitre_version": "5.1",
+    "mitre_last_modified": "2026-01-20",
+    "retrieved": "2026-07-22",
+    "mapping_status": "complete",
+    "official_layer_versions": {
+      "layer": "4.5",
+      "attack": "19",
+      "navigator": "5.3.2"
+    },
+    "source": "https://attack.mitre.org/groups/G0010/",
+    "techniques": [
+      {
+        "mapping_id": "GROUP-001",
+        "tactics": [
+          "Stealth",
+          "Privilege Escalation"
+        ],
+        "technique_id": "T1134.002",
+        "technique_name": "Create Process with Token",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1134/002/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) RPC backdoors can impersonate or steal process tokens before executing commands.(Citation: ESET Turla PowerShell May 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) RPC backdoors can impersonate or steal process tokens before executing commands.(Citation: ESET Turla PowerShell May 2019)"
+      },
+      {
+        "mapping_id": "GROUP-002",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1087.001",
+        "technique_name": "Local Account",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1087/001/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used net user to enumerate local accounts on the system.(Citation: ESET ComRAT May 2020)(Citation: ESET Crutch December 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used net user to enumerate local accounts on the system.(Citation: ESET ComRAT May 2020)(Citation: ESET Crutch December 2020)"
+      },
+      {
+        "mapping_id": "GROUP-003",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1087.002",
+        "technique_name": "Domain Account",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1087/002/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used net user /domain to enumerate domain accounts.(Citation: ESET ComRAT May 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used net user /domain to enumerate domain accounts.(Citation: ESET ComRAT May 2020)"
+      },
+      {
+        "mapping_id": "GROUP-004",
+        "tactics": [
+          "Resource Development"
+        ],
+        "technique_id": "T1583.006",
+        "technique_name": "Web Services",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1583/006/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has created web accounts including Dropbox and GitHub for C2 and document exfiltration.(Citation: ESET Crutch December 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has created web accounts including Dropbox and GitHub for C2 and document exfiltration.(Citation: ESET Crutch December 2020)"
+      },
+      {
+        "mapping_id": "GROUP-005",
+        "tactics": [
+          "Command and Control"
+        ],
+        "technique_id": "T1071.001",
+        "technique_name": "Web Protocols",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1071/001/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used HTTP and HTTPS for C2 communications.(Citation: ESET Turla Mosquito Jan 2018)(Citation: ESET Turla Mosquito May 2018)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used HTTP and HTTPS for C2 communications.(Citation: ESET Turla Mosquito Jan 2018)(Citation: ESET Turla Mosquito May 2018)"
+      },
+      {
+        "mapping_id": "GROUP-006",
+        "tactics": [
+          "Command and Control"
+        ],
+        "technique_id": "T1071.003",
+        "technique_name": "Mail Protocols",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1071/003/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used multiple backdoors which communicate with a C2 server via email attachments.(Citation: Crowdstrike GTR2020 Mar 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used multiple backdoors which communicate with a C2 server via email attachments.(Citation: Crowdstrike GTR2020 Mar 2020)"
+      },
+      {
+        "mapping_id": "GROUP-007",
+        "tactics": [
+          "Collection"
+        ],
+        "technique_id": "T1560.001",
+        "technique_name": "Archive via Utility",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1560/001/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has encrypted files stolen from connected USB drives into a RAR file before exfiltration.(Citation: Symantec Waterbug Jun 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has encrypted files stolen from connected USB drives into a RAR file before exfiltration.(Citation: Symantec Waterbug Jun 2019)"
+      },
+      {
+        "mapping_id": "GROUP-008",
+        "tactics": [
+          "Persistence",
+          "Privilege Escalation"
+        ],
+        "technique_id": "T1547.001",
+        "technique_name": "Registry Run Keys / Startup Folder",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1547/001/",
+        "notes": "Official MITRE G0010 context. A [Turla](https://attack.mitre.org/groups/G0010) Javascript backdoor added a local_update_check value under the Registry key HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run to establish persistence. Additionally, a [Turla](https://attack.mitre.org/groups/G0010) custom executable containing Metasploit shellcode is saved to the Startup folder to gain persistence.(Citation: ESET Turla Mosquito Jan 2018)(Citation: ESET Turla Mosquito May 2018)(Citation: ESET Turla Lunar toolset May 2024)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "A [Turla](https://attack.mitre.org/groups/G0010) Javascript backdoor added a local_update_check value under the Registry key HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run to establish persistence. Additionally, a [Turla](https://attack.mitre.org/groups/G0010) custom executable containing Metasploit shellcode is saved to the Startup folder to gain persistence.(Citation: ESET Turla Mosquito Jan 2018)(Citation: ESET Turla Mosquito May 2018)(Citation: ESET Turla Lunar toolset May 2024)"
+      },
+      {
+        "mapping_id": "GROUP-009",
+        "tactics": [
+          "Persistence",
+          "Privilege Escalation"
+        ],
+        "technique_id": "T1547.004",
+        "technique_name": "Winlogon Helper DLL",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1547/004/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) established persistence by adding a Shell value under the Registry key HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon.(Citation: ESET Turla Mosquito Jan 2018)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) established persistence by adding a Shell value under the Registry key HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon.(Citation: ESET Turla Mosquito Jan 2018)"
+      },
+      {
+        "mapping_id": "GROUP-010",
+        "tactics": [
+          "Credential Access"
+        ],
+        "technique_id": "T1110",
+        "technique_name": "Brute Force",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1110/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) may attempt to connect to systems within a victim's network using net use commands and a predefined list or collection of passwords.(Citation: Kaspersky Turla)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) may attempt to connect to systems within a victim's network using net use commands and a predefined list or collection of passwords.(Citation: Kaspersky Turla)"
+      },
+      {
+        "mapping_id": "GROUP-011",
+        "tactics": [
+          "Execution"
+        ],
+        "technique_id": "T1059.001",
+        "technique_name": "PowerShell",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1059/001/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used PowerShell to execute commands/scripts, in some cases via a custom executable or code from [Empire](https://attack.mitre.org/software/S0363)'s PSInject.(Citation: ESET Turla Mosquito May 2018)(Citation: ESET Turla PowerShell May 2019)(Citation: Symantec Waterbug Jun 2019) [Turla](https://attack.mitre.org/groups/G0010) has also used PowerShell scripts to load and execute malware in memory.",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used PowerShell to execute commands/scripts, in some cases via a custom executable or code from [Empire](https://attack.mitre.org/software/S0363)'s PSInject.(Citation: ESET Turla Mosquito May 2018)(Citation: ESET Turla PowerShell May 2019)(Citation: Symantec Waterbug Jun 2019) [Turla](https://attack.mitre.org/groups/G0010) has also used PowerShell scripts to load and execute malware in memory."
+      },
+      {
+        "mapping_id": "GROUP-012",
+        "tactics": [
+          "Execution"
+        ],
+        "technique_id": "T1059.003",
+        "technique_name": "Windows Command Shell",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1059/003/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) RPC backdoors have used cmd.exe to execute commands.(Citation: ESET Turla PowerShell May 2019)(Citation: Symantec Waterbug Jun 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) RPC backdoors have used cmd.exe to execute commands.(Citation: ESET Turla PowerShell May 2019)(Citation: Symantec Waterbug Jun 2019)"
+      },
+      {
+        "mapping_id": "GROUP-013",
+        "tactics": [
+          "Execution"
+        ],
+        "technique_id": "T1059.005",
+        "technique_name": "Visual Basic",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1059/005/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used VBS scripts throughout its operations.(Citation: Symantec Waterbug Jun 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used VBS scripts throughout its operations.(Citation: Symantec Waterbug Jun 2019)"
+      },
+      {
+        "mapping_id": "GROUP-014",
+        "tactics": [
+          "Execution"
+        ],
+        "technique_id": "T1059.006",
+        "technique_name": "Python",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1059/006/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used IronPython scripts as part of the [IronNetInjector](https://attack.mitre.org/software/S0581) toolchain to drop payloads.(Citation: Unit 42 IronNetInjector February 2021 )",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used IronPython scripts as part of the [IronNetInjector](https://attack.mitre.org/software/S0581) toolchain to drop payloads.(Citation: Unit 42 IronNetInjector February 2021 )"
+      },
+      {
+        "mapping_id": "GROUP-015",
+        "tactics": [
+          "Execution"
+        ],
+        "technique_id": "T1059.007",
+        "technique_name": "JavaScript",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1059/007/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used various JavaScript-based backdoors.(Citation: ESET Turla Mosquito Jan 2018)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used various JavaScript-based backdoors.(Citation: ESET Turla Mosquito Jan 2018)"
+      },
+      {
+        "mapping_id": "GROUP-016",
+        "tactics": [
+          "Resource Development"
+        ],
+        "technique_id": "T1584.003",
+        "technique_name": "Virtual Private Server",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1584/003/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used the VPS infrastructure of compromised Iranian threat actors.(Citation: NSA NCSC Turla OilRig)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used the VPS infrastructure of compromised Iranian threat actors.(Citation: NSA NCSC Turla OilRig)"
+      },
+      {
+        "mapping_id": "GROUP-017",
+        "tactics": [
+          "Resource Development"
+        ],
+        "technique_id": "T1584.004",
+        "technique_name": "Server",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1584/004/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used compromised servers as infrastructure.(Citation: Recorded Future Turla Infra 2020)(Citation: Accenture HyperStack October 2020)(Citation: Talos TinyTurla September 2021)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used compromised servers as infrastructure.(Citation: Recorded Future Turla Infra 2020)(Citation: Accenture HyperStack October 2020)(Citation: Talos TinyTurla September 2021)"
+      },
+      {
+        "mapping_id": "GROUP-018",
+        "tactics": [
+          "Resource Development"
+        ],
+        "technique_id": "T1584.006",
+        "technique_name": "Web Services",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1584/006/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has frequently used compromised WordPress sites for C2 infrastructure.(Citation: Recorded Future Turla Infra 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has frequently used compromised WordPress sites for C2 infrastructure.(Citation: Recorded Future Turla Infra 2020)"
+      },
+      {
+        "mapping_id": "GROUP-019",
+        "tactics": [
+          "Credential Access"
+        ],
+        "technique_id": "T1555.004",
+        "technique_name": "Windows Credential Manager",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1555/004/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has gathered credentials from the Windows Credential Manager tool.(Citation: Symantec Waterbug Jun 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has gathered credentials from the Windows Credential Manager tool.(Citation: Symantec Waterbug Jun 2019)"
+      },
+      {
+        "mapping_id": "GROUP-020",
+        "tactics": [
+          "Collection"
+        ],
+        "technique_id": "T1213.006",
+        "technique_name": "Databases",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1213/006/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used a custom .NET tool to collect documents from an organization's internal central database.(Citation: ESET ComRAT May 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used a custom .NET tool to collect documents from an organization's internal central database.(Citation: ESET ComRAT May 2020)"
+      },
+      {
+        "mapping_id": "GROUP-021",
+        "tactics": [
+          "Collection"
+        ],
+        "technique_id": "T1005",
+        "technique_name": "Data from Local System",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1005/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) RPC backdoors can upload files from victim machines.(Citation: ESET Turla PowerShell May 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) RPC backdoors can upload files from victim machines.(Citation: ESET Turla PowerShell May 2019)"
+      },
+      {
+        "mapping_id": "GROUP-022",
+        "tactics": [
+          "Collection"
+        ],
+        "technique_id": "T1025",
+        "technique_name": "Data from Removable Media",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1025/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) RPC backdoors can collect files from USB thumb drives.(Citation: ESET Turla PowerShell May 2019)(Citation: Symantec Waterbug Jun 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) RPC backdoors can collect files from USB thumb drives.(Citation: ESET Turla PowerShell May 2019)(Citation: Symantec Waterbug Jun 2019)"
+      },
+      {
+        "mapping_id": "GROUP-023",
+        "tactics": [
+          "Stealth"
+        ],
+        "technique_id": "T1140",
+        "technique_name": "Deobfuscate/Decode Files or Information",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1140/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used a custom decryption routine, which pulls key and salt values from other artifacts such as a WMI filter or [PowerShell Profile](https://attack.mitre.org/techniques/T1546/013), to decode encrypted PowerShell payloads.(Citation: ESET Turla PowerShell May 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used a custom decryption routine, which pulls key and salt values from other artifacts such as a WMI filter or [PowerShell Profile](https://attack.mitre.org/techniques/T1546/013), to decode encrypted PowerShell payloads.(Citation: ESET Turla PowerShell May 2019)"
+      },
+      {
+        "mapping_id": "GROUP-024",
+        "tactics": [
+          "Resource Development"
+        ],
+        "technique_id": "T1587.001",
+        "technique_name": "Malware",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1587/001/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has developed its own unique malware for use in operations.(Citation: Recorded Future Turla Infra 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has developed its own unique malware for use in operations.(Citation: Recorded Future Turla Infra 2020)"
+      },
+      {
+        "mapping_id": "GROUP-025",
+        "tactics": [
+          "Defense Impairment"
+        ],
+        "technique_id": "T1685",
+        "technique_name": "Disable or Modify Tools",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1685/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used a AMSI bypass, which patches the in-memory amsi.dll, in PowerShell scripts to bypass Windows antimalware products.(Citation: ESET Turla PowerShell May 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used a AMSI bypass, which patches the in-memory amsi.dll, in PowerShell scripts to bypass Windows antimalware products.(Citation: ESET Turla PowerShell May 2019)"
+      },
+      {
+        "mapping_id": "GROUP-026",
+        "tactics": [
+          "Initial Access"
+        ],
+        "technique_id": "T1189",
+        "technique_name": "Drive-by Compromise",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1189/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has infected victims using watering holes.(Citation: ESET ComRAT May 2020)(Citation: Secureworks IRON HUNTER Profile)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has infected victims using watering holes.(Citation: ESET ComRAT May 2020)(Citation: Secureworks IRON HUNTER Profile)"
+      },
+      {
+        "mapping_id": "GROUP-027",
+        "tactics": [
+          "Privilege Escalation",
+          "Persistence"
+        ],
+        "technique_id": "T1546.003",
+        "technique_name": "Windows Management Instrumentation Event Subscription",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1546/003/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used WMI event filters and consumers to establish persistence.(Citation: ESET Turla PowerShell May 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used WMI event filters and consumers to establish persistence.(Citation: ESET Turla PowerShell May 2019)"
+      },
+      {
+        "mapping_id": "GROUP-028",
+        "tactics": [
+          "Privilege Escalation",
+          "Persistence"
+        ],
+        "technique_id": "T1546.013",
+        "technique_name": "PowerShell Profile",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1546/013/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used PowerShell profiles to maintain persistence on an infected machine.(Citation: ESET Turla PowerShell May 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used PowerShell profiles to maintain persistence on an infected machine.(Citation: ESET Turla PowerShell May 2019)"
+      },
+      {
+        "mapping_id": "GROUP-029",
+        "tactics": [
+          "Exfiltration"
+        ],
+        "technique_id": "T1567.002",
+        "technique_name": "Exfiltration to Cloud Storage",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1567/002/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used WebDAV to upload stolen USB files to a cloud drive.(Citation: Symantec Waterbug Jun 2019) [Turla](https://attack.mitre.org/groups/G0010) has also exfiltrated stolen files to OneDrive and 4shared.(Citation: ESET ComRAT May 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used WebDAV to upload stolen USB files to a cloud drive.(Citation: Symantec Waterbug Jun 2019) [Turla](https://attack.mitre.org/groups/G0010) has also exfiltrated stolen files to OneDrive and 4shared.(Citation: ESET ComRAT May 2020)"
+      },
+      {
+        "mapping_id": "GROUP-030",
+        "tactics": [
+          "Privilege Escalation"
+        ],
+        "technique_id": "T1068",
+        "technique_name": "Exploitation for Privilege Escalation",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1068/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has exploited vulnerabilities in the VBoxDrv.sys driver to obtain kernel mode privileges.(Citation: Unit42 AcidBox June 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has exploited vulnerabilities in the VBoxDrv.sys driver to obtain kernel mode privileges.(Citation: Unit42 AcidBox June 2020)"
+      },
+      {
+        "mapping_id": "GROUP-031",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1083",
+        "technique_name": "File and Directory Discovery",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1083/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover files in specific locations on the hard disk %TEMP% directory, the current user's desktop, the Program Files directory, and Recent.(Citation: Kaspersky Turla)(Citation: ESET ComRAT May 2020) [Turla](https://attack.mitre.org/groups/G0010) RPC backdoors have also searched for files matching the lPH*.dll pattern.(Citation: ESET Turla PowerShell May 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover files in specific locations on the hard disk %TEMP% directory, the current user's desktop, the Program Files directory, and Recent.(Citation: Kaspersky Turla)(Citation: ESET ComRAT May 2020) [Turla](https://attack.mitre.org/groups/G0010) RPC backdoors have also searched for files matching the lPH*.dll pattern.(Citation: ESET Turla PowerShell May 2019)"
+      },
+      {
+        "mapping_id": "GROUP-032",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1615",
+        "technique_name": "Group Policy Discovery",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1615/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover Group Policy details using the gpresult command.(Citation: ESET ComRAT May 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover Group Policy details using the gpresult command.(Citation: ESET ComRAT May 2020)"
+      },
+      {
+        "mapping_id": "GROUP-033",
+        "tactics": [
+          "Stealth"
+        ],
+        "technique_id": "T1564.012",
+        "technique_name": "File/Path Exclusions",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1564/012/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has placed [LunarWeb](https://attack.mitre.org/software/S1141) install files into directories that are excluded from scanning.(Citation: ESET Turla Lunar toolset May 2024)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has placed [LunarWeb](https://attack.mitre.org/software/S1141) install files into directories that are excluded from scanning.(Citation: ESET Turla Lunar toolset May 2024)"
+      },
+      {
+        "mapping_id": "GROUP-034",
+        "tactics": [
+          "Command and Control"
+        ],
+        "technique_id": "T1105",
+        "technique_name": "Ingress Tool Transfer",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1105/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used shellcode to download Meterpreter after compromising a victim.(Citation: ESET Turla Mosquito May 2018)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used shellcode to download Meterpreter after compromising a victim.(Citation: ESET Turla Mosquito May 2018)"
+      },
+      {
+        "mapping_id": "GROUP-035",
+        "tactics": [
+          "Lateral Movement"
+        ],
+        "technique_id": "T1570",
+        "technique_name": "Lateral Tool Transfer",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1570/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) RPC backdoors can be used to transfer files to/from victim machines on the local network.(Citation: ESET Turla PowerShell May 2019)(Citation: Symantec Waterbug Jun 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) RPC backdoors can be used to transfer files to/from victim machines on the local network.(Citation: ESET Turla PowerShell May 2019)(Citation: Symantec Waterbug Jun 2019)"
+      },
+      {
+        "mapping_id": "GROUP-036",
+        "tactics": [
+          "Stealth"
+        ],
+        "technique_id": "T1036.005",
+        "technique_name": "Match Legitimate Resource Name or Location",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1036/005/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has named components of [LunarWeb](https://attack.mitre.org/software/S1141) to mimic Zabbix agent logs.(Citation: ESET Turla Lunar toolset May 2024)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has named components of [LunarWeb](https://attack.mitre.org/software/S1141) to mimic Zabbix agent logs.(Citation: ESET Turla Lunar toolset May 2024)"
+      },
+      {
+        "mapping_id": "GROUP-037",
+        "tactics": [
+          "Defense Impairment",
+          "Persistence"
+        ],
+        "technique_id": "T1112",
+        "technique_name": "Modify Registry",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1112/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has modified Registry values to store payloads.(Citation: ESET Turla PowerShell May 2019)(Citation: Symantec Waterbug Jun 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has modified Registry values to store payloads.(Citation: ESET Turla PowerShell May 2019)(Citation: Symantec Waterbug Jun 2019)"
+      },
+      {
+        "mapping_id": "GROUP-038",
+        "tactics": [
+          "Execution"
+        ],
+        "technique_id": "T1106",
+        "technique_name": "Native API",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1106/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) and its RPC backdoors have used APIs calls for various tasks related to subverting AMSI and accessing then executing commands through RPC and/or named pipes.(Citation: ESET Turla PowerShell May 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) and its RPC backdoors have used APIs calls for various tasks related to subverting AMSI and accessing then executing commands through RPC and/or named pipes.(Citation: ESET Turla PowerShell May 2019)"
+      },
+      {
+        "mapping_id": "GROUP-039",
+        "tactics": [
+          "Stealth"
+        ],
+        "technique_id": "T1027.005",
+        "technique_name": "Indicator Removal from Tools",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1027/005/",
+        "notes": "Official MITRE G0010 context. Based on comparison of [Gazer](https://attack.mitre.org/software/S0168) versions, [Turla](https://attack.mitre.org/groups/G0010) made an effort to obfuscate strings in the malware that could be used as IoCs, including the mutex name and named pipe.(Citation: ESET Gazer Aug 2017)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "Based on comparison of [Gazer](https://attack.mitre.org/software/S0168) versions, [Turla](https://attack.mitre.org/groups/G0010) made an effort to obfuscate strings in the malware that could be used as IoCs, including the mutex name and named pipe.(Citation: ESET Gazer Aug 2017)"
+      },
+      {
+        "mapping_id": "GROUP-040",
+        "tactics": [
+          "Stealth"
+        ],
+        "technique_id": "T1027.010",
+        "technique_name": "Command Obfuscation",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1027/010/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used encryption (including salted 3DES via [PowerSploit](https://attack.mitre.org/software/S0194)'s Out-EncryptedScript.ps1), random variable names, and base64 encoding to obfuscate PowerShell commands and payloads.(Citation: ESET Turla PowerShell May 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used encryption (including salted 3DES via [PowerSploit](https://attack.mitre.org/software/S0194)'s Out-EncryptedScript.ps1), random variable names, and base64 encoding to obfuscate PowerShell commands and payloads.(Citation: ESET Turla PowerShell May 2019)"
+      },
+      {
+        "mapping_id": "GROUP-041",
+        "tactics": [
+          "Stealth"
+        ],
+        "technique_id": "T1027.011",
+        "technique_name": "Fileless Storage",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1027/011/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used the Registry to store encrypted and encoded payloads.(Citation: ESET Turla PowerShell May 2019)(Citation: Symantec Waterbug Jun 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used the Registry to store encrypted and encoded payloads.(Citation: ESET Turla PowerShell May 2019)(Citation: Symantec Waterbug Jun 2019)"
+      },
+      {
+        "mapping_id": "GROUP-042",
+        "tactics": [
+          "Resource Development"
+        ],
+        "technique_id": "T1588.001",
+        "technique_name": "Malware",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1588/001/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used malware obtained after compromising other threat actors, such as [OilRig](https://attack.mitre.org/groups/G0049).(Citation: NSA NCSC Turla OilRig)(Citation: Recorded Future Turla Infra 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used malware obtained after compromising other threat actors, such as [OilRig](https://attack.mitre.org/groups/G0049).(Citation: NSA NCSC Turla OilRig)(Citation: Recorded Future Turla Infra 2020)"
+      },
+      {
+        "mapping_id": "GROUP-043",
+        "tactics": [
+          "Resource Development"
+        ],
+        "technique_id": "T1588.002",
+        "technique_name": "Tool",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1588/002/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has obtained and customized publicly-available tools like [Mimikatz](https://attack.mitre.org/software/S0002).(Citation: Symantec Waterbug Jun 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has obtained and customized publicly-available tools like [Mimikatz](https://attack.mitre.org/software/S0002).(Citation: Symantec Waterbug Jun 2019)"
+      },
+      {
+        "mapping_id": "GROUP-044",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1201",
+        "technique_name": "Password Policy Discovery",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1201/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used net accounts and net accounts /domain to acquire password policy information.(Citation: ESET ComRAT May 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used net accounts and net accounts /domain to acquire password policy information.(Citation: ESET ComRAT May 2020)"
+      },
+      {
+        "mapping_id": "GROUP-045",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1120",
+        "technique_name": "Peripheral Device Discovery",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1120/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used fsutil fsinfo drives to list connected drives.(Citation: ESET ComRAT May 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used fsutil fsinfo drives to list connected drives.(Citation: ESET ComRAT May 2020)"
+      },
+      {
+        "mapping_id": "GROUP-046",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1069.001",
+        "technique_name": "Local Groups",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1069/001/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used net localgroup and net localgroup Administrators to enumerate group information, including members of the local administrators group.(Citation: ESET ComRAT May 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used net localgroup and net localgroup Administrators to enumerate group information, including members of the local administrators group.(Citation: ESET ComRAT May 2020)"
+      },
+      {
+        "mapping_id": "GROUP-047",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1069.002",
+        "technique_name": "Domain Groups",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1069/002/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used net group \"Domain Admins\" /domain to identify domain administrators.(Citation: ESET ComRAT May 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used net group \"Domain Admins\" /domain to identify domain administrators.(Citation: ESET ComRAT May 2020)"
+      },
+      {
+        "mapping_id": "GROUP-048",
+        "tactics": [
+          "Initial Access"
+        ],
+        "technique_id": "T1566.002",
+        "technique_name": "Spearphishing Link",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1566/002/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) attempted to trick targets into clicking on a link featuring a seemingly legitimate domain from Adobe.com to download their malware and gain initial access.(Citation: ESET Turla Mosquito Jan 2018)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) attempted to trick targets into clicking on a link featuring a seemingly legitimate domain from Adobe.com to download their malware and gain initial access.(Citation: ESET Turla Mosquito Jan 2018)"
+      },
+      {
+        "mapping_id": "GROUP-049",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1057",
+        "technique_name": "Process Discovery",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1057/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover running processes using the tasklist /v command.(Citation: Kaspersky Turla) [Turla](https://attack.mitre.org/groups/G0010) RPC backdoors have also enumerated processes associated with specific open ports or named pipes.(Citation: ESET Turla PowerShell May 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover running processes using the tasklist /v command.(Citation: Kaspersky Turla) [Turla](https://attack.mitre.org/groups/G0010) RPC backdoors have also enumerated processes associated with specific open ports or named pipes.(Citation: ESET Turla PowerShell May 2019)"
+      },
+      {
+        "mapping_id": "GROUP-050",
+        "tactics": [
+          "Stealth",
+          "Privilege Escalation"
+        ],
+        "technique_id": "T1055",
+        "technique_name": "Process Injection",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1055/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has also used [PowerSploit](https://attack.mitre.org/software/S0194)'s Invoke-ReflectivePEInjection.ps1 to reflectively load a PowerShell payload into a random process on the victim system.(Citation: ESET Turla PowerShell May 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has also used [PowerSploit](https://attack.mitre.org/software/S0194)'s Invoke-ReflectivePEInjection.ps1 to reflectively load a PowerShell payload into a random process on the victim system.(Citation: ESET Turla PowerShell May 2019)"
+      },
+      {
+        "mapping_id": "GROUP-051",
+        "tactics": [
+          "Stealth",
+          "Privilege Escalation"
+        ],
+        "technique_id": "T1055.001",
+        "technique_name": "Dynamic-link Library Injection",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1055/001/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used Metasploit to perform reflective DLL injection in order to escalate privileges.(Citation: ESET Turla Mosquito May 2018)(Citation: Github Rapid7 Meterpreter Elevate)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used Metasploit to perform reflective DLL injection in order to escalate privileges.(Citation: ESET Turla Mosquito May 2018)(Citation: Github Rapid7 Meterpreter Elevate)"
+      },
+      {
+        "mapping_id": "GROUP-052",
+        "tactics": [
+          "Command and Control"
+        ],
+        "technique_id": "T1090",
+        "technique_name": "Proxy",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1090/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) RPC backdoors have included local UPnP RPC proxies.(Citation: ESET Turla PowerShell May 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) RPC backdoors have included local UPnP RPC proxies.(Citation: ESET Turla PowerShell May 2019)"
+      },
+      {
+        "mapping_id": "GROUP-053",
+        "tactics": [
+          "Command and Control"
+        ],
+        "technique_id": "T1090.001",
+        "technique_name": "Internal Proxy",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1090/001/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has compromised internal network systems to act as a proxy to forward traffic to C2.(Citation: Talos TinyTurla September 2021)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has compromised internal network systems to act as a proxy to forward traffic to C2.(Citation: Talos TinyTurla September 2021)"
+      },
+      {
+        "mapping_id": "GROUP-054",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1012",
+        "technique_name": "Query Registry",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1012/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover information in the Windows Registry with the reg query command.(Citation: Kaspersky Turla) [Turla](https://attack.mitre.org/groups/G0010) has also retrieved PowerShell payloads hidden in Registry keys as well as checking keys associated with null session named pipes .(Citation: ESET Turla PowerShell May 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover information in the Windows Registry with the reg query command.(Citation: Kaspersky Turla) [Turla](https://attack.mitre.org/groups/G0010) has also retrieved PowerShell payloads hidden in Registry keys as well as checking keys associated with null session named pipes .(Citation: ESET Turla PowerShell May 2019)"
+      },
+      {
+        "mapping_id": "GROUP-055",
+        "tactics": [
+          "Lateral Movement"
+        ],
+        "technique_id": "T1021.002",
+        "technique_name": "SMB/Windows Admin Shares",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1021/002/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) used net use commands to connect to lateral systems within a network.(Citation: Kaspersky Turla)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) used net use commands to connect to lateral systems within a network.(Citation: Kaspersky Turla)"
+      },
+      {
+        "mapping_id": "GROUP-056",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1018",
+        "technique_name": "Remote System Discovery",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1018/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover remote systems on a local network using the net view and net view /DOMAIN commands. [Turla](https://attack.mitre.org/groups/G0010) has also used net group \"Domain Computers\" /domain, net group \"Domain Controllers\" /domain, and net group \"Exchange Servers\" /domain to enumerate domain computers, including the organization's DC and Exchange Server.(Citation: Kaspersky Turla)(Citation: ESET ComRAT May 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover remote systems on a local network using the net view and net view /DOMAIN commands. [Turla](https://attack.mitre.org/groups/G0010) has also used net group \"Domain Computers\" /domain, net group \"Domain Controllers\" /domain, and net group \"Exchange Servers\" /domain to enumerate domain computers, including the organization's DC and Exchange Server.(Citation: Kaspersky Turla)(Citation: ESET ComRAT May 2020)"
+      },
+      {
+        "mapping_id": "GROUP-057",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1518.001",
+        "technique_name": "Security Software Discovery",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1518/001/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has obtained information on security software, including security logging information that may indicate whether their malware has been detected.(Citation: ESET ComRAT May 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has obtained information on security software, including security logging information that may indicate whether their malware has been detected.(Citation: ESET ComRAT May 2020)"
+      },
+      {
+        "mapping_id": "GROUP-058",
+        "tactics": [
+          "Defense Impairment"
+        ],
+        "technique_id": "T1553.006",
+        "technique_name": "Code Signing Policy Modification",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1553/006/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has modified variables in kernel memory to turn off Driver Signature Enforcement after exploiting vulnerabilities that obtained kernel mode privileges.(Citation: Unit42 AcidBox June 2020)(Citation: GitHub Turla Driver Loader)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has modified variables in kernel memory to turn off Driver Signature Enforcement after exploiting vulnerabilities that obtained kernel mode privileges.(Citation: Unit42 AcidBox June 2020)(Citation: GitHub Turla Driver Loader)"
+      },
+      {
+        "mapping_id": "GROUP-059",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1082",
+        "technique_name": "System Information Discovery",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1082/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover operating system configuration details using the systeminfo and set commands.(Citation: Kaspersky Turla)(Citation: ESET ComRAT May 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover operating system configuration details using the systeminfo and set commands.(Citation: Kaspersky Turla)(Citation: ESET ComRAT May 2020)"
+      },
+      {
+        "mapping_id": "GROUP-060",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1016",
+        "technique_name": "System Network Configuration Discovery",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1016/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover network configuration details using the arp -a, nbtstat -n, net config, ipconfig /all, and route commands, as well as [NBTscan](https://attack.mitre.org/software/S0590).(Citation: Kaspersky Turla)(Citation: Symantec Waterbug Jun 2019)(Citation: ESET ComRAT May 2020) [Turla](https://attack.mitre.org/groups/G0010) RPC backdoors have also retrieved registered RPC interface information from process memory.(Citation: ESET Turla PowerShell May 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover network configuration details using the arp -a, nbtstat -n, net config, ipconfig /all, and route commands, as well as [NBTscan](https://attack.mitre.org/software/S0590).(Citation: Kaspersky Turla)(Citation: Symantec Waterbug Jun 2019)(Citation: ESET ComRAT May 2020) [Turla](https://attack.mitre.org/groups/G0010) RPC backdoors have also retrieved registered RPC interface information from process memory.(Citation: ESET Turla PowerShell May 2019)"
+      },
+      {
+        "mapping_id": "GROUP-061",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1016.001",
+        "technique_name": "Internet Connection Discovery",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1016/001/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used tracert to check internet connectivity.(Citation: ESET ComRAT May 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used tracert to check internet connectivity.(Citation: ESET ComRAT May 2020)"
+      },
+      {
+        "mapping_id": "GROUP-062",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1049",
+        "technique_name": "System Network Connections Discovery",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1049/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover active local network connections using the netstat -an, net use, net file, and net session commands.(Citation: Kaspersky Turla)(Citation: ESET ComRAT May 2020) [Turla](https://attack.mitre.org/groups/G0010) RPC backdoors have also enumerated the IPv4 TCP connection table via the GetTcpTable2 API call.(Citation: ESET Turla PowerShell May 2019)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover active local network connections using the netstat -an, net use, net file, and net session commands.(Citation: Kaspersky Turla)(Citation: ESET ComRAT May 2020) [Turla](https://attack.mitre.org/groups/G0010) RPC backdoors have also enumerated the IPv4 TCP connection table via the GetTcpTable2 API call.(Citation: ESET Turla PowerShell May 2019)"
+      },
+      {
+        "mapping_id": "GROUP-063",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1007",
+        "technique_name": "System Service Discovery",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1007/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover running services and associated processes using the tasklist /svc command.(Citation: Kaspersky Turla)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover running services and associated processes using the tasklist /svc command.(Citation: Kaspersky Turla)"
+      },
+      {
+        "mapping_id": "GROUP-064",
+        "tactics": [
+          "Discovery"
+        ],
+        "technique_id": "T1124",
+        "technique_name": "System Time Discovery",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1124/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover the system time by using the net time command.(Citation: Kaspersky Turla)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) surveys a system upon check-in to discover the system time by using the net time command.(Citation: Kaspersky Turla)"
+      },
+      {
+        "mapping_id": "GROUP-065",
+        "tactics": [
+          "Execution"
+        ],
+        "technique_id": "T1204.001",
+        "technique_name": "Malicious Link",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1204/001/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used spearphishing via a link to get users to download and run their malware.(Citation: ESET Turla Mosquito Jan 2018)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used spearphishing via a link to get users to download and run their malware.(Citation: ESET Turla Mosquito Jan 2018)"
+      },
+      {
+        "mapping_id": "GROUP-066",
+        "tactics": [
+          "Stealth",
+          "Persistence",
+          "Privilege Escalation",
+          "Initial Access"
+        ],
+        "technique_id": "T1078.003",
+        "technique_name": "Local Accounts",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1078/003/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has abused local accounts that have the same password across the victim’s network.(Citation: ESET Crutch December 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has abused local accounts that have the same password across the victim’s network.(Citation: ESET Crutch December 2020)"
+      },
+      {
+        "mapping_id": "GROUP-067",
+        "tactics": [
+          "Command and Control"
+        ],
+        "technique_id": "T1102",
+        "technique_name": "Web Service",
+        "subtechnique": false,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1102/",
+        "notes": "Official MITRE G0010 context. [Turla](https://attack.mitre.org/groups/G0010) has used legitimate web services including Pastebin, Dropbox, and GitHub for C2 communications.(Citation: Accenture HyperStack October 2020)(Citation: ESET Crutch December 2020)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "[Turla](https://attack.mitre.org/groups/G0010) has used legitimate web services including Pastebin, Dropbox, and GitHub for C2 communications.(Citation: Accenture HyperStack October 2020)(Citation: ESET Crutch December 2020)"
+      },
+      {
+        "mapping_id": "GROUP-068",
+        "tactics": [
+          "Command and Control"
+        ],
+        "technique_id": "T1102.002",
+        "technique_name": "Bidirectional Communication",
+        "subtechnique": true,
+        "evidence_classification": "group_level_context",
+        "confidence": "high",
+        "dynamic_status": "not assessed for this sample",
+        "evidence_references": [
+          "https://attack.mitre.org/groups/G0010/"
+        ],
+        "detection_references": [],
+        "mitre_url": "https://attack.mitre.org/techniques/T1102/002/",
+        "notes": "Official MITRE G0010 context. A [Turla](https://attack.mitre.org/groups/G0010) JavaScript backdoor has used Google Apps Script as its C2 server.(Citation: ESET Turla Mosquito Jan 2018)(Citation: ESET Turla Mosquito May 2018)",
+        "source": "MITRE ATT&CK G0010",
+        "mitre_layer_comment": "A [Turla](https://attack.mitre.org/groups/G0010) JavaScript backdoor has used Google Apps Script as its C2 server.(Citation: ESET Turla Mosquito Jan 2018)(Citation: ESET Turla Mosquito May 2018)"
+      }
+    ]
+  },
+  "activity_status": {
+    "assessment": "publicly_reported_active",
+    "public_reporting_status": "Publicly reported as active",
+    "status_as_of": "2026-06-25",
+    "confidence": "high",
+    "latest_supporting_source": "Google Threat Intelligence Group — STOCKSTAY Another Day",
+    "sources": [
+      {
+        "id": "REF-004",
+        "title": "Microsoft Kazuar report",
+        "url": "https://www.microsoft.com/en-us/security/blog/2026/05/14/kazuar-anatomy-of-a-nation-state-botnet/",
+        "scope": "group_activity"
+      },
+      {
+        "id": "REF-006",
+        "title": "Google Threat Intelligence STOCKSTAY Another Day",
+        "url": "https://cloud.google.com/blog/topics/threat-intelligence/stockstay-turla-intelligence-gathering",
+        "scope": "group_activity"
+      }
+    ],
+    "limitations": [
+      "Time-bounded public assessment.",
+      "Does not prove current deployment of this Neuron sample.",
+      "Not inferred from the MITRE page modification date."
+    ]
+  },
+  "detection_coverage": [
+    {
+      "technique_id": "T1543.003",
+      "yara": true,
+      "sigma": true,
+      "soar": true,
+      "threat_hunting": true,
+      "notes": "The -install branch and Windows artifacts confirm service persistence."
+    },
+    {
+      "technique_id": "T1036.004",
+      "yara": true,
+      "sigma": false,
+      "soar": true,
+      "threat_hunting": true,
+      "notes": "Legitimate-looking Exchange service identity; the name alone is not sufficient."
+    },
+    {
+      "technique_id": "T1059.003",
+      "yara": true,
+      "sigma": false,
+      "soar": false,
+      "threat_hunting": true,
+      "notes": "cmd.exe /c with redirected stdout/stderr exists in code; no attacker command ran."
+    },
+    {
+      "technique_id": "T1112",
+      "yara": false,
+      "sigma": true,
+      "soar": true,
+      "threat_hunting": true,
+      "notes": "Different Registry activities served persistence, event-source, ZoneMap, and configuration purposes."
+    },
+    {
+      "technique_id": "T1012",
+      "yara": false,
+      "sigma": false,
+      "soar": false,
+      "threat_hunting": true,
+      "notes": "Recursive HKCU\\SOFTWARE search and value reads are present in code."
+    },
+    {
+      "technique_id": "T1071.001",
+      "yara": true,
+      "sigma": false,
+      "soar": true,
+      "threat_hunting": true,
+      "notes": "The wildcard HTTPS prefix is local listener configuration, not a remote C2 destination."
+    },
+    {
+      "technique_id": "T1573.001",
+      "yara": true,
+      "sigma": false,
+      "soar": false,
+      "threat_hunting": true,
+      "notes": "RC4-style processing supports encrypted command and response data."
+    },
+    {
+      "technique_id": "T1573.002",
+      "yara": true,
+      "sigma": false,
+      "soar": false,
+      "threat_hunting": true,
+      "notes": "Embedded 1024-bit RSA public key, exponent 65537, OAEP; no private key recovered."
+    },
+    {
+      "technique_id": "T1132.001",
+      "yara": true,
+      "sigma": false,
+      "soar": false,
+      "threat_hunting": true,
+      "notes": "Base64 request, response, and file-content processing is present."
+    },
+    {
+      "technique_id": "T1140",
+      "yara": true,
+      "sigma": false,
+      "soar": false,
+      "threat_hunting": true,
+      "notes": "Base64 and RC4-style decoding transform protected input before processing."
+    },
+    {
+      "technique_id": "T1105",
+      "yara": true,
+      "sigma": false,
+      "soar": false,
+      "threat_hunting": true,
+      "notes": "Remote protocol file read/write capability exists, but transfer was not exercised."
+    }
+  ],
+  "references": [
+    {
+      "id": "REF-001",
+      "title": "MITRE ATT&CK Turla G0010",
+      "url": "https://attack.mitre.org/groups/G0010/",
+      "scope": "group"
+    },
+    {
+      "id": "REF-002",
+      "title": "MITRE ATT&CK Groups methodology",
+      "url": "https://attack.mitre.org/groups/index.html",
+      "scope": "methodology"
+    },
+    {
+      "id": "REF-003",
+      "title": "MITRE ATT&CK Navigator",
+      "url": "https://mitre-attack.github.io/attack-navigator/",
+      "scope": "visualization"
+    },
+    {
+      "id": "REF-004",
+      "title": "Microsoft Kazuar report",
+      "url": "https://www.microsoft.com/en-us/security/blog/2026/05/14/kazuar-anatomy-of-a-nation-state-botnet/",
+      "scope": "group_activity"
+    },
+    {
+      "id": "REF-005",
+      "title": "Microsoft ApolloShadow report",
+      "url": "https://www.microsoft.com/en-us/security/blog/2025/07/31/frozen-in-transit-secret-blizzards-aitm-campaign-against-diplomats/",
+      "scope": "group_activity"
+    },
+    {
+      "id": "REF-006",
+      "title": "Google Threat Intelligence STOCKSTAY Another Day",
+      "url": "https://cloud.google.com/blog/topics/threat-intelligence/stockstay-turla-intelligence-gathering",
+      "scope": "group_activity"
+    },
+    {
+      "id": "REF-007",
+      "title": "UK NCSC Turla malware publication",
+      "url": "https://www.ncsc.gov.uk/file/2691/download?token=RzXWTuAB",
+      "scope": "group_context"
+    },
+    {
+      "id": "REF-008",
+      "title": "UK NCSC Turla group malware alert",
+      "url": "https://www.ncsc.gov.uk/alerts/turla-group-malware",
+      "scope": "group_context"
+    },
+    {
+      "id": "REF-009",
+      "title": "HTB Malware Analysis",
+      "url": "https://academy.hackthebox.com/app/module/234/section/2514",
+      "scope": "methodology"
+    },
+    {
+      "id": "REF-010",
+      "title": "HTB Incident Reporting",
+      "url": "https://academy.hackthebox.com/app/module/238/section/2584",
+      "scope": "methodology"
+    }
+  ],
+  "evidence_limitations": [
+    "Static capability does not prove execution.",
+    "No attacker request or external C2 session was observed.",
+    "No external C2 IP address or domain was identified.",
+    "No private RSA key was recovered.",
+    "The malware-run Procmon PML was unusable.",
+    "Group-level reporting does not prove sample behavior.",
+    "Kazuar, ApolloShadow, STOCKSTAY, and LightNeuron are not treated as this sample."
+  ]
+}

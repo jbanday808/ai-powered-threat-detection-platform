@@ -1,0 +1,42 @@
+finding_id,category,artifact_type,value,classification,confidence,evidence_source,detection_value,notes
+STA-001,sample_identity,filename,Microsoft.Exchange.Service.exe,confirmed_file_metadata,high,Metadata screenshots,Filename and service-image hunting,Filename can be changed
+STA-002,sample_identity,md5,0f12268221e27406351a6313f902b498,confirmed_file_metadata,high,VirusTotal metadata,Exact sample matching,Prefer SHA-256 where available
+STA-003,sample_identity,sha1,b0bdbc81a0e367330007b7e593d8ddabf92ca7afd,confirmed_file_metadata,high,VirusTotal metadata,Exact sample matching,Prefer SHA-256 where available
+STA-004,sample_identity,sha256,d1d7a96fcadc137e80ad866c838502713db9cdfe59939342b8e3beacf9c7fe29,confirmed_file_metadata,high,VirusTotal and YARA evidence,Preferred exact sample identifier,Strongest file indicator
+STA-005,sample_identity,defender_detection,Trojan:MSIL/DarkNeuron.B!dha,supporting_context,medium,Defender and YARA metadata,Defender telemetry pivot,Product classification rather than content indicator
+STA-006,file_metadata,file_type,PE32 executable,confirmed_file_metadata,high,file and ExifTool screenshot,File triage,Windows portable executable
+STA-007,file_metadata,architecture,Intel i386 / 32-bit,confirmed_file_metadata,high,file and ExifTool screenshot,Execution-environment context,Managed 32-bit image
+STA-008,file_metadata,runtime,Mono/.NET assembly,confirmed_file_metadata,high,file and VirusTotal metadata,dnSpy triage,Managed code
+STA-009,file_metadata,subsystem,Windows GUI,confirmed_file_metadata,medium,ExifTool screenshot,Execution-context support,GUI subsystem does not imply visible windows
+STA-010,file_metadata,file_size,43008 bytes / 42 KB,confirmed_file_metadata,high,VirusTotal and ExifTool screenshots,Sample triage,Small size does not limit capability
+STA-011,file_metadata,dotnet_metadata_version,v4.0.30319,confirmed_file_metadata,medium,VirusTotal metadata screenshot,Runtime context,Metadata value only
+STA-012,file_metadata,linker_version,11.0,confirmed_file_metadata,medium,VirusTotal and ExifTool screenshots,Build context,Not attribution evidence
+STA-013,file_metadata,file_description,MSExchange,confirmed_file_metadata,medium,ExifTool screenshot,Masquerading context,Embedded metadata
+STA-014,file_metadata,product_name,MSExchange,confirmed_file_metadata,medium,ExifTool screenshot,Masquerading context,Embedded metadata
+STA-015,file_metadata,original_filename,Microsoft.Exchange.Service.exe,confirmed_file_metadata,medium,ExifTool screenshot,Filename correlation,Embedded metadata can be forged
+STA-016,file_metadata,version,1.0.0.0,confirmed_file_metadata,medium,ExifTool screenshot,Sample comparison,"File, product, and assembly version shown"
+STA-017,file_metadata,pe_timestamp,2017-03-12 03:05:52,supporting_context,low,Metadata screenshots,Timeline context only,PE metadata timestamp is potentially compiler-controlled and not independently verified
+STA-018,service,service_name,MSExchangeService,confirmed_statically,high,dnSpy and YARA evidence,Service-installation detection,Distinctive artifact
+STA-019,service,display_name,Microsoft Exchange Service,confirmed_statically,medium,dnSpy evidence,Service correlation,Exchange-themed masquerading
+STA-020,service,description,"Host service for the Microsoft Exchange Server management provider. If this service is stopped or disabled, Microsoft Exchange cannot be managed.",confirmed_statically,medium,dnSpy evidence,Service-description hunting,Needs correlation
+STA-021,protocol,listener_prefix,https://*:443/ews/exchange/,confirmed_statically,high,dnSpy and YARA evidence,HTTP.sys and file-content hunting,Wildcard local listener not a remote destination
+STA-022,protocol,uri_path,/ews/exchange/,confirmed_statically,high,dnSpy and YARA evidence,Network and listener hunting,Case-insensitive matching recommended
+STA-023,protocol,request_field,cid,confirmed_statically,medium,dnSpy evidence,Correlated protocol hunting,Broad alone
+STA-024,protocol,request_field,cadataKey,confirmed_statically,high,dnSpy and YARA evidence,Correlated protocol hunting,Distinctive token
+STA-025,protocol,request_field,cadata,confirmed_statically,medium,dnSpy evidence,Correlated protocol hunting,Needs context
+STA-026,protocol,request_field,cadataSig,confirmed_statically,high,dnSpy and YARA evidence,Correlated protocol hunting,Distinctive token
+STA-027,identifier,validation_guid,f2949bab-240a-46ca-a455-6f504367ba7d,confirmed_statically,high,dnSpy and YARA evidence,Static and protocol correlation,Embedded identifier
+STA-028,identifier,encryption_guid,8d963325-01b8-4671-8e82-d0904275ab06,confirmed_statically,high,dnSpy and YARA evidence,Static and protocol correlation,Embedded fallback identifier
+STA-029,function,function_name,ExecCMD,confirmed_statically,high,YARA and dnSpy evidence,YARA correlation,Function artifact
+STA-030,function,function_name,KillOldThread,confirmed_statically,high,YARA and dnSpy evidence,YARA correlation,Function artifact
+STA-031,function,function_name,EncryptScript,confirmed_statically,medium,dnSpy evidence,Static correlation,RC4-style routine
+STA-032,task,task_marker,MSXEWS,supporting_context,medium,dnSpy and IOC evidence,Static task-artifact hunting,Use with related indicators
+STA-033,task,base64_marker,TVNYRVdT,supporting_context,medium,dnSpy and IOC evidence,Encoded-artifact hunting,Base64 representation of MSXEWS
+STA-034,capability,service_persistence,"Install, uninstall, configure, and start MSExchangeService",confirmed_statically,high,dnSpy package,Service persistence detection,Dynamic confirmation is separate
+STA-035,capability,command_execution,Hidden cmd.exe execution with output and error capture,capability_only,high,dnSpy package,Service-child-process hunting,No attacker command was observed
+STA-036,capability,file_operations,Base64-backed file write and read operations,capability_only,medium,dnSpy package,File-operation hunting,No transfer was dynamically exercised
+STA-037,capability,registry_configuration,Recursive encrypted HKCU SOFTWARE configuration read and write,capability_only,medium,dnSpy package,Registry hunting,Exact hidden location was not dynamically confirmed
+STA-038,capability,cryptography,RC4-style processing and RSA public-key encryption,confirmed_statically,medium,dnSpy package,Encrypted-protocol context,No private RSA key was recovered
+STA-039,capability,storage,C:\Windows\Temp\{GUID} with five-minute cleanup polling,confirmed_statically,medium,dnSpy package,Host-derived temporary-directory hunting,Exact MachineGuid is environmental
+STA-040,yara_validation,rule_match,Turla_Neuron_Exact,detection_validated,high,YARA compiled-match screenshot and compiled rule,Exact SHA-256 detection,Scanning did not execute the sample
+STA-041,yara_validation,rule_match,Turla_Neuron_Behavior,detection_validated,high,YARA compiled-match screenshot and compiled rule,Behavioral static detection,Uses a correlated artifact set

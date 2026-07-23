@@ -1,0 +1,80 @@
+Turla Neuron / DarkNeuron Threat-Hunting Package Validation
+Validation date: 2026-07-22
+
+Directory transition
+1. detections/suricata/ inspected: PASS
+2. Actual Suricata rules, PCAP results, IDS configuration, test traffic, or documentation found: none
+3. Empty detections/suricata/ renamed to detections/threat-hunting/: PASS
+4. .gitkeep handling: PASS (not applicable; original directory contained no .gitkeep)
+
+Required files
+5. README.md exists: PASS
+6. turla_neuron_threat_hunt_plan.md exists: PASS
+7. turla_neuron_hunt_hypotheses.yml exists: PASS
+8. turla_neuron_hunt_queries.md exists: PASS
+9. turla_neuron_hunt_tracker.csv exists: PASS
+10. turla_neuron_hunt_mapping.json exists: PASS
+11. Validation report exists: PASS
+
+Structural validation
+- YAML parses successfully: PASS
+- YAML UUID: a508db9c-bf3c-428b-abd9-0d9dc8fc4afd (valid and newly generated)
+- YAML status: test
+- Hypotheses: 12 (HUNT-001 through HUNT-012)
+- Required hypothesis fields present: PASS
+- Outcomes: 8
+- JSON parses successfully: PASS
+- JSON hypothesis mappings: 12
+- Tracker rows: 12
+- Tracker columns per row: 13
+- Duplicate tracker rows: 0
+- Tracker status values: not_started
+- Invented findings, counts, hosts, times, outcomes, or analysts in tracker: 0
+
+Reference validation
+- README local references: 5; broken: 0
+- Hunt-plan local references: 7; broken: 0
+- Query-document local references: 3; broken: 0
+- YAML repository-relative references: 6; broken: 0
+- JSON detection references: 3; broken: 0
+- JSON evidence references: 5; broken: 0
+- Existing Sigma rule referenced: PASS
+- Existing YARA rule referenced: PASS
+
+Indicator and evidence validation
+- Exact SHA-256: present
+- Filename and service identity: present
+- Defender name and Threat ID: present
+- URI path and local wildcard prefix: present
+- Both embedded GUIDs: present
+- Four request-field names: present
+- ExecCMD, KillOldThread, EncryptScript, MSXEWS, and TVNYRVdT: present
+- Laboratory path excluded as production IOC: PASS
+- Exact laboratory MachineGuid excluded: PASS
+- Process IDs, SID, and quarantine filenames excluded as general IOCs: PASS
+
+Safety and accuracy validation
+- Queries are read-only: PASS
+- No malware execution or service mutation command: PASS
+- No listener request or network-state change: PASS
+- No C2 client, payload generator, protocol emulator, or exploit code: PASS
+- No generated cid, cadataKey, cadata, or cadataSig payload: PASS
+- Port 443, LocalSystem, PID 4/System, Exchange terminology, GUID directories, and ZoneMap values treated as broad/supporting context: PASS
+- Static capabilities remain distinct from dynamic observations: PASS
+- No external C2 IP/domain, affected host, account, attacker command, transfer, exfiltration, lateral movement, packet content, Sysmon event, Suricata alert, Splunk result, or completed hunt result invented: PASS
+
+Repository-reference updates
+- Root README Suricata-reserved section replaced with threat-hunting package link: PASS
+- Root README repository map updated: PASS
+- General future Suricata/network IDS recommendation retained: PASS
+- Other case studies modified: 0
+
+Evidence limitations
+- No production threat hunt was executed.
+- No Sysmon events or representative malware packet capture exist.
+- No external C2 infrastructure or attacker request was observed.
+- No remote command, file transfer, exfiltration, or lateral movement was observed.
+- The raw malware-run Procmon PML was unusable.
+- Several hunts require enterprise telemetry not available in the laboratory.
+
+Final result: PASS
