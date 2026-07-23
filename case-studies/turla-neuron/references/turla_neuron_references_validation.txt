@@ -1,0 +1,23 @@
+Turla Neuron Reference Package Validation
+=========================================
+
+Total references discovered in pre-existing case-study files: 3
+Total references included: 16
+Required references present: 16 of 16
+Missing required references: None
+Duplicate URLs: None
+Duplicate JSON reference IDs: None
+Markdown-only URLs: None
+JSON-only URLs: None
+Markdown and JSON URL sets match: PASS
+Markdown table and JSON ID sets match: PASS
+JSON syntax validation: PASS
+New HTB incident-reporting reference present: PASS
+
+Discovery notes:
+- The three pre-existing external references were the Hack The Box malware-analysis module and two UK NCSC Turla sources.
+- The embedded wildcard HTTPS EWS listener prefix is malware configuration, not an external reference, and was excluded.
+- No external YARA, Splunk, or Suricata documentation URL was present in the case-study files.
+- No unrelated URL from another malware case study was included.
+
+Final result: PASS

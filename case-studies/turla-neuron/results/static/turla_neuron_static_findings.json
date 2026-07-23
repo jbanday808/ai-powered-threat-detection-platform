@@ -1,0 +1,153 @@
+{
+  "case": {
+    "incident_id": "MAL-2026-0721-NEURON",
+    "family": "Turla Neuron",
+    "alias": "DarkNeuron",
+    "sample": "Microsoft.Exchange.Service.exe",
+    "md5": "0f12268221e27406351a6313f902b498",
+    "sha1": "b0bdbc81a0e367330007b7e593d8ddabf92ca7afd",
+    "sha256": "d1d7a96fcadc137e80ad866c838502713db9cdfe59939342b8e3beacf9c7fe29",
+    "analyst": "James Banday",
+    "analysis_date": "2026-07-22",
+    "analysis_type": "static"
+  },
+  "file_metadata": {
+    "file_type": "PE32 executable",
+    "platform": "Microsoft Windows",
+    "architecture": "Intel i386 / 32-bit",
+    "runtime": "Mono/.NET assembly",
+    "subsystem": "Windows GUI",
+    "size_bytes": 43008,
+    "size_display": "42 KB",
+    "dotnet_metadata_version": "v4.0.30319",
+    "linker_version": "11.0",
+    "file_description": "MSExchange",
+    "product_name": "MSExchange",
+    "original_filename": "Microsoft.Exchange.Service.exe",
+    "file_version": "1.0.0.0",
+    "product_version": "1.0.0.0",
+    "assembly_version": "1.0.0.0",
+    "pe_metadata_timestamp": "2017-03-12 03:05:52",
+    "timestamp_note": "PE metadata timestamp — potentially compiler-controlled and not independently verified.",
+    "classification": "confirmed_file_metadata"
+  },
+  "embedded_artifacts": [
+    {"id": "ART-001", "category": "service", "type": "service_name", "value": "MSExchangeService", "classification": "confirmed_statically", "detection_value": "high"},
+    {"id": "ART-002", "category": "service", "type": "display_name", "value": "Microsoft Exchange Service", "classification": "confirmed_statically", "detection_value": "medium"},
+    {"id": "ART-003", "category": "service", "type": "description", "value": "Host service for the Microsoft Exchange Server management provider. If this service is stopped or disabled, Microsoft Exchange cannot be managed.", "classification": "confirmed_statically", "detection_value": "medium"},
+    {"id": "ART-004", "category": "protocol", "type": "listener_prefix", "value": "https://*:443/ews/exchange/", "classification": "confirmed_statically", "detection_value": "high"},
+    {"id": "ART-005", "category": "protocol", "type": "uri_path", "value": "/ews/exchange/", "classification": "confirmed_statically", "detection_value": "high"},
+    {"id": "ART-006", "category": "protocol", "type": "request_field", "value": "cid", "classification": "confirmed_statically", "detection_value": "medium"},
+    {"id": "ART-007", "category": "protocol", "type": "request_field", "value": "cadataKey", "classification": "confirmed_statically", "detection_value": "high"},
+    {"id": "ART-008", "category": "protocol", "type": "request_field", "value": "cadata", "classification": "confirmed_statically", "detection_value": "medium"},
+    {"id": "ART-009", "category": "protocol", "type": "request_field", "value": "cadataSig", "classification": "confirmed_statically", "detection_value": "high"},
+    {"id": "ART-010", "category": "identifier", "type": "validation_guid", "value": "f2949bab-240a-46ca-a455-6f504367ba7d", "classification": "confirmed_statically", "detection_value": "high"},
+    {"id": "ART-011", "category": "identifier", "type": "encryption_guid", "value": "8d963325-01b8-4671-8e82-d0904275ab06", "classification": "confirmed_statically", "detection_value": "high"},
+    {"id": "ART-012", "category": "function", "type": "function_name", "value": "ExecCMD", "classification": "confirmed_statically", "detection_value": "high"},
+    {"id": "ART-013", "category": "function", "type": "function_name", "value": "KillOldThread", "classification": "confirmed_statically", "detection_value": "high"},
+    {"id": "ART-014", "category": "function", "type": "function_name", "value": "EncryptScript", "classification": "confirmed_statically", "detection_value": "medium"},
+    {"id": "ART-015", "category": "task", "type": "task_marker", "value": "MSXEWS", "classification": "supporting_context", "detection_value": "medium"},
+    {"id": "ART-016", "category": "task", "type": "base64_marker", "value": "TVNYRVdT", "classification": "supporting_context", "detection_value": "medium"}
+  ],
+  "capabilities": [
+    {
+      "id": "CAP-001",
+      "category": "entry_point",
+      "summary": "Handles -install and -uninstall and otherwise starts MSExchangeService through ServiceBase.Run.",
+      "classification": "confirmed_statically",
+      "dynamic_status": "documented_separately"
+    },
+    {
+      "id": "CAP-002",
+      "category": "service_persistence",
+      "summary": "Configures an Exchange-themed Windows service and starts it after installation.",
+      "classification": "confirmed_statically",
+      "dynamic_status": "confirmed in separate dynamic evidence"
+    },
+    {
+      "id": "CAP-003",
+      "category": "https_listener",
+      "summary": "Starts a WebServer listener for /ews/exchange/ and stops it from the service shutdown method.",
+      "classification": "confirmed_statically",
+      "dynamic_status": "local listener confirmed; no external request observed"
+    },
+    {
+      "id": "CAP-004",
+      "category": "command_channel",
+      "summary": "Parses request fields, Base64 data, JSON, and encrypted request and response content.",
+      "classification": "confirmed_statically",
+      "dynamic_status": "not exercised"
+    },
+    {
+      "id": "CAP-005",
+      "category": "command_and_file_operations",
+      "summary": "Implements hidden cmd.exe execution, output capture, file writing, file reading, and Base64 conversion.",
+      "classification": "capability_only",
+      "dynamic_status": "not exercised"
+    },
+    {
+      "id": "CAP-006",
+      "category": "registry_configuration",
+      "summary": "Recursively searches for encrypted binary JSON configuration under HKCU SOFTWARE and can write REG_BINARY configuration.",
+      "classification": "capability_only",
+      "dynamic_status": "exact hidden configuration not confirmed"
+    },
+    {
+      "id": "CAP-007",
+      "category": "cryptography",
+      "summary": "Implements RC4-style processing and RSA public-key encryption; no private key was recovered.",
+      "classification": "confirmed_statically",
+      "dynamic_status": "not exercised"
+    },
+    {
+      "id": "CAP-008",
+      "category": "storage",
+      "summary": "Uses a MachineGuid-derived temporary directory and a five-minute cleanup loop.",
+      "classification": "confirmed_statically",
+      "dynamic_status": "directory creation confirmed separately"
+    }
+  ],
+  "yara_validation": {
+    "source_rule": "case-studies/turla-neuron/detections/yara/turla_neuron_v2.yar",
+    "compiled_rule": null,
+    "rules": [
+      {"name": "Turla_Neuron_Exact", "classification": "detection_validated", "result": "matched analyzed sample", "basis": "SHA-256"},
+      {"name": "Turla_Neuron_Behavior", "classification": "detection_validated", "result": "matched analyzed sample", "basis": "service, listener, GUID, protocol, and function artifacts"}
+    ],
+    "source_rule_match": true,
+    "compiled_rule_match": true,
+    "execution_note": "YARA scanning read file content and did not execute the malware."
+  },
+  "mitre_attack": [
+    {"technique": "Windows Service", "id": "T1543.003", "classification": "confirmed_statically", "evidence": "Service installer and runtime code"},
+    {"technique": "Windows Command Shell", "id": "T1059.003", "classification": "capability_only", "evidence": "Hidden cmd.exe execution branch"},
+    {"technique": "Modify Registry", "id": "T1112", "classification": "capability_only", "evidence": "Encrypted configuration read and write code"},
+    {"technique": "Web Protocols", "id": "T1071.001", "classification": "capability_only", "evidence": "HTTPS listener and request parser"},
+    {"technique": "Data Encoding", "id": "T1132.001", "classification": "confirmed_statically", "evidence": "Base64 request, response, and file-content conversion"},
+    {"technique": "Encrypted Channel", "id": "T1573", "classification": "capability_only", "evidence": "RC4-style and RSA-related protocol processing"},
+    {"technique": "Ingress Tool Transfer", "id": "T1105", "classification": "capability_only", "evidence": "File write and read command types"},
+    {"technique": "Deobfuscate/Decode Files or Information", "id": "T1140", "classification": "confirmed_statically", "evidence": "Base64 decoding, decryption, and JSON decoding"}
+  ],
+  "evidence_limitations": [
+    "Static analysis does not prove execution or attacker use.",
+    "Decompiled code may differ slightly from the original source code.",
+    "No external C2 IP address or domain was identified.",
+    "No attacker request or successful remote command was observed.",
+    "No private RSA key was recovered.",
+    "File-transfer and hidden-configuration capabilities were not dynamically exercised.",
+    "Laboratory paths and the exact MachineGuid are not universal indicators."
+  ],
+  "evidence_files": [
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_01_VirusTotal_SHA256_and_File_Details.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_02_PE_and_DotNet_File_Metadata.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_03_Refined_YARA_v2_Rule_Source_Code.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_04_Compiled_YARA_v2_Exact_and_Behavioral_Matches.png",
+    "case-studies/turla-neuron/screenshots/TurlaNeuron_04_Refined_YARA_v2_Rule_Source_Code.png",
+    "case-studies/turla-neuron/results/dnspy/turla_neuron_dnspy_analysis.md",
+    "case-studies/turla-neuron/results/dnspy/turla_neuron_dnspy_findings.json",
+    "case-studies/turla-neuron/detections/yara/turla_neuron_v2.yar",
+    "case-studies/turla-neuron/iocs/turla_neuron_iocs.md",
+    "case-studies/turla-neuron/reports/incident-report.md",
+    "case-studies/turla-neuron/references/turla_neuron_references.md"
+  ]
+}

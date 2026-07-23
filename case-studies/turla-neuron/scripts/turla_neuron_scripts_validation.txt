@@ -1,0 +1,68 @@
+Turla Neuron / DarkNeuron Defensive Scripts Validation
+Validation date: 2026-07-22
+
+Required files
+1. README.md exists: PASS
+2. collect_static_metadata.sh exists: PASS
+3. validate_yara_rules.sh exists: PASS
+4. collect_windows_dynamic_evidence.ps1 exists: PASS
+5. verify_windows_cleanup.ps1 exists: PASS
+6. inventory_case_evidence.py exists: PASS
+7. validate_case_artifacts.py exists: PASS
+8. Validation report exists: PASS
+9. .gitkeep handling: PASS (not applicable; scripts/ was empty and contained no .gitkeep)
+
+Syntax and execution checks
+- collect_static_metadata.sh Bash syntax: PASS
+- validate_yara_rules.sh Bash syntax: PASS
+- inventory_case_evidence.py Python AST parse: PASS
+- validate_case_artifacts.py Python AST parse: PASS
+- Python --help interfaces: PASS
+- PowerShell parser: UNAVAILABLE (pwsh is not installed; no package was installed)
+- YARA compiler availability: AVAILABLE
+- YARA source-rule syntax compilation: PASS
+- Benign /bin/ls YARA negative test: PASS (no output)
+- ShellCheck: UNAVAILABLE (no package was installed)
+
+Safe functional tests
+- Evidence inventory generated from the case directory: PASS (90 records at test time)
+- Cross-format artifact validation: PASS
+  - JSON files parsed: 9
+  - CSV files checked: 10
+  - Markdown files checked: 12
+  - Local Markdown links checked: 145
+  - Failures: 0
+- Existing-output refusal without --force: PASS (nonzero exit)
+- Symbolic-link sample refusal: PASS (nonzero exit)
+
+Safety review
+- No script launches the sample: PASS
+- No script invokes the sample with an installation, removal, or other argument: PASS
+- No script starts or installs MSExchangeService: PASS
+- No script reconnects a network adapter: PASS
+- No HTTP client or listener request is present: PASS
+- No command-and-control client, emulator, tasking message, or exploit code is present: PASS
+- No protocol-field values are generated: PASS
+- No script deletes or alters raw evidence: PASS
+- No automatic package installation is present: PASS
+- Output overwrite requires explicit --force or -Force: PASS
+- Python utilities use standard-library modules only: PASS
+- Usernames, SIDs, process IDs, MachineGuids, and Defender quarantine names are not hardcoded: PASS
+- Paths are accepted as parameters where analyst-specific location is required: PASS
+
+Script behavior summary
+- collect_static_metadata.sh: verifies the expected SHA-256 and records hashes/metadata without execution.
+- validate_yara_rules.sh: verifies the sample hash, compiles YARA, performs source and compiled scans, and runs a benign negative test.
+- collect_windows_dynamic_evidence.ps1: performs read-only collection of network-adapter, service, Registry, HTTP.sys, socket, Defender, and optional installer-artifact metadata.
+- verify_windows_cleanup.ps1: performs read-only current-state verification and returns nonzero when suspicious state remains.
+- inventory_case_evidence.py: creates a deterministic SHA-256 CSV inventory and refuses symlinks.
+- validate_case_artifacts.py: validates JSON, CSV, Markdown links, required artifacts, hash references, and absence of executables under results/.
+
+Limitations
+- PowerShell parser/runtime validation could not be performed on this Linux host because pwsh is unavailable.
+- Positive YARA testing against the malware sample was not performed; the sample was not accessed or copied.
+- Windows collection and cleanup scripts were not run because no Windows analysis VM was connected or accessed.
+- Static metadata collection was not run against the malware sample.
+- YARA and static metadata outputs depend on tools already installed by the operator.
+
+Final result: PASS

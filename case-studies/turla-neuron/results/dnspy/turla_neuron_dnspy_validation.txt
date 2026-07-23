@@ -1,0 +1,42 @@
+Turla Neuron dnSpy Evidence Package Validation
+==============================================
+
+1. Markdown file exists: PASS
+2. CSV file exists: PASS
+3. JSON file exists: PASS
+4. JSON parses successfully: PASS
+5. Every CSV row has exactly nine columns: PASS
+   Function-map entries: 13
+6. Duplicate CSV rows: None
+7. JSON finding IDs are unique: PASS
+   JSON findings: 13
+   Duplicate JSON findings: None
+8. Every Markdown screenshot path exists: PASS
+9. Every existing screenshot numbered 05 through 21 is indexed: PASS
+   Screenshots discovered: 17
+   Screenshots indexed: 17
+10. SHA-256 appears in Markdown and JSON: PASS
+11. Core findings are present: PASS
+    - MSExchangeService
+    - Microsoft Exchange Service
+    - https://*:443/ews/exchange/
+    - cid
+    - cadataKey
+    - cadata
+    - cadataSig
+    - ExecCMD
+    - KillOldThread
+    - EncryptScript
+12. No external C2 IP address or domain was invented: PASS
+13. No laboratory process ID was promoted as an IOC: PASS
+14. No claim of confirmed data exfiltration appears: PASS
+15. No claim of successful attacker command execution appears: PASS
+16. No malware sample was copied into results/dnspy: PASS
+
+Evidence-boundary notes:
+- Decompiled code is classified separately from dynamically confirmed behavior.
+- Command execution, file transfer, and encrypted configuration are not presented as attacker actions observed during the isolated run.
+- The RSA finding is supporting context because the indexed screenshot shows the Crypt method tree and EncryptScript body, not the detailed RSA method body.
+- Laboratory paths and the exact MachineGuid are not promoted as universal indicators.
+
+Final result: PASS

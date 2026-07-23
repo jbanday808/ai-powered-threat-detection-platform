@@ -1,0 +1,33 @@
+Turla Neuron Screenshot Validation
+==================================
+
+Report: case-studies/turla-neuron/reports/incident-report.md
+Inventory: case-studies/turla-neuron/results/static/turla_neuron_screenshot_inventory.txt
+
+Total screenshots found: 35
+Total unique screenshots embedded: 35
+Total image references in the report: 35
+Screenshots missing from the report: None
+Broken image paths: None
+Image paths outside case-study directory: None
+Incorrect or uninventoried image filenames: None
+Total Annex C entries: 35
+Screenshots absent from Annex C: None
+Unexpected Annex C entries: None
+Repeated references: None
+Duplicate Annex C entries: None
+
+Required screenshots 22-32:
+- Referenced exactly once in main report body: PASS
+- Listed exactly once in Annex C: PASS
+- Relative paths exist: PASS
+- Exact ../screenshots/ filenames used: PASS
+- Missing or repeated in body: None
+- Missing or repeated in Annex C: None
+- Broken required paths: None
+- Incorrect required paths: None
+
+Duplicate or alternate screenshots identified:
+- TurlaNeuron_04_Refined_YARA_v2_Rule_Source_Code.png is a possible alternate capture of TurlaNeuron_03_Refined_YARA_v2_Rule_Source_Code.png.
+
+Final result: PASS

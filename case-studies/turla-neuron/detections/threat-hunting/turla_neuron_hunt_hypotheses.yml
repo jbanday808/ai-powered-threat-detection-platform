@@ -1,0 +1,254 @@
+name: Turla Neuron Threat Hunting Hypotheses
+id: a508db9c-bf3c-428b-abd9-0d9dc8fc4afd
+version: 1.0
+status: test
+author: James Banday
+date_created: 2026-07-22
+description: >
+  Vendor-neutral threat-hunting hypotheses for identifying
+  Turla Neuron or DarkNeuron activity on Windows systems.
+case:
+  incident_id: MAL-2026-0721-NEURON
+  family: Turla Neuron
+  alias: DarkNeuron
+indicators:
+  sha256: d1d7a96fcadc137e80ad866c838502713db9cdfe59939342b8e3beacf9c7fe29
+  filename: Microsoft.Exchange.Service.exe
+  service_name: MSExchangeService
+  display_name: Microsoft Exchange Service
+  service_account: LocalSystem
+  startup_type: Automatic
+  defender_detection: Trojan:MSIL/DarkNeuron.B!dha
+  defender_threat_id: 2147724727
+  uri_path: /ews/exchange/
+  listener_prefix: https://*:443/ews/exchange/
+  validation_guid: f2949bab-240a-46ca-a455-6f504367ba7d
+  fallback_encryption_guid: 8d963325-01b8-4671-8e82-d0904275ab06
+  request_fields:
+    - cid
+    - cadataKey
+    - cadata
+    - cadataSig
+  internal_strings:
+    - ExecCMD
+    - KillOldThread
+    - EncryptScript
+    - MSXEWS
+    - TVNYRVdT
+data_sources:
+  - Windows System Event Log
+  - Windows Registry telemetry
+  - EDR process telemetry
+  - Service inventory
+  - Microsoft Defender history
+  - HTTP.sys service state
+  - TCP listener inventory
+  - File inventory and hashes
+  - YARA scan results
+  - Asset inventory or CMDB
+  - DNS proxy and firewall records when available
+  - TLS inspection or reverse-proxy logs when available
+hypotheses:
+  - id: HUNT-001
+    title: Exact Sample Present
+    hypothesis: A host contains a file whose SHA-256 matches the analyzed Turla Neuron sample.
+    priority: critical
+    required_data: [File inventory, SHA-256 hashes, Asset role]
+    search_indicators: [sha256, filename]
+    correlation_requirements: Exact hash match; exclude authorized malware laboratories and protected evidence repositories.
+    false_positives: [Authorized malware-analysis laboratory, Security-research evidence repository]
+    analyst_questions: ["Does the hash match exactly?", "Is the system an authorized laboratory?", "What path and signer are recorded?"]
+    escalation_criteria: Exact hash outside an authorized laboratory or evidence repository.
+    evidence_classification: confirmed_indicator
+    mitre_attack: []
+    limitations: A hash identifies this exact sample and may not identify other family variants.
+  - id: HUNT-002
+    title: Turla Neuron Service Persistence
+    hypothesis: A Windows system installed MSExchangeService using Microsoft.Exchange.Service.exe.
+    priority: high
+    required_data: [Windows Event ID 7045, Service inventory, Service Registry, File metadata]
+    search_indicators: [service_name, filename, display_name, service_account, startup_type]
+    correlation_requirements: Service name plus executable name or exact hash.
+    false_positives: [Authorized security test using the same service, Approved internal application with exact names]
+    analyst_questions: ["What is ImagePath?", "Is startup Automatic?", "Is the account LocalSystem?", "Is installation authorized?"]
+    escalation_criteria: Suspicious service and executable match on a non-laboratory system.
+    evidence_classification: confirmed_dynamic_behavior
+    mitre_attack: [T1543.003]
+    limitations: Event ID 7045 field names vary by platform and parser.
+  - id: HUNT-003
+    title: Exchange-Themed Service on Non-Exchange Host
+    hypothesis: A non-Exchange system contains an unexpected service using Microsoft Exchange terminology.
+    priority: high
+    required_data: [Service inventory, Asset inventory or CMDB, File signer, Installation history]
+    search_indicators: [service_name, display_name, filename]
+    correlation_requirements: Non-Exchange asset plus suspicious service metadata; filename or hash raises confidence.
+    false_positives: [Legitimate Exchange server, Approved Exchange management component, Similar internal service]
+    analyst_questions: ["Is this an approved Exchange server?", "Is the executable signed and expected?", "Who owns the service?"]
+    escalation_criteria: Exchange-themed service on a non-Exchange host with suspicious file provenance.
+    evidence_classification: hunt_lead
+    mitre_attack: [T1036]
+    limitations: Microsoft Exchange terminology is not malicious by itself.
+  - id: HUNT-004
+    title: Suspicious Service Process Tree
+    hypothesis: Microsoft.Exchange.Service.exe is launched by services.exe or launches cmd.exe.
+    priority: high
+    required_data: [EDR process telemetry, Command lines, Hashes, Service account, Asset role]
+    search_indicators: [filename, service_name, ExecCMD]
+    correlation_requirements: Suspicious filename/hash/service plus command-shell child activity.
+    false_positives: [Legitimate service launched by services.exe, Authorized administrative service action]
+    analyst_questions: ["Does the file hash match?", "Was cmd.exe a child?", "What command line ran?", "Is the service approved?"]
+    escalation_criteria: Suspicious service process launches cmd.exe or other shell.
+    evidence_classification: confirmed_static_capability
+    mitre_attack: [T1059.003, T1543.003]
+    limitations: services.exe launching a legitimate service is normal; no attacker command was observed in the laboratory.
+  - id: HUNT-005
+    title: HTTP.sys EWS Listener
+    hypothesis: A non-Exchange host registers /ews/exchange/ through HTTP.sys or links port 443 to the suspicious service queue.
+    priority: high
+    required_data: [HTTP.sys request queues, Registered URLs, Service association, Process image, Asset role]
+    search_indicators: [uri_path, listener_prefix, service_name, filename]
+    correlation_requirements: Queue associated with MSExchangeService or the suspicious executable on a non-Exchange host.
+    false_positives: [Legitimate Exchange deployment, Approved web service using a similar path]
+    analyst_questions: ["Which service owns the queue?", "Is the host an Exchange server?", "What image is attached?", "Did requests arrive?"]
+    escalation_criteria: Matching queue/service association on a non-Exchange host.
+    evidence_classification: confirmed_dynamic_behavior
+    mitre_attack: [T1071.001]
+    limitations: PID 4/System and port 443 alone are not suspicious.
+  - id: HUNT-006
+    title: Service Registry Persistence
+    hypothesis: HKLM\SYSTEM\CurrentControlSet\Services\MSExchangeService exists with suspicious configuration.
+    priority: high
+    required_data: [Registry telemetry, Endpoint Registry state, Service inventory]
+    search_indicators: [service_name, filename, display_name, service_account, startup_type]
+    correlation_requirements: Service key plus suspicious ImagePath, Start, Type, ObjectName, or exact file hash.
+    false_positives: [Authorized internal application with same service identity, Authorized laboratory]
+    analyst_questions: ["What are ImagePath and ObjectName?", "When was the key created?", "Is the file present and signed?"]
+    escalation_criteria: Key points to Microsoft.Exchange.Service.exe outside an approved deployment.
+    evidence_classification: confirmed_dynamic_behavior
+    mitre_attack: [T1543.003, T1112]
+    limitations: Registry creation timestamps may be unavailable.
+  - id: HUNT-007
+    title: Event Log Source Registration
+    hypothesis: HKLM\SYSTEM\CurrentControlSet\Services\EventLog\Application\MSExchangeService exists.
+    priority: medium
+    required_data: [Registry telemetry, Endpoint Registry state, Service inventory]
+    search_indicators: [service_name]
+    correlation_requirements: Event Log source plus matching service, executable, or installer artifacts.
+    false_positives: [Legitimate application Event Log source, Authorized test]
+    analyst_questions: ["Does the service exist?", "What EventMessageFile is configured?", "Are matching Application events present?"]
+    escalation_criteria: Source is correlated with suspicious service persistence.
+    evidence_classification: confirmed_dynamic_behavior
+    mitre_attack: [T1112]
+    limitations: Source registration does not prove that events were written.
+  - id: HUNT-008
+    title: MachineGuid-Based Temporary Storage
+    hypothesis: A suspicious service created a GUID-named directory under C:\Windows\Temp.
+    priority: medium
+    required_data: [File telemetry, Directory inventory, Creating process, Ownership, Service association]
+    search_indicators: [MSXEWS, TVNYRVdT]
+    correlation_requirements: GUID directory plus suspicious creator/service, contents, or related indicators.
+    false_positives: [Normal GUID-named temporary directory, Software installer, System maintenance]
+    analyst_questions: ["Which process created it?", "Is it empty?", "What files are present?", "Is the service related?"]
+    escalation_criteria: Directory creation by suspicious service with task or output artifacts.
+    evidence_classification: supporting_behavior
+    mitre_attack: []
+    limitations: GUID-named folders are common; the laboratory MachineGuid is not a universal IOC.
+  - id: HUNT-009
+    title: Protocol Artifacts
+    hypothesis: Endpoint, memory, proxy, reverse-proxy, decrypted HTTPS, or application logs contain multiple request fields or a known GUID.
+    priority: high
+    required_data: [Endpoint strings, Memory telemetry, Decrypted proxy or reverse-proxy logs when available]
+    search_indicators: [uri_path, validation_guid, fallback_encryption_guid, request_fields]
+    correlation_requirements: Multiple request fields plus a known GUID or suspicious service/listener.
+    false_positives: [Generic cid or cadata text, Legitimate Exchange URI without other indicators]
+    analyst_questions: ["Are multiple fields co-located?", "Is a known GUID present?", "Is the host associated with the service?"]
+    escalation_criteria: Multiple fields and a known GUID on the same host/session/artifact.
+    evidence_classification: confirmed_static_capability
+    mitre_attack: [T1071.001, T1132.001, T1573]
+    limitations: No on-wire request was captured during the laboratory run; HTTPS may hide fields.
+  - id: HUNT-010
+    title: Defender DarkNeuron Detection
+    hypothesis: Microsoft Defender history contains the DarkNeuron name or Threat ID 2147724727.
+    priority: high
+    required_data: [Defender current state, Defender detection history, Resources, Remediation status]
+    search_indicators: [defender_detection, defender_threat_id, filename, sha256]
+    correlation_requirements: Distinguish active records from historical remediated detections and verify current endpoint state.
+    false_positives: [Historical remediated record, Authorized laboratory detection]
+    analyst_questions: ["Is IsActive true?", "Did remediation succeed?", "Are resources still present?", "Does the service remain?"]
+    escalation_criteria: Active detection or current malicious file/service remains.
+    evidence_classification: confirmed_dynamic_behavior
+    mitre_attack: []
+    limitations: Historical records can remain after successful cleanup.
+  - id: HUNT-011
+    title: Installer Artifacts
+    hypothesis: The suspicious executable created InstallUtil.InstallLog, Microsoft.Exchange.Service.InstallLog, or Microsoft.Exchange.Service.InstallState.
+    priority: medium
+    required_data: [File telemetry, File inventory, Process attribution, Service installation history]
+    search_indicators: [filename, service_name]
+    correlation_requirements: Installer artifact plus suspicious process, service, hash, or close timing.
+    false_positives: [Legitimate .NET service installation, Software deployment]
+    analyst_questions: ["Which process created the file?", "Does the service exist?", "Is the file hash known?"]
+    escalation_criteria: Artifacts attributed to the suspicious executable with service persistence.
+    evidence_classification: confirmed_dynamic_behavior
+    mitre_attack: [T1543.003]
+    limitations: These filenames can be legitimate and are not high-confidence standalone IOCs.
+  - id: HUNT-012
+    title: Supporting ZoneMap Activity
+    hypothesis: Microsoft.Exchange.Service.exe wrote AutoDetect, IntranetName, ProxyBypass, or UNCAsIntranet under ZoneMap.
+    priority: low
+    required_data: [Registry telemetry, Process attribution, Baseline or change history]
+    search_indicators: [filename]
+    correlation_requirements: Writes attributed to the suspicious executable and correlated with service installation.
+    false_positives: [Legitimate administration, Group Policy, Software configuration]
+    analyst_questions: ["Which process wrote the values?", "Was the data changed or rewritten?", "What related indicators exist?"]
+    escalation_criteria: Use only to strengthen an already credible multi-indicator finding.
+    evidence_classification: supporting_behavior
+    mitre_attack: [T1112]
+    limitations: Values are not malicious by themselves; laboratory pre-execution values were unavailable.
+correlation:
+  factors:
+    exact_sha256: 100
+    active_defender_detection: 80
+    service_name: 40
+    filename: 40
+    ews_queue_non_exchange_host: 40
+    service_launches_cmd: 30
+    known_guid: 25
+    multiple_protocol_fields: 25
+    local_system: 10
+    automatic_startup: 10
+    event_log_source: 10
+    installer_artifacts: 10
+    authorized_malware_lab: -100
+    verified_legitimate_exchange: -80
+    historical_inactive_only: -40
+  thresholds:
+    critical: 100
+    high: 70
+    medium: 40
+    low: 20
+    informational: 0
+  guidance: Tune factors and thresholds to local telemetry, asset roles, and false-positive history.
+outcomes:
+  - confirmed_active_compromise
+  - probable_compromise
+  - historical_remediated_detection
+  - authorized_lab_activity
+  - legitimate_exchange_activity
+  - false_positive
+  - insufficient_telemetry
+  - no_evidence_found
+limitations:
+  - No production hunt was executed.
+  - No Sysmon event collection or representative malware PCAP exists.
+  - No external C2 IP address or domain was identified.
+  - No attacker request, remote command, file transfer, exfiltration, or lateral movement was observed.
+  - The raw malware-run Procmon PML was unusable.
+  - Some hypotheses require telemetry unavailable in the laboratory.
+references:
+  - ../sigma/win_system_turla_neuron_service_install.yml
+  - ../yara/turla_neuron_v2.yar
+  - ../../iocs/turla_neuron_iocs.md
+  - ../../results/dynamic/turla_neuron_dynamic_analysis.md
+  - ../../results/network/turla_neuron_network_analysis.md
+  - ../../results/reverse-engineering/turla_neuron_reverse_engineering.md

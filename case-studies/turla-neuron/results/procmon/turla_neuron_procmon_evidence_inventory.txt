@@ -1,0 +1,34 @@
+Turla Neuron / DarkNeuron Procmon Evidence Inventory
+Generated: 2026-07-22
+
+Fields: repository-relative path | size | SHA-256 | extension/type | evidence category | purpose | usability status
+
+1. case-studies/turla-neuron/results/noriben/turla_neuron_noriben_analysis.md | 16963 bytes | e48754a407678312771cfd183087269872a9999dd7a1845433c1e75ef92fe2ad | Markdown | processed Noriben | Baseline context, filtered findings, background noise, and PML limitation | usable_supporting
+2. case-studies/turla-neuron/results/noriben/turla_neuron_noriben_event_summary.csv | 5703 bytes | f385eed36cb4f0aaf520023f146a94a83f7740324c3f71cc89f76d595d675724 | CSV | processed Noriben | Structured summary of baseline, processed, and PML-handling findings | usable_supporting
+3. case-studies/turla-neuron/results/noriben/turla_neuron_noriben_evidence_inventory.txt | 2445 bytes | 81dc5df9f831f2ea9628b1c9f7fb7bd82594f74c7030be1a39a72abce51e9e57 | text | evidence inventory | Records absent raw Noriben and Procmon sources | usable_supporting
+4. case-studies/turla-neuron/results/noriben/turla_neuron_noriben_findings.json | 10453 bytes | 90c97ff2174823e727ddc979e7fdfde95846d069c9ade822e316ddf4b4cb3b85 | JSON | processed Noriben | Structured Noriben findings and limitations | usable_supporting
+5. case-studies/turla-neuron/results/noriben/turla_neuron_noriben_validation.txt | 2384 bytes | dbf7c157997d59adf45bdd5edfccc8a05d64368b6bfd2d46c74071ce3a3c3868 | text | validation | Confirms Noriben package integrity and PML limitation | usable_supporting
+6. case-studies/turla-neuron/results/dynamic/turla_neuron_dynamic_analysis.md | 22598 bytes | 3b28553465554b20adcf11a28efdaa8d8899689806a0aff8237f8a7f7d5af16b | Markdown | dynamic correlation | Separates processed Procmon findings from Windows evidence | usable_supporting
+7. case-studies/turla-neuron/reports/incident-report.md | 42637 bytes | 661810c68473f4cafdfe5b65e278da5316d4443309da05615a1930a0a56677dc | Markdown | case report | Preserves laboratory and evidence-handling context | usable_supporting
+8. case-studies/turla-neuron/screenshots/TurlaNeuron_22_Dynamic_ZoneMap_Registry_Modifications.png | 26364 bytes | dc10dcaedf3d500efb14f251be3601ad70d1417a05582e120fd689f53f0277a7 | PNG | supporting Windows evidence | Direct view of ZoneMap values | usable_primary
+9. case-studies/turla-neuron/screenshots/TurlaNeuron_23_Noriben_Filtered_Timeline_Activity.png | 187565 bytes | 0de7e7d2a195e8b49798776855fcc0127f517f6b73083bf73cb015d3de1c7a25 | PNG | processed Noriben | Filtered installer-file and Registry timeline | usable_primary
+10. case-studies/turla-neuron/screenshots/TurlaNeuron_26_Dynamic_Installer_Log_Service_Success.png | 42333 bytes | a2d05f1b61781ba09afe5418191d3237837fd46e15048a0ba78da1bbb1f2f09b | PNG | supporting Windows evidence | Confirms service installation independently of raw PML | usable_primary
+11. case-studies/turla-neuron/screenshots/TurlaNeuron_28_Dynamic_Service_Registry_Persistence.png | 48485 bytes | 198202a21eb94a9bd8329180a301001fedf10353c19feb9988ff01b9cae1b2e2 | PNG | supporting Windows evidence | Confirms automatic LocalSystem service persistence | usable_primary
+12. case-studies/turla-neuron/results/noriben/Noriben_22_Jul_26__09_43_979200.pml | recorded 976 bytes | A29B4908C3C5C79F265FD37A56A7186572ADCFA541EBDB89EFDB751CBA66FD84 | PML | raw Procmon | Intended malware-run event capture; no events recoverable | corrupted_or_unusable
+13. case-studies/turla-neuron/results/noriben/Procmon_PML_Reexport.csv | recorded approximately 124 bytes | unavailable | CSV | recovery output | Command-line re-export from malware-run PML; zero events | corrupted_or_unusable
+
+Inventory summary
+- Inventory records: 13
+- Present repository evidence files: 11
+- Present usable primary files: 4
+- Present usable supporting files: 7
+- Missing or unusable raw/recovery records: 2
+- Raw malware-run PML status: corrupted_or_unusable
+
+Additional absent artifacts
+- The reported approximately 1.2 MB usable baseline PML is not retained.
+- Baseline Noriben text, CSV, timeline, and log files are not retained.
+- Malware-run raw Noriben text, CSV, timeline, and log files are not retained.
+- No raw evidence was copied into results/procmon.
+
+Integrity note: SHA-256 values for the 11 present sources were recalculated at inventory time. The PML hash is a preserved handling-record value because the PML itself is absent. No source evidence was modified.

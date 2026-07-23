@@ -1,0 +1,92 @@
+{
+  "case": {
+    "incident_id": "MAL-2026-0721-NEURON",
+    "family": "Turla Neuron",
+    "alias": "DarkNeuron",
+    "author": "James Banday",
+    "date_created": "2026-07-22"
+  },
+  "detections": [
+    {
+      "type": "sigma",
+      "name": "Turla Neuron Service Installation",
+      "path": "../sigma/win_system_turla_neuron_service_install.yml",
+      "supports": ["HUNT-002", "HUNT-006"]
+    },
+    {
+      "type": "yara",
+      "name": "Turla_Neuron_Exact",
+      "path": "../yara/turla_neuron_v2.yar",
+      "supports": ["HUNT-001"]
+    },
+    {
+      "type": "yara",
+      "name": "Turla_Neuron_Behavior",
+      "path": "../yara/turla_neuron_v2.yar",
+      "supports": ["HUNT-002", "HUNT-005", "HUNT-009"]
+    }
+  ],
+  "hypothesis_mapping": [
+    {"id": "HUNT-001", "classification": "confirmed_indicator", "primary_sources": ["File inventory and hashes", "YARA"], "mitre_attack": []},
+    {"id": "HUNT-002", "classification": "confirmed_dynamic_behavior", "primary_sources": ["Windows System Event Log", "Service inventory", "Registry"], "mitre_attack": ["T1543.003"]},
+    {"id": "HUNT-003", "classification": "hunt_lead", "primary_sources": ["Service inventory", "CMDB", "File signer"], "mitre_attack": ["T1036"]},
+    {"id": "HUNT-004", "classification": "confirmed_static_capability", "primary_sources": ["EDR process telemetry"], "mitre_attack": ["T1059.003", "T1543.003"]},
+    {"id": "HUNT-005", "classification": "confirmed_dynamic_behavior", "primary_sources": ["HTTP.sys service state", "TCP listener inventory", "CMDB"], "mitre_attack": ["T1071.001"]},
+    {"id": "HUNT-006", "classification": "confirmed_dynamic_behavior", "primary_sources": ["Registry telemetry", "Service inventory"], "mitre_attack": ["T1543.003", "T1112"]},
+    {"id": "HUNT-007", "classification": "confirmed_dynamic_behavior", "primary_sources": ["Registry telemetry"], "mitre_attack": ["T1112"]},
+    {"id": "HUNT-008", "classification": "supporting_behavior", "primary_sources": ["File telemetry", "Endpoint inventory"], "mitre_attack": []},
+    {"id": "HUNT-009", "classification": "confirmed_static_capability", "primary_sources": ["Endpoint strings", "Memory", "Decrypted application or proxy logs"], "mitre_attack": ["T1071.001", "T1132.001", "T1573"]},
+    {"id": "HUNT-010", "classification": "confirmed_dynamic_behavior", "primary_sources": ["Microsoft Defender current state and history"], "mitre_attack": []},
+    {"id": "HUNT-011", "classification": "confirmed_dynamic_behavior", "primary_sources": ["File telemetry", "Service installation history"], "mitre_attack": ["T1543.003"]},
+    {"id": "HUNT-012", "classification": "supporting_behavior", "primary_sources": ["Registry telemetry", "Process attribution"], "mitre_attack": ["T1112"]}
+  ],
+  "indicator_mapping": [
+    {"indicator": "d1d7a96fcadc137e80ad866c838502713db9cdfe59939342b8e3beacf9c7fe29", "type": "sha256", "classification": "confirmed_indicator", "hypotheses": ["HUNT-001"]},
+    {"indicator": "Microsoft.Exchange.Service.exe", "type": "filename", "classification": "confirmed_indicator", "hypotheses": ["HUNT-002", "HUNT-004", "HUNT-006"]},
+    {"indicator": "MSExchangeService", "type": "service_name", "classification": "confirmed_indicator", "hypotheses": ["HUNT-002", "HUNT-003", "HUNT-005", "HUNT-006", "HUNT-007"]},
+    {"indicator": "/ews/exchange/", "type": "uri_path", "classification": "confirmed_static_capability", "hypotheses": ["HUNT-005", "HUNT-009"]},
+    {"indicator": "f2949bab-240a-46ca-a455-6f504367ba7d", "type": "validation_guid", "classification": "confirmed_indicator", "hypotheses": ["HUNT-009"]},
+    {"indicator": "8d963325-01b8-4671-8e82-d0904275ab06", "type": "fallback_guid", "classification": "confirmed_indicator", "hypotheses": ["HUNT-009"]},
+    {"indicator": "Trojan:MSIL/DarkNeuron.B!dha", "type": "defender_detection", "classification": "confirmed_dynamic_behavior", "hypotheses": ["HUNT-010"]},
+    {"indicator": "2147724727", "type": "defender_threat_id", "classification": "confirmed_dynamic_behavior", "hypotheses": ["HUNT-010"]}
+  ],
+  "broad_context": [
+    {"value": "443", "reason": "Common port and not malicious alone"},
+    {"value": "LocalSystem", "reason": "Common service account and not malicious alone"},
+    {"value": "PID 4/System", "reason": "HTTP.sys kernel socket owner and not malware"},
+    {"value": "Microsoft Exchange terminology", "reason": "Requires asset and software provenance"},
+    {"value": "C:\\Windows\\Temp\\{GUID}", "reason": "GUID temporary directories are common"},
+    {"value": "ZoneMap values", "reason": "Legitimate administration can configure them"}
+  ],
+  "not_observed": [
+    "External C2 IP address",
+    "External C2 domain",
+    "Inbound attacker request",
+    "Remote attacker command",
+    "File transfer",
+    "Data exfiltration",
+    "Lateral movement",
+    "Production impact",
+    "Sysmon events",
+    "Representative malware packet capture",
+    "Suricata alert",
+    "Completed production threat-hunt result"
+  ],
+  "outcomes": [
+    "confirmed_active_compromise",
+    "probable_compromise",
+    "historical_remediated_detection",
+    "authorized_lab_activity",
+    "legitimate_exchange_activity",
+    "false_positive",
+    "insufficient_telemetry",
+    "no_evidence_found"
+  ],
+  "references": [
+    "../../iocs/turla_neuron_iocs.md",
+    "../../results/static/turla_neuron_static_analysis.md",
+    "../../results/dynamic/turla_neuron_dynamic_analysis.md",
+    "../../results/network/turla_neuron_network_analysis.md",
+    "../../results/reverse-engineering/turla_neuron_reverse_engineering.md"
+  ]
+}

@@ -1,0 +1,43 @@
+title: Turla Neuron Service Installation
+id: e001147f-6dd2-47d1-a0bf-4a5d3e7033b4
+status: test
+description: This rule alerts when Windows records the installation of a service named MSExchangeService that runs Microsoft.Exchange.Service.exe. The analyzed Turla Neuron (DarkNeuron) sample uses this fake Microsoft Exchange service so it can start automatically and remain active after the computer restarts. The associated sample has SHA-256 d1d7a96fcadc137e80ad866c838502713db9cdfe59939342b8e3beacf9c7fe29.
+author: James Banday
+date: 2026-07-22
+references:
+    - https://academy.hackthebox.com/app/module/234/section/2514
+    - https://www.ncsc.gov.uk/file/2691/download?token=RzXWTuAB
+    - https://www.ncsc.gov.uk/alerts/turla-group-malware
+tags:
+    - attack.persistence
+    - attack.privilege_escalation
+    - attack.t1543.003
+logsource:
+    product: windows
+    service: system
+detection:
+    selection_base:
+        EventID: 7045
+        ServiceName: MSExchangeService
+        ImagePath|contains: 'Microsoft.Exchange.Service.exe'
+    # Supporting context for triage; these fields are intentionally not required.
+    selection_context_display:
+        DisplayName|contains: 'Microsoft Exchange Service'
+    selection_context_account:
+        AccountName|contains: 'LocalSystem'
+    selection_context_start:
+        StartType|contains:
+            - 'auto'
+            - 'automatic'
+    condition: selection_base
+fields:
+    - Computer
+    - ServiceName
+    - ImagePath
+    - StartType
+    - AccountName
+falsepositives:
+    - Authorized malware-analysis activity
+    - Internal security testing that intentionally uses the same service name
+    - A legitimate internal application using the exact same service name and executable name
+level: high

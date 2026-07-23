@@ -1,0 +1,76 @@
+Turla Neuron / DarkNeuron SOAR Package Validation
+Validation date: 2026-07-22
+
+Directory transition
+1. detections/splunk/ inspected before rename: PASS
+2. Actual Splunk content found: none
+3. Empty detections/splunk/ renamed to detections/soar/: PASS
+4. detections/soar/ exists: PASS
+5. .gitkeep handling: PASS (not applicable; the empty Splunk directory contained no .gitkeep)
+
+Required files
+6. README.md exists: PASS
+7. turla_neuron_soar_playbook.yml exists: PASS
+8. turla_neuron_soar_workflow.md exists: PASS
+9. turla_neuron_soar_mapping.json exists: PASS
+10. Validation report exists: PASS
+
+Structural validation
+- YAML parses successfully: PASS
+- JSON parses successfully: PASS
+- Playbook UUID format: PASS (3998ee56-a66e-43f4-a6b9-9056c8e91147)
+- Playbook status: test
+- Workflow steps: 16
+- Supported alert-source mappings: 7
+- Outcomes: 8
+- README local references: 3; broken: 0
+- Workflow local references: 6; broken: 0
+- YAML repository-relative references: 6; broken: 0
+- JSON repository-relative references: 3; broken: 0
+
+Action-level validation
+- Allowed action levels:
+  - automatic_read_only
+  - approval_required_containment
+  - approval_required_remediation
+- Automatic endpoint-changing actions: 0 (PASS)
+- Containment steps require approval: PASS
+- Remediation steps require approval: PASS
+- Case disposition and closure require recorded analyst decisions: PASS
+- Evidence preservation precedes permanent remediation: PASS
+
+Supported inputs
+- Sigma-compatible service-installation alert: present
+- YARA exact-hash match: present
+- YARA behavioral match: present
+- Microsoft Defender detection: present
+- EDR process/service alert: present
+- HTTP.sys/local-listener telemetry: present
+- Analyst-submitted IOC match: present
+
+Safety validation
+- No real credentials, tokens, tenant IDs, hostnames, accounts, or API endpoints: PASS
+- No executable connector commands or deletion commands: PASS
+- No malware execution or listener interaction: PASS
+- No command-and-control client, tasking message, protocol emulator, or exploit code: PASS
+- No generated cid, cadataKey, cadata, or cadataSig request: PASS
+- Port 443 alone is not classified as malicious: PASS
+- PID 4/System is not classified as malware: PASS
+- Exchange-role and provenance checks precede service action: PASS
+- Historical Defender records alone do not prove active infection: PASS
+- Permanent deletion requires evidence preservation and approval: PASS
+- No invented C2 IP, domain, host, user, ticket, device ID, or successful attack activity: PASS
+
+Reference update review
+- Incorrect references to detections/splunk/: 0
+- Case-study files updated outside detections/soar/: 0
+- General Splunk recommendations changed: 0
+
+Evidence limitations
+- This package is a vendor-neutral design and contains no configured connectors.
+- Deploying organizations must map fields, integrations, credentials, approvals, rollback, and evidence retention.
+- No attacker request, external C2 infrastructure, file transfer, exfiltration, or lateral movement was observed in the case evidence.
+- The local wildcard listener is not a remote C2 destination.
+- Platform-specific playbook execution was not attempted.
+
+Final result: PASS

@@ -1,0 +1,55 @@
+category,type,value,confidence,scope,evidence,recommended_use,notes
+file,filename,Microsoft.Exchange.Service.exe,high,family-associated,Static metadata and dynamic service evidence,Hunt for the filename with service or hash context,Filename can be renamed
+file,md5,0f12268221e27406351a6313f902b498,high,sample-specific,VirusTotal metadata,Exact sample matching,Prefer SHA-256 where available
+file,sha1,b0bdbc81a0e367330007b7e593d8ddabf92ca7afd,high,sample-specific,VirusTotal metadata,Exact sample matching,Prefer SHA-256 where available
+file,sha256,d1d7a96fcadc137e80ad866c838502713db9cdfe59939342b8e3beacf9c7fe29,high,sample-specific,YARA exact rule and VirusTotal metadata,Preferred exact sample match,Strongest file indicator
+service,service_name,MSExchangeService,high,family-associated,Installer log and service Registry evidence,Alert on service installation and correlate with executable name,Distinctive service name
+service,display_name,Microsoft Exchange Service,medium,family-associated,Decompiler and service Registry evidence,Correlate with service name and image path,Exchange-themed masquerading
+service,executable_name_pattern,*\Microsoft.Exchange.Service.exe,high,family-associated,Service Registry and Sigma evidence,Hunt across service image paths,Directory-independent pattern
+service,service_account,LocalSystem,low,behavioral,Service Registry evidence,Use only as service-installation context,Common legitimate service account
+service,startup_type,Automatic,low,behavioral,Service Registry Start value 2,Use only with distinctive service fields,Common legitimate setting
+service,service_type,WIN32_OWN_PROCESS,low,behavioral,Service Registry Type value 16,Use only with distinctive service fields,Common dedicated-service type
+service,description,"Host service for the Microsoft Exchange Server management provider. If this service is stopped or disabled, Microsoft Exchange cannot be managed.",medium,family-associated,Decompiler and service Registry evidence,Search service descriptions with related fields,Masquerades as Exchange management
+registry,key,HKLM\SYSTEM\CurrentControlSet\Services\MSExchangeService,high,family-associated,Dynamic service Registry evidence,Hunt for exact service key,Confirmed persistence artifact
+registry,key,HKLM\SYSTEM\CurrentControlSet\Services\EventLog\Application\MSExchangeService,medium,family-associated,Dynamic Event Log source evidence,Hunt with service installation evidence,Source registration does not prove messages were written
+registry,value_data,ImagePath contains Microsoft.Exchange.Service.exe,high,family-associated,Dynamic service Registry evidence,Match service ImagePath independent of directory,Do not require the laboratory path
+registry,value_data,DisplayName = Microsoft Exchange Service,medium,family-associated,Dynamic service Registry evidence,Correlate with service name and ImagePath,Not sufficient alone
+registry,value_data,ObjectName = LocalSystem,low,behavioral,Dynamic service Registry evidence,Use as privilege context,Not unique
+registry,value_data,Start = 2,low,behavioral,Dynamic service Registry evidence,Use as automatic-start context,Not unique
+registry,value_data,Type = 16,low,behavioral,Dynamic service Registry evidence,Use as dedicated-service context,Not unique
+network_protocol,http_listener_prefix,HTTPS://*:443/EWS/EXCHANGE/,high,family-associated,Decompiler and dynamic HTTP.sys evidence,Hunt HTTP.sys state and correlate with service,Wildcard listener prefix not a remote destination
+network_protocol,uri_path,/ews/exchange/,high,family-associated,YARA and HTTP.sys evidence,Hunt unusual local listener registrations,Case-insensitive matching recommended
+network_protocol,port,443,low,behavioral,Dynamic HTTP.sys evidence,Use only with listener path and service context,Port alone is not useful
+network_protocol,request_parameter,cid,medium,family-associated,Decompiler request parsing,Hunt in traffic only with related parameters and URI,Static capability
+network_protocol,request_parameter,cadataKey,high,family-associated,YARA and decompiler evidence,Hunt with URI and related parameters,Distinctive case-sensitive token
+network_protocol,request_parameter,cadata,medium,family-associated,Decompiler request parsing,Hunt with URI and related parameters,Generic without context
+network_protocol,request_parameter,cadataSig,high,family-associated,YARA and decompiler evidence,Hunt with URI and related parameters,Distinctive case-sensitive token
+network_protocol,validation_guid,f2949bab-240a-46ca-a455-6f504367ba7d,high,family-associated,YARA and decompiler evidence,Search files or requests with related artifacts,Embedded request-validation value
+network_protocol,encryption_guid,8d963325-01b8-4671-8e82-d0904275ab06,high,family-associated,YARA and decompiler evidence,Search files or decoded requests with related artifacts,Embedded encryption value
+storage_task,directory_pattern,C:\Windows\Temp\{GUID},medium,behavioral,Decompiler and dynamic directory evidence,Hunt braced Temp directories created by the service,Name is derived from host MachineGuid
+storage_task,task_marker,MSXEWS,medium,family-associated,Reverse-engineering evidence,Search file content and task data with related indicators,Static marker
+storage_task,base64_marker,TVNYRVdT,medium,family-associated,Reverse-engineering evidence,Search encoded content with related indicators,Base64 representation of MSXEWS
+installer,filename,InstallUtil.InstallLog,low,behavioral,Filtered Noriben timeline,Use to pivot around suspicious .NET service installation,May occur during legitimate .NET installation
+installer,filename,Microsoft.Exchange.Service.InstallLog,medium,family-associated,Filtered Noriben timeline,Hunt near service creation time,Filename follows analyzed assembly name
+installer,filename,Microsoft.Exchange.Service.InstallState,medium,family-associated,Filtered Noriben timeline,Hunt near service creation time,May occur during legitimate .NET installation
+security_product,defender_detection,Trojan:MSIL/DarkNeuron.B!dha,medium,sample-specific,Microsoft Defender remediation evidence,Pivot in Defender history,Product classification not a content indicator
+security_product,defender_threat_id,2147724727,medium,sample-specific,Microsoft Defender remediation evidence,Pivot in Defender telemetry,Product-specific investigation context
+supporting_behavior,registry_value,HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\AutoDetect = 0,low,behavioral,Dynamic Registry and Noriben evidence,Use only with installer and service evidence,Not a standalone IOC
+supporting_behavior,registry_value,HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\IntranetName = 1,low,behavioral,Dynamic Registry and Noriben evidence,Use only with installer and service evidence,Not a standalone IOC
+supporting_behavior,registry_value,HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProxyBypass = 1,low,behavioral,Dynamic Registry and Noriben evidence,Use only with installer and service evidence,Not a standalone IOC
+supporting_behavior,registry_value,HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\UNCAsIntranet = 1,low,behavioral,Dynamic Registry and Noriben evidence,Use only with installer and service evidence,Not a standalone IOC
+excluded,laboratory_directory,C:\Malware\TurlaNeuron\,low,environmental,Laboratory setup,Do not deploy as an IOC,Analyst-chosen sample directory
+excluded,laboratory_user_path,C:\Users\james\,low,environmental,Laboratory setup,Do not deploy as an IOC,Analyst-specific profile
+excluded,laboratory_machine_guid,433532c3-7ccc-4378-8462-ffd9d5838324,low,environmental,Dynamic laboratory evidence,Do not deploy as a universal IOC,Host-specific MachineGuid
+excluded,process_ids,"1632, 6812, 960, PID 4",low,environmental,Dynamic laboratory evidence,Do not deploy as IOCs,Temporary runtime identifiers
+excluded,analyst_username,james,low,environmental,Laboratory setup,Do not deploy as an IOC,Analyst identity
+excluded,laboratory_sid,Laboratory user SID,low,environmental,Defender quarantine evidence,Do not deploy as an IOC,Host and account specific
+excluded,vm_snapshot_name,Pre-Noriben Turla Neuron,low,environmental,Laboratory safety evidence,Do not deploy as an IOC,Analyst-created recovery label
+excluded,analysis_timestamps,2026-07-22 laboratory timestamps,low,environmental,Analysis evidence,Do not deploy as IOCs,Times describe the controlled run
+excluded,quarantine_filename,Random Defender quarantine filenames,low,environmental,Defender remediation evidence,Do not deploy as IOCs,Temporary Defender-managed names
+excluded,recycle_bin_path,C:\$Recycle.Bin,low,environmental,Defender remediation evidence,Do not deploy as an IOC,Generic quarantine location
+excluded,quarantine_name,RZ18ZGP.exe,low,environmental,Defender remediation evidence,Do not deploy as an IOC,Random temporary quarantine name
+excluded,broad_port,Port 443 by itself,low,environmental,HTTP.sys evidence,Do not alert without related artifacts,Common HTTPS port
+excluded,broad_registry_values,ZoneMap values by themselves,low,environmental,Dynamic Registry evidence,Do not alert without related artifacts,Common administrative settings
+excluded,noriben_filename,Temporary Noriben filenames,low,environmental,Laboratory monitoring evidence,Do not deploy as IOCs,Tool-generated analysis artifacts
+excluded,kali_sample_path,Local Kali sample path,low,environmental,Static-analysis evidence,Do not deploy as an IOC,Analyst filesystem location

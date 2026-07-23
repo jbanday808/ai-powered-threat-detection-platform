@@ -1,0 +1,100 @@
+{
+  "case": {
+    "incident_id": "MAL-2026-0721-NEURON",
+    "family": "Turla Neuron",
+    "alias": "DarkNeuron",
+    "defender_detection": "Trojan:MSIL/DarkNeuron.B!dha",
+    "sample": "Microsoft.Exchange.Service.exe",
+    "sha256": "d1d7a96fcadc137e80ad866c838502713db9cdfe59939342b8e3beacf9c7fe29",
+    "analyst": "James Banday",
+    "analysis_date": "2026-07-22",
+    "tool": "dnSpyEx 6.6.0"
+  },
+  "architecture": [
+    {"id": "RE-001", "component": "neuron_service.Program", "responsibility": "Argument dispatch and service entry", "classification": "confirmed_statically"},
+    {"id": "RE-002", "component": "neuron_service.ProjectInstaller", "responsibility": "Service configuration and immediate start", "classification": "statically_confirmed_and_dynamically_observed"},
+    {"id": "RE-003", "component": "neuron_service.MSExchangeService", "responsibility": "Service lifecycle, listener, and storage thread", "classification": "statically_confirmed_and_dynamically_observed"},
+    {"id": "RE-004", "component": "WebServer / WebServerUtils", "responsibility": "HTTPS prefix registration and request handling", "classification": "statically_confirmed_and_dynamically_observed"},
+    {"id": "RE-005", "component": "CommandScript", "responsibility": "Numeric command dispatch", "classification": "capability_only"},
+    {"id": "RE-006", "component": "Config", "responsibility": "Encrypted Registry configuration search and write", "classification": "confirmed_statically"},
+    {"id": "RE-007", "component": "Crypt", "responsibility": "RC4-style and RSA-related processing", "classification": "confirmed_statically"},
+    {"id": "RE-008", "component": "Storage", "responsibility": "Host-derived path and periodic cleanup", "classification": "confirmed_statically"},
+    {"id": "RE-009", "component": "Utils", "responsibility": "Host-derived key associated with MachineGuid", "classification": "inferred_from_multiple_artifacts"}
+  ],
+  "execution_stages": [
+    {"id": "RE-010", "stage": 1, "name": "Program entry", "summary": "Main selects install, uninstall, or service execution.", "classification": "confirmed_statically"},
+    {"id": "RE-011", "stage": 2, "name": "Service installation", "summary": "ProjectInstaller creates Exchange-themed MSExchangeService and starts it.", "classification": "statically_confirmed_and_dynamically_observed"},
+    {"id": "RE-012", "stage": 3, "name": "Service startup", "summary": "OnStart creates WebServer, registers the listener, and starts KillOldThread.", "classification": "statically_confirmed_and_dynamically_observed"},
+    {"id": "RE-013", "stage": 4, "name": "HTTP.sys listener", "summary": "HTTP.sys maps the kernel port-443 socket to the service request queue.", "classification": "observed_dynamically"},
+    {"id": "RE-014", "stage": 5, "name": "Request parsing", "summary": "SendResponse parses query/body fields and URL-decodes key-value data.", "classification": "confirmed_statically"},
+    {"id": "RE-015", "stage": 6, "name": "Request validation", "summary": "cid is compared with the embedded validation GUID.", "classification": "confirmed_statically"},
+    {"id": "RE-016", "stage": 7, "name": "Key and session processing", "summary": "cadataKey undergoes Base64, UTF-8, JSON, and key-related processing.", "classification": "confirmed_statically"},
+    {"id": "RE-017", "stage": 8, "name": "Encrypted command processing", "summary": "cadata and cadataSig drive encrypted command or storage workflows.", "classification": "confirmed_statically"},
+    {"id": "RE-018", "stage": 9, "name": "Command dispatch", "summary": "CommandScript routes numeric types 0 through 6.", "classification": "capability_only"},
+    {"id": "RE-019", "stage": 10, "name": "Registry configuration", "summary": "Config searches and writes encrypted binary JSON below HKCU SOFTWARE.", "classification": "confirmed_statically"},
+    {"id": "RE-020", "stage": 11, "name": "Cryptography", "summary": "EncryptScript supplies RC4-style transformation; RSA context is public-key only.", "classification": "confirmed_statically"},
+    {"id": "RE-021", "stage": 12, "name": "Storage", "summary": "Storage uses a MachineGuid-associated key for a host-specific temporary directory.", "classification": "statically_confirmed_and_dynamically_observed"},
+    {"id": "RE-022", "stage": 13, "name": "Cleanup", "summary": "KillOldThread invokes KillOld every 300000 milliseconds.", "classification": "confirmed_statically"}
+  ],
+  "commands": [
+    {"type": 0, "operation": "cmd.exe execution and output capture", "classification": "capability_only", "dynamic_status": "not_exercised"},
+    {"type": 1, "operation": "Base64 file write", "classification": "capability_only", "dynamic_status": "not_exercised"},
+    {"type": 2, "operation": "File read and Base64 response", "classification": "capability_only", "dynamic_status": "not_exercised"},
+    {"type": 3, "operation": "Instruction data return", "classification": "confirmed_statically", "dynamic_status": "not_exercised"},
+    {"type": 4, "operation": "GetConfigAsString", "classification": "confirmed_statically", "dynamic_status": "not_exercised"},
+    {"type": 5, "operation": "AddConfigAsString", "classification": "confirmed_statically", "dynamic_status": "not_exercised"},
+    {"type": 6, "operation": "DelConfigAsString", "classification": "confirmed_statically", "dynamic_status": "not_exercised"}
+  ],
+  "protocol": {
+    "listener": "https://*:443/ews/exchange/",
+    "request_fields": ["cid", "cadataKey", "cadata", "cadataSig"],
+    "validation_guid": "f2949bab-240a-46ca-a455-6f504367ba7d",
+    "fallback_encryption_guid": "8d963325-01b8-4671-8e82-d0904275ab06",
+    "observed_on_wire": false,
+    "packet_capture_available": false
+  },
+  "dynamic_correlation": [
+    {"behavior": "Service installation", "classification": "statically_confirmed_and_dynamically_observed"},
+    {"behavior": "Immediate service start", "classification": "statically_confirmed_and_dynamically_observed"},
+    {"behavior": "Automatic LocalSystem persistence", "classification": "observed_dynamically"},
+    {"behavior": "HTTP.sys listener", "classification": "statically_confirmed_and_dynamically_observed"},
+    {"behavior": "Host-specific storage directory", "classification": "statically_confirmed_and_dynamically_observed"},
+    {"behavior": "Installer and Event Log artifacts", "classification": "observed_dynamically"},
+    {"behavior": "ZoneMap writes", "classification": "observed_dynamically"},
+    {"behavior": "Command execution", "classification": "not_exercised"},
+    {"behavior": "File transfer", "classification": "not_exercised"},
+    {"behavior": "Hidden encrypted Registry configuration", "classification": "not_observed"},
+    {"behavior": "External C2 communication", "classification": "not_observed"}
+  ],
+  "not_observed": [
+    "Inbound attacker request",
+    "External C2 IP or domain",
+    "Complete protocol session",
+    "Remote attacker command execution",
+    "File transfer",
+    "Data exfiltration",
+    "Hidden encrypted Registry configuration",
+    "Storage cleanup action"
+  ],
+  "limitations": [
+    "Decompiled code is not original source code and no debug symbols were available.",
+    "No attacker request or complete protocol session was captured.",
+    "No C2 IP or domain was identified.",
+    "No private RSA key was recovered.",
+    "No command or file-transfer request was dynamically exercised.",
+    "The malware-run PML was unusable.",
+    "The storage directory was empty.",
+    "Laboratory paths, process IDs, timestamps, and MachineGuid are environmental."
+  ],
+  "evidence_files": [
+    "case-studies/turla-neuron/results/dnspy/turla_neuron_dnspy_analysis.md",
+    "case-studies/turla-neuron/results/static/turla_neuron_static_analysis.md",
+    "case-studies/turla-neuron/results/dynamic/turla_neuron_dynamic_analysis.md",
+    "case-studies/turla-neuron/results/network/turla_neuron_network_analysis.md",
+    "case-studies/turla-neuron/results/noriben/turla_neuron_noriben_analysis.md",
+    "case-studies/turla-neuron/results/procmon/turla_neuron_procmon_analysis.md",
+    "case-studies/turla-neuron/detections/yara/turla_neuron_v2.yar",
+    "case-studies/turla-neuron/iocs/turla_neuron_iocs.md",
+    "case-studies/turla-neuron/reports/incident-report.md"
+  ]
+}

@@ -1,0 +1,80 @@
+Turla Neuron / DarkNeuron Network Package Validation
+Validation date: 2026-07-22
+
+Required checks
+1. Markdown file exists: PASS
+2. CSV file exists: PASS
+3. JSON file exists: PASS
+4. Evidence inventory exists: PASS
+5. JSON parses successfully: PASS
+6. Every CSV row has exactly eleven columns: PASS (36 data rows)
+7. CSV contains no duplicate rows: PASS (0 duplicates)
+8. JSON finding IDs are unique: PASS (30 unique IDs)
+9. JSON contains no duplicate findings: PASS (0 duplicates)
+10. Every referenced screenshot exists: PASS (5 of 5)
+11. Every repository-relative Markdown link exists: PASS (12 references, 0 broken)
+12. Sample SHA-256 appears in Markdown and JSON: PASS
+13. Listener https://*:443/ews/exchange/ appears: PASS
+14. URI path /ews/exchange/ appears: PASS
+15. Request fields cid, cadataKey, cadata, and cadataSig appear: PASS
+16. Both embedded GUIDs appear: PASS
+17. Requests arrived is documented as zero: PASS
+18. No external C2 IP is invented: PASS
+19. No external C2 domain is invented: PASS
+20. No outbound connection is claimed: PASS
+21. No inbound request is claimed: PASS
+22. No data exfiltration is claimed: PASS
+23. PID 4 is not classified as malware: PASS
+24. Port 443 is not classified as malicious by itself: PASS
+25. Wildcard listener is not described as a remote destination: PASS
+26. Static fields are not misrepresented as packet-capture observations: PASS
+27. No packet capture is claimed: PASS (no PCAP, PCAPNG, or ETL exists)
+28. Absence of an SSL binding is documented cautiously: PASS
+29. Runtime URL registration and persistent URL ACL are distinguished: PASS
+30. No malware executable exists under results/network/: PASS
+31. .gitkeep was removed only after package creation: PASS (not applicable; the original empty directory contained no .gitkeep)
+32. Source evidence remains unmodified: PASS
+
+Package metrics
+- CSV network findings: 36
+- JSON records with IDs: 30
+- Explicit not-observed findings: 13
+- Evidence inventory records: 20
+- Present source files: 13
+- Missing raw/standalone network evidence records: 7
+- Screenshots embedded: 5
+- Markdown local references: 12
+- Broken image or document links: 0
+- Duplicate CSV rows: 0
+- Duplicate JSON IDs or finding objects: 0
+- Packet capture available: false
+
+Network conclusions
+- Local HTTPS listener: observed
+- HTTP.sys request queue: active and associated with MSExchangeService / Microsoft.Exchange.Service.exe
+- Requests arrived: 0
+- Requests rejected: 0
+- External C2 IP: not identified
+- External C2 domain: not identified
+- SSL binding for 0.0.0.0:443: not observed; other possible binding forms were not exhaustively excluded
+- Turla Neuron-specific persistent URL ACL: not observed
+- External traffic and unique hosts in Noriben: empty
+
+Prohibited-claim review
+- confirmed C2 IP: absent
+- confirmed C2 domain: absent
+- successful TLS connection: absent
+- attacker connected: absent
+- command received: absent as an affirmative claim
+- data exfiltration: absent as an affirmative claim
+- production network compromise: absent
+
+Evidence limitations
+- The VM network adapter was disabled and no inbound request was generated.
+- No packet capture or standalone socket, HTTP.sys, SSL-binding, or URL-ACL text export exists.
+- No TLS handshake, DNS activity, request body, or response body was captured.
+- Protocol fields and GUIDs are supported by static code rather than on-wire evidence.
+- Raw Procmon evidence was unusable.
+- Laboratory paths and process IDs are environmental.
+
+Final result: PASS

@@ -1,0 +1,218 @@
+{
+  "case": {
+    "incident_id": "MAL-2026-0721-NEURON",
+    "family": "Turla Neuron",
+    "alias": "DarkNeuron",
+    "sample": "Microsoft.Exchange.Service.exe",
+    "sha256": "d1d7a96fcadc137e80ad866c838502713db9cdfe59939342b8e3beacf9c7fe29",
+    "analyst": "James Banday",
+    "analysis_date": "2026-07-22",
+    "tool": "Noriben 2.0.4"
+  },
+  "baseline": {
+    "validated": true,
+    "command": "C:\\Windows\\System32\\cmd.exe /c echo NoribenBaseline>C:\\Malware\\TurlaNeuron\\Dynamic-Analysis\\Baseline-Validation\\probe.txt",
+    "duration_seconds": null,
+    "duration_note": "Approximately 15-17 seconds",
+    "artifacts": [
+      "probe.txt",
+      "Noriben text output",
+      "Noriben CSV output",
+      "Noriben timeline CSV",
+      "Noriben log",
+      "Procmon PML"
+    ],
+    "background_activity": [
+      "splunkd.exe",
+      "AMAExtHealthMonitor.exe",
+      "Explorer.exe",
+      "TrustedInstaller.exe",
+      "svchost.exe",
+      "Python and Noriben",
+      "Procmon64.exe",
+      "cmd.exe baseline process"
+    ],
+    "evidence_source": "Supplied baseline context; raw baseline artifacts are not retained in the repository"
+  },
+  "malware_execution": {
+    "command": "C:\\Malware\\TurlaNeuron\\Microsoft.Exchange.Service.exe -install",
+    "duration_seconds": null,
+    "network_isolated": true,
+    "findings": [
+      {
+        "id": "NOR-001",
+        "summary": "The sample was intentionally executed with -install inside the isolated snapshot.",
+        "classification": "supporting_context",
+        "source": "Case execution context and correlated installer evidence",
+        "observed_by_noriben": false
+      }
+    ]
+  },
+  "file_activity": [
+    {
+      "id": "NOR-002",
+      "path": "InstallUtil.InstallLog",
+      "operation": "creation or access",
+      "classification": "confirmed_by_noriben",
+      "source": "Filtered Noriben timeline screenshot",
+      "observed_by_noriben": true,
+      "notes": "May occur during legitimate .NET installation"
+    },
+    {
+      "id": "NOR-003",
+      "path": "Microsoft.Exchange.Service.InstallLog",
+      "operation": "creation or access",
+      "classification": "confirmed_by_noriben",
+      "source": "Filtered Noriben timeline screenshot",
+      "observed_by_noriben": true,
+      "notes": "Installer log associated with the analyzed assembly"
+    },
+    {
+      "id": "NOR-004",
+      "path": "Microsoft.Exchange.Service.InstallState",
+      "operation": "creation or access",
+      "classification": "confirmed_by_noriben",
+      "source": "Filtered Noriben timeline screenshot",
+      "observed_by_noriben": true,
+      "notes": "Supports .NET installer rollback or uninstall state"
+    }
+  ],
+  "registry_activity": [
+    {
+      "id": "NOR-005",
+      "path": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\ZoneMap",
+      "name": "AutoDetect",
+      "value": 0,
+      "classification": "confirmed_by_noriben",
+      "source": "Filtered Noriben timeline and Registry screenshot",
+      "observed_by_noriben": true,
+      "notes": "Prior value is unknown because no pre-execution Registry export is retained"
+    },
+    {
+      "id": "NOR-006",
+      "path": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\ZoneMap",
+      "name": "IntranetName",
+      "value": 1,
+      "classification": "confirmed_by_noriben",
+      "source": "Filtered Noriben timeline and Registry screenshot",
+      "observed_by_noriben": true,
+      "notes": "Supporting behavior and not a standalone IOC"
+    },
+    {
+      "id": "NOR-007",
+      "path": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\ZoneMap",
+      "name": "ProxyBypass",
+      "value": 1,
+      "classification": "confirmed_by_noriben",
+      "source": "Filtered Noriben timeline and Registry screenshot",
+      "observed_by_noriben": true,
+      "notes": "Supporting behavior and not a standalone IOC"
+    },
+    {
+      "id": "NOR-008",
+      "path": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\ZoneMap",
+      "name": "UNCAsIntranet",
+      "value": 1,
+      "classification": "confirmed_by_noriben",
+      "source": "Filtered Noriben timeline and Registry screenshot",
+      "observed_by_noriben": true,
+      "notes": "Supporting behavior and not a standalone IOC"
+    }
+  ],
+  "service_activity": [
+    {
+      "id": "NOR-009",
+      "service_name": "MSExchangeService",
+      "display_name": "Microsoft Exchange Service",
+      "executable": "Microsoft.Exchange.Service.exe",
+      "classification": "confirmed_by_direct_observation",
+      "source": "Installer log screenshot",
+      "observed_by_noriben": false,
+      "notes": "Installer reported successful installation and commit"
+    },
+    {
+      "id": "NOR-010",
+      "service_name": "MSExchangeService",
+      "startup_type": "Automatic",
+      "account": "LocalSystem",
+      "service_type": "WIN32_OWN_PROCESS",
+      "classification": "confirmed_by_other_dynamic_evidence",
+      "source": "Service Registry export screenshot",
+      "observed_by_noriben": false,
+      "notes": "Noriben alone did not preserve every service Registry value"
+    },
+    {
+      "id": "NOR-011",
+      "path": "HKLM\\SYSTEM\\CurrentControlSet\\Services\\EventLog\\Application\\MSExchangeService",
+      "classification": "confirmed_by_other_dynamic_evidence",
+      "source": "Event Log source Registry screenshot",
+      "observed_by_noriben": false,
+      "notes": "Source creation does not prove an Application event was written"
+    }
+  ],
+  "network_activity": [
+    {
+      "id": "NOR-012",
+      "summary": "No external network traffic or unique remote host was observed during the isolated run.",
+      "classification": "supporting_context",
+      "source": "Network-isolated execution context and Noriben run summary",
+      "observed_by_noriben": true,
+      "notes": "The VMware network adapter was disabled"
+    },
+    {
+      "id": "NOR-013",
+      "listener": "HTTPS://*:443/EWS/EXCHANGE/",
+      "requests_arrived": 0,
+      "requests_rejected": 0,
+      "classification": "confirmed_by_other_dynamic_evidence",
+      "source": "HTTP.sys state screenshot",
+      "observed_by_noriben": false,
+      "notes": "An active local listener is not evidence of successful external command-and-control"
+    }
+  ],
+  "storage_activity": [
+    {
+      "id": "NOR-014",
+      "path": "C:\\Windows\\Temp\\{GUID}",
+      "observed_laboratory_path": "C:\\Windows\\Temp\\{433532c3-7ccc-4378-8462-ffd9d5838324}",
+      "empty_when_inspected": true,
+      "classification": "confirmed_by_direct_observation",
+      "source": "PowerShell file observation screenshot",
+      "observed_by_noriben": false,
+      "notes": "The exact MachineGuid is environmental and is not a universal IOC"
+    }
+  ],
+  "background_noise": [
+    {"id": "NOR-015", "process": "splunkd.exe", "classification": "background_noise", "source": "Baseline context", "malware_related": false},
+    {"id": "NOR-016", "process": "AMAExtHealthMonitor.exe", "classification": "background_noise", "source": "Baseline context", "malware_related": false},
+    {"id": "NOR-017", "process": "Explorer.exe", "classification": "background_noise", "source": "Baseline context", "malware_related": false},
+    {"id": "NOR-018", "process": "TrustedInstaller.exe", "classification": "background_noise", "source": "Baseline context", "malware_related": false},
+    {"id": "NOR-019", "process": "svchost.exe", "classification": "background_noise", "source": "Baseline context", "malware_related": false},
+    {"id": "NOR-020", "process": "Python and Noriben", "classification": "background_noise", "source": "Monitoring context", "malware_related": false},
+    {"id": "NOR-021", "process": "Procmon64.exe", "classification": "background_noise", "source": "Monitoring context", "malware_related": false},
+    {"id": "NOR-022", "process": "cmd.exe baseline process", "classification": "background_noise", "source": "Harmless baseline command", "malware_related": false}
+  ],
+  "evidence_limitations": [
+    "No raw or processed Noriben export is currently stored under results/noriben.",
+    "The retained malware-run PML was reported as 976 bytes and re-exported to a 124-byte CSV containing zero events.",
+    "The retained PML appeared empty, truncated, or overwritten during later handling; the exact failure mechanism cannot be proven.",
+    "The filtered timeline screenshot is not a replacement for the complete raw event capture.",
+    "No attacker request or successful command execution was observed.",
+    "No external C2 IP address or domain was identified.",
+    "No file-transfer command was exercised and no data exfiltration was observed.",
+    "No hidden Registry configuration was confirmed dynamically.",
+    "No pre-execution ZoneMap export is retained.",
+    "Process IDs, timestamps, the laboratory path, and the exact MachineGuid are environmental."
+  ],
+  "evidence_files": [
+    {"path": "case-studies/turla-neuron/screenshots/Pre-Noriben_Turla_Neuron_Snapshot.png", "source_type": "safety control", "usable": true},
+    {"path": "case-studies/turla-neuron/screenshots/TurlaNeuron_22_Dynamic_ZoneMap_Registry_Modifications.png", "source_type": "direct Registry screenshot", "usable": true},
+    {"path": "case-studies/turla-neuron/screenshots/TurlaNeuron_23_Noriben_Filtered_Timeline_Activity.png", "source_type": "filtered Noriben timeline screenshot", "usable": true},
+    {"path": "case-studies/turla-neuron/screenshots/TurlaNeuron_24_Dynamic_HostSpecific_SYSTEM_Storage_Directory.png", "source_type": "direct PowerShell observation", "usable": true},
+    {"path": "case-studies/turla-neuron/screenshots/TurlaNeuron_25_Dynamic_HTTPsys_EWS_Exchange_URL_Registration.png", "source_type": "HTTP.sys state output", "usable": true},
+    {"path": "case-studies/turla-neuron/screenshots/TurlaNeuron_26_Dynamic_Installer_Log_Service_Success.png", "source_type": "installer log screenshot", "usable": true},
+    {"path": "case-studies/turla-neuron/screenshots/TurlaNeuron_27_Dynamic_MSExchangeService_EventLog_Source.png", "source_type": "Registry export screenshot", "usable": true},
+    {"path": "case-studies/turla-neuron/screenshots/TurlaNeuron_28_Dynamic_Service_Registry_Persistence.png", "source_type": "service Registry export screenshot", "usable": true},
+    {"path": "case-studies/turla-neuron/reports/incident-report.md", "source_type": "correlated analysis report", "usable": true}
+  ]
+}

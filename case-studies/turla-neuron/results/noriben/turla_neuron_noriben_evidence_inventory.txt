@@ -1,0 +1,48 @@
+Turla Neuron Noriben Evidence Inventory
+=======================================
+
+Inventory scope:
+- Directory: case-studies/turla-neuron/results/noriben/
+- Inventory generated after the analysis, event-summary, and findings files were finalized.
+- Existing raw Noriben files discovered before package creation: 0
+- Raw Noriben text, CSV, timeline CSV, log, PML, probe, and installer files present in this directory: None
+
+File 1
+------
+Relative path: case-studies/turla-neuron/results/noriben/turla_neuron_noriben_analysis.md
+File size: 16963 bytes
+SHA-256: e48754a407678312771cfd183087269872a9999dd7a1845433c1e75ef92fe2ad
+File type or extension: Markdown; UTF-8 text
+Last modification time: 2026-07-22 20:11:18.073158000 -1000
+Purpose: Human-readable Noriben and correlated dynamic-analysis report
+Usability status: usable_primary
+
+File 2
+------
+Relative path: case-studies/turla-neuron/results/noriben/turla_neuron_noriben_event_summary.csv
+File size: 5703 bytes
+SHA-256: f385eed36cb4f0aaf520023f146a94a83f7740324c3f71cc89f76d595d675724
+File type or extension: CSV; ASCII-compatible UTF-8 text
+Last modification time: 2026-07-22 20:09:35.196121200 -1000
+Purpose: Structured summary of baseline, malware, correlated, background, and limitation events
+Usability status: usable_supporting
+
+File 3
+------
+Relative path: case-studies/turla-neuron/results/noriben/turla_neuron_noriben_findings.json
+File size: 10453 bytes
+SHA-256: 90c97ff2174823e727ddc979e7fdfde95846d069c9ade822e316ddf4b4cb3b85
+File type or extension: JSON; UTF-8 text
+Last modification time: 2026-07-22 20:10:19.994690300 -1000
+Purpose: Machine-readable findings with evidence-source and classification fields
+Usability status: usable_supporting
+
+Administrative-file note:
+- This inventory and the validation report are package-control files created after the evidence-file inventory was frozen.
+- They are not raw Noriben evidence and are not included as evidence inputs.
+- The inventory does not attempt to record its own SHA-256 because embedding a self-hash would change that hash.
+
+Raw-evidence usability conclusion:
+- No raw Noriben artifact is stored in this directory.
+- The reported 976-byte malware-run PML and its 124-byte zero-event CSV export are absent and classified as corrupted_or_unusable based on the retained handling record.
+- The filtered timeline screenshot and separately preserved Windows evidence remain usable supporting sources outside this directory.

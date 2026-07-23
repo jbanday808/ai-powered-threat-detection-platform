@@ -1,0 +1,192 @@
+{
+  "case": {
+    "incident_id": "MAL-2026-0721-NEURON",
+    "family": "Turla Neuron",
+    "alias": "DarkNeuron",
+    "sample": "Microsoft.Exchange.Service.exe",
+    "sha256": "d1d7a96fcadc137e80ad866c838502713db9cdfe59939342b8e3beacf9c7fe29",
+    "analyst": "James Banday",
+    "analysis_date": "2026-07-22",
+    "tool": "dnSpyEx 6.6.0"
+  },
+  "findings": [
+    {
+      "id": "DNSPY-001",
+      "category": "service_installation",
+      "component": "neuron_service.Program",
+      "method": "Main",
+      "summary": "Handles -install through InstallHelper, handles -uninstall through /u, and otherwise starts MSExchangeService with ServiceBase.Run.",
+      "classification": "confirmed_statically",
+      "artifacts": ["-install", "-uninstall", "/u", "MSExchangeService"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_05_dnSpy_Service_Installer_Configuration.png"],
+      "detection_value": ["Service installation arguments", "MSExchangeService"]
+    },
+    {
+      "id": "DNSPY-002",
+      "category": "service_installation",
+      "component": "neuron_service.ProjectInstaller",
+      "method": "InitializeComponent",
+      "summary": "Configures the Exchange-themed service name, display name, and description without visible hardcoded account credentials.",
+      "classification": "confirmed_statically",
+      "artifacts": ["MSExchangeService", "Microsoft Exchange Service", "Host service for the Microsoft Exchange Server management provider. If this service is stopped or disabled, Microsoft Exchange cannot be managed."],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_07_dnSpy_Service_Installer_Configuration.png"],
+      "detection_value": ["ServiceName", "DisplayName", "Service description"]
+    },
+    {
+      "id": "DNSPY-003",
+      "category": "service_installation",
+      "component": "neuron_service.ProjectInstaller",
+      "method": "serviceInstaller1_AfterInstall",
+      "summary": "Creates a ServiceController for MSExchangeService and immediately calls Start.",
+      "classification": "confirmed_statically",
+      "artifacts": ["MSExchangeService", "ServiceController.Start"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_06_dnSpy_AfterInstall_Automatic_Service_Start.png"],
+      "detection_value": ["Immediate post-install service start"]
+    },
+    {
+      "id": "DNSPY-004",
+      "category": "service_runtime",
+      "component": "neuron_service.MSExchangeService",
+      "method": "OnStart",
+      "summary": "Creates a WebServer using SendResponse, registers the wildcard HTTPS EWS listener, starts KillOldThread, and runs the listener.",
+      "classification": "confirmed_statically",
+      "artifacts": ["https://*:443/ews/exchange/", "WebServerUtils.SendResponse", "Storage.KillOldThread"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_08_dnSpy_Service_OnStart_HTTPS_Listener.png"],
+      "detection_value": ["/ews/exchange/", "Unexpected port-443 listener"]
+    },
+    {
+      "id": "DNSPY-005",
+      "category": "service_runtime",
+      "component": "neuron_service.MSExchangeService",
+      "method": "OnStop",
+      "summary": "Stops the WebServer and aborts the storage thread.",
+      "classification": "confirmed_statically",
+      "artifacts": ["WebServer.Stop", "Thread.Abort"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_09_dnSpy_Service_OnStop.png"],
+      "detection_value": ["Service shutdown behavior"]
+    },
+    {
+      "id": "DNSPY-006",
+      "category": "protocol",
+      "component": "neuron_service.WebServerUtils",
+      "method": "SendResponse",
+      "summary": "Parses query strings or POST bodies, URL-decodes key-value pairs, validates cid, and processes encrypted protocol fields.",
+      "classification": "confirmed_statically",
+      "artifacts": ["cid", "cadataKey", "cadata", "cadataSig", "f2949bab-240a-46ca-a455-6f504367ba7d"],
+      "evidence": [
+        "case-studies/turla-neuron/screenshots/TurlaNeuron_10_dnSpy_SendResponse_Request_Validation.png",
+        "case-studies/turla-neuron/screenshots/TurlaNeuron_11_dnSpy_Cadata_RC4_Remote_Storage_Command_Channel.png"
+      ],
+      "detection_value": ["Protocol field correlation", "Embedded validation GUID"]
+    },
+    {
+      "id": "DNSPY-007",
+      "category": "command_processing",
+      "component": "neuron_service.CommandScript",
+      "method": "CommandScript",
+      "summary": "Dispatches command types that implement hidden command-shell execution, file writing, file reading, Base64 conversion, and configuration operations.",
+      "classification": "capability_only",
+      "artifacts": ["cmd.exe", "/c", "WriteAllBytes", "ReadAllBytes", "GetConfigAsString", "AddConfigAsString", "DelConfigAsString", "ExecCMD"],
+      "evidence": [
+        "case-studies/turla-neuron/screenshots/TurlaNeuron_12_dnSpy_CommandScript_Type0_Command_Execution.png",
+        "case-studies/turla-neuron/screenshots/TurlaNeuron_13_dnSpy_CommandScript_Type0_Execution_and_Output_Capture.png",
+        "case-studies/turla-neuron/screenshots/TurlaNeuron_14_dnSpy_CommandScript_Types1_2_File_Transfer.png",
+        "case-studies/turla-neuron/screenshots/TurlaNeuron_15_dnSpy_CommandScript_Configuration_Operations.png"
+      ],
+      "detection_value": ["Service-spawned cmd.exe", "File-operation telemetry"]
+    },
+    {
+      "id": "DNSPY-008",
+      "category": "registry_configuration",
+      "component": "neuron_service.Config",
+      "method": "FindConfig",
+      "summary": "Recursively searches HKCU SOFTWARE, reads binary Registry values, decrypts them with EncryptScript and Utils.GetKey, and decodes JSON configuration.",
+      "classification": "confirmed_statically",
+      "artifacts": ["HKCU\\SOFTWARE", "Connect", "URL", "LastStart", "FirstStart", "Interval", "SubKey", "ValueName"],
+      "evidence": [
+        "case-studies/turla-neuron/screenshots/TurlaNeuron_16_dnSpy_Config_Registry_Search_and_Decryption.png",
+        "case-studies/turla-neuron/screenshots/TurlaNeuron_17_dnSpy_Config_Fields_SubKey_ValueName.png"
+      ],
+      "detection_value": ["Encrypted binary configuration under HKCU"]
+    },
+    {
+      "id": "DNSPY-009",
+      "category": "registry_configuration",
+      "component": "neuron_service.Config",
+      "method": "WriteConfig",
+      "summary": "JSON-serializes and encrypts configuration before writing it as a binary Registry value.",
+      "classification": "confirmed_statically",
+      "artifacts": ["HKCU\\SOFTWARE\\<SubKey>", "RegistryValueKind.Binary", "REG_BINARY"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_18_dnSpy_Config_Encrypted_Registry_Write.png"],
+      "detection_value": ["Binary Registry writes by the service process"]
+    },
+    {
+      "id": "DNSPY-010",
+      "category": "cryptography",
+      "component": "neuron_service.Crypt",
+      "method": "EncryptScript",
+      "summary": "Implements an RC4-style symmetric transform using two 256-entry arrays, key scheduling, pseudo-random generation, and XOR.",
+      "classification": "confirmed_statically",
+      "artifacts": ["EncryptScript", "RC4-style byte transform"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_19_dnSpy_RC4_EncryptScript_Implementation.png"],
+      "detection_value": ["YARA function-name artifact", "Encrypted protocol context"]
+    },
+    {
+      "id": "DNSPY-011",
+      "category": "cryptography",
+      "component": "neuron_service.Crypt",
+      "method": "Encryption",
+      "summary": "Uses an embedded 1024-bit RSA public key with exponent 65537, OAEP encryption, and Base64 output.",
+      "classification": "supporting_context",
+      "artifacts": ["RSACryptoServiceProvider", "1024-bit RSA", "65537", "OAEP", "Base64"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_19_dnSpy_RC4_EncryptScript_Implementation.png"],
+      "detection_value": ["Encrypted-session processing context"]
+    },
+    {
+      "id": "DNSPY-012",
+      "category": "storage",
+      "component": "neuron_service.Storage",
+      "method": "KillOldThread",
+      "summary": "Loops indefinitely, calls Storage.KillOld, and sleeps for 300000 milliseconds between calls.",
+      "classification": "confirmed_statically",
+      "artifacts": ["KillOldThread", "Storage.KillOld", "300000 milliseconds", "5 minutes"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_20_dnSpy_Storage_Five_Minute_Polling.png"],
+      "detection_value": ["YARA function-name artifact", "Periodic storage cleanup"]
+    },
+    {
+      "id": "DNSPY-013",
+      "category": "storage",
+      "component": "neuron_service.Storage",
+      "method": "GetPathName",
+      "summary": "Creates and returns a system temporary directory whose braced name is derived from Utils.GetKey and the host MachineGuid.",
+      "classification": "confirmed_statically",
+      "artifacts": ["C:\\Windows\\Temp\\{MachineGuid}", "Utils.GetKey", "MSXEWS", "TVNYRVdT", ".TMP"],
+      "evidence": ["case-studies/turla-neuron/screenshots/TurlaNeuron_21_dnSpy_Host_Specific_Storage_Path.png"],
+      "detection_value": ["Host-derived temporary directory pattern", "Task markers"]
+    }
+  ],
+  "command_types": [
+    {"type": 0, "capability": "Launch cmd.exe with /c, no shell execution, redirected standard output and error, and a temporary working directory.", "classification": "confirmed_statically", "dynamic_status": "not_exercised"},
+    {"type": 1, "capability": "Base64-decode supplied data and write bytes to a file.", "classification": "capability_only", "dynamic_status": "not_exercised"},
+    {"type": 2, "capability": "Read bytes from a file and Base64-encode the contents.", "classification": "capability_only", "dynamic_status": "not_exercised"},
+    {"type": 3, "capability": "Return or pass through selected instruction data.", "classification": "confirmed_statically", "dynamic_status": "not_exercised"},
+    {"type": 4, "capability": "Call GetConfigAsString.", "classification": "confirmed_statically", "dynamic_status": "not_exercised"},
+    {"type": 5, "capability": "Call AddConfigAsString.", "classification": "confirmed_statically", "dynamic_status": "not_exercised"},
+    {"type": 6, "capability": "Call DelConfigAsString.", "classification": "confirmed_statically", "dynamic_status": "not_exercised"}
+  ],
+  "protocol_fields": ["cid", "cadataKey", "cadata", "cadataSig"],
+  "embedded_identifiers": [
+    {"purpose": "cid validation", "value": "f2949bab-240a-46ca-a455-6f504367ba7d"},
+    {"purpose": "fallback encryption", "value": "8d963325-01b8-4671-8e82-d0904275ab06"}
+  ],
+  "limitations": [
+    "Decompiled code may differ slightly from the original source code.",
+    "The indexed screenshot shows the Crypt method tree and EncryptScript body but not the detailed RSA method body.",
+    "No private RSA key was recovered.",
+    "No external command-and-control IP address or domain was confirmed.",
+    "No attacker sent commands during the isolated run.",
+    "No file-transfer or configuration command was dynamically exercised.",
+    "No confirmed data exfiltration occurred.",
+    "The laboratory sample path and MachineGuid are not universal indicators."
+  ]
+}
