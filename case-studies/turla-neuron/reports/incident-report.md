@@ -99,16 +99,6 @@ YARA reads file content for matching; scanning is not execution. Both source and
 
 **Evidence limitation:** YARA matched static file content; the scan did not execute the sample or demonstrate live command-and-control.
 
-### Evidence: Alternate refined YARA v2 source view
-
-![Alternate terminal capture of the refined Turla Neuron YARA source](../screenshots/TurlaNeuron_04_Refined_YARA_v2_Rule_Source_Code.png)
-
-**Plain-language explanation:** This alternate capture repeats the complete detection rule so its exact and behavior-based checks can be reviewed.
-
-**Technical finding:** The view shows the same two-rule structure and condition groups as the earlier refined-source capture.
-
-**Evidence limitation:** This possible alternate capture documents source code only and does not show execution.
-
 ## Static Reverse Engineering — Service Installation and Runtime
 
 Decompilation identified command-line handling for `-install` and `-uninstall`. With no installation switch, the main method passes `MSExchangeService` to the Windows service framework. The installer defines Exchange-themed service metadata and starts the service after installation. On start, the service creates the HTTPS listener and a background storage-cleanup thread; on stop, it stops the listener and aborts that thread.
@@ -488,36 +478,35 @@ Mappings based only on capability are not claims that those techniques were exer
 | 3 | `TurlaNeuron_02_PE_and_DotNet_File_Metadata.png` | Static metadata | PE32 and .NET file characteristics | Sample Identification and Static Metadata | None identified |
 | 4 | `TurlaNeuron_03_Refined_YARA_v2_Rule_Source_Code.png` | Detection engineering | Exact and behavioral YARA source | YARA Detection Engineering | None identified |
 | 5 | `TurlaNeuron_04_Compiled_YARA_v2_Exact_and_Behavioral_Matches.png` | Detection validation | Compiled exact and behavioral matches | YARA Detection Engineering | None identified |
-| 6 | `TurlaNeuron_04_Refined_YARA_v2_Rule_Source_Code.png` | Detection engineering | Alternate complete YARA source capture | YARA Detection Engineering | Possible alternate capture of No. 4 |
-| 7 | `TurlaNeuron_05_dnSpy_Service_Installer_Configuration.png` | Static reverse engineering | Install/uninstall switches and service entry | Static Reverse Engineering — Service Installation and Runtime | None identified |
-| 8 | `TurlaNeuron_06_dnSpy_AfterInstall_Automatic_Service_Start.png` | Static reverse engineering | Post-install service start | Static Reverse Engineering — Service Installation and Runtime | None identified |
-| 9 | `TurlaNeuron_07_dnSpy_Service_Installer_Configuration.png` | Static reverse engineering | Service name, display name, and description | Static Reverse Engineering — Service Installation and Runtime | None identified |
-| 10 | `TurlaNeuron_08_dnSpy_Service_OnStart_HTTPS_Listener.png` | Static reverse engineering | HTTPS listener and background thread startup | Static Reverse Engineering — Service Installation and Runtime | None identified |
-| 11 | `TurlaNeuron_09_dnSpy_Service_OnStop.png` | Static reverse engineering | Listener and thread shutdown | Static Reverse Engineering — Service Installation and Runtime | None identified |
-| 12 | `TurlaNeuron_10_dnSpy_SendResponse_Request_Validation.png` | Static reverse engineering | Request parsing, `cid`, and `cadataKey` | Static Reverse Engineering — Request Validation and Command Channel | None identified |
-| 13 | `TurlaNeuron_11_dnSpy_Cadata_RC4_Remote_Storage_Command_Channel.png` | Static reverse engineering | Encrypted `cadata` decoding and command dispatch | Static Reverse Engineering — Request Validation and Command Channel | None identified |
-| 14 | `TurlaNeuron_12_dnSpy_CommandScript_Type0_Command_Execution.png` | Static reverse engineering | Hidden `cmd.exe` capability | Static Reverse Engineering — Command Execution and File Operations | None identified |
-| 15 | `TurlaNeuron_13_dnSpy_CommandScript_Type0_Execution_and_Output_Capture.png` | Static reverse engineering | Standard output and error capture | Static Reverse Engineering — Command Execution and File Operations | None identified |
-| 16 | `TurlaNeuron_14_dnSpy_CommandScript_Types1_2_File_Transfer.png` | Static reverse engineering | File writes, reads, and Base64 conversion | Static Reverse Engineering — Command Execution and File Operations | None identified |
-| 17 | `TurlaNeuron_15_dnSpy_CommandScript_Configuration_Operations.png` | Static reverse engineering | Configuration add, get, and delete functions | Static Reverse Engineering — Command Execution and File Operations | None identified |
-| 18 | `TurlaNeuron_16_dnSpy_Config_Registry_Search_and_Decryption.png` | Static reverse engineering | Recursive Registry search and decryption | Static Reverse Engineering — Registry Configuration | None identified |
-| 19 | `TurlaNeuron_17_dnSpy_Config_Fields_SubKey_ValueName.png` | Static reverse engineering | Configuration fields and location tracking | Static Reverse Engineering — Registry Configuration | None identified |
-| 20 | `TurlaNeuron_18_dnSpy_Config_Encrypted_Registry_Write.png` | Static reverse engineering | Encrypted binary Registry writing | Static Reverse Engineering — Registry Configuration | None identified |
-| 21 | `TurlaNeuron_19_dnSpy_RC4_EncryptScript_Implementation.png` | Static reverse engineering | RC4-style encryption routine | Static Reverse Engineering — Cryptography and Storage | None identified |
-| 22 | `TurlaNeuron_20_dnSpy_Storage_Five_Minute_Polling.png` | Static reverse engineering | Five-minute storage cleanup loop | Static Reverse Engineering — Cryptography and Storage | None identified |
-| 23 | `TurlaNeuron_21_dnSpy_Host_Specific_Storage_Path.png` | Static reverse engineering | Host-specific temporary path construction | Static Reverse Engineering — Cryptography and Storage | None identified |
-| 24 | `TurlaNeuron_22_Dynamic_ZoneMap_Registry_Modifications.png` | Dynamic Analysis | ZoneMap values written during the monitored run | Dynamic Analysis — Registry Modifications | None identified |
-| 25 | `TurlaNeuron_23_Noriben_Filtered_Timeline_Activity.png` | Dynamic Analysis | Filtered installer, InstallState, and ZoneMap activity | Dynamic Analysis — Noriben Timeline | None identified |
-| 26 | `TurlaNeuron_24_Dynamic_HostSpecific_SYSTEM_Storage_Directory.png` | Dynamic Analysis | MachineGuid-based directory under Windows Temp | Dynamic Analysis — Host-Specific Storage | None identified |
-| 27 | `TurlaNeuron_25_Dynamic_HTTPsys_EWS_Exchange_URL_Registration.png` | Dynamic Analysis | Active HTTP.sys queue, registered URL, and zero requests | Dynamic Analysis — HTTP.sys Listener | None identified |
-| 28 | `TurlaNeuron_26_Dynamic_Installer_Log_Service_Success.png` | Dynamic Analysis | Successful service installation and commit | Dynamic Analysis — Successful Service Installation | None identified |
-| 29 | `TurlaNeuron_27_Dynamic_MSExchangeService_EventLog_Source.png` | Dynamic Analysis | Application Event Log source registration | Dynamic Analysis — Event Log Source | None identified |
-| 30 | `TurlaNeuron_28_Dynamic_Service_Registry_Persistence.png` | Dynamic Analysis | Automatic LocalSystem service persistence | Dynamic Analysis — Service Registry Persistence | None identified |
-| 31 | `TurlaNeuron_29_Defender_DarkNeuron_Quarantined_RecycleBin.png` | Remediation and Cleanup | Defender quarantine status | Remediation — Defender Quarantine | None identified |
-| 32 | `TurlaNeuron_30_Defender_DarkNeuron_Detection_and_Remediation_History.png` | Remediation and Cleanup | Successful historical Defender actions | Remediation — Defender Detection History | None identified |
-| 33 | `TurlaNeuron_31_Defender_DarkNeuron_Inactive_Cleanup_Verification.png` | Remediation and Cleanup | Missing file and service with inactive threat | Remediation — Inactive Cleanup Verification | None identified |
-| 34 | `TurlaNeuron_32_Defender_Final_Scan_Threat_Inactive.png` | Remediation and Cleanup | Final targeted scan and inactive threat state | Remediation — Final Defender Scan | None identified |
-| 35 | `TurlaNeuron_Diagram.png` | Overview | Simplified execution flow | Executive Summary | None identified |
+| 6 | `TurlaNeuron_05_dnSpy_Service_Installer_Configuration.png` | Static reverse engineering | Install/uninstall switches and service entry | Static Reverse Engineering — Service Installation and Runtime | None identified |
+| 7 | `TurlaNeuron_06_dnSpy_AfterInstall_Automatic_Service_Start.png` | Static reverse engineering | Post-install service start | Static Reverse Engineering — Service Installation and Runtime | None identified |
+| 8 | `TurlaNeuron_07_dnSpy_Service_Installer_Configuration.png` | Static reverse engineering | Service name, display name, and description | Static Reverse Engineering — Service Installation and Runtime | None identified |
+| 9 | `TurlaNeuron_08_dnSpy_Service_OnStart_HTTPS_Listener.png` | Static reverse engineering | HTTPS listener and background thread startup | Static Reverse Engineering — Service Installation and Runtime | None identified |
+| 10 | `TurlaNeuron_09_dnSpy_Service_OnStop.png` | Static reverse engineering | Listener and thread shutdown | Static Reverse Engineering — Service Installation and Runtime | None identified |
+| 11 | `TurlaNeuron_10_dnSpy_SendResponse_Request_Validation.png` | Static reverse engineering | Request parsing, `cid`, and `cadataKey` | Static Reverse Engineering — Request Validation and Command Channel | None identified |
+| 12 | `TurlaNeuron_11_dnSpy_Cadata_RC4_Remote_Storage_Command_Channel.png` | Static reverse engineering | Encrypted `cadata` decoding and command dispatch | Static Reverse Engineering — Request Validation and Command Channel | None identified |
+| 13 | `TurlaNeuron_12_dnSpy_CommandScript_Type0_Command_Execution.png` | Static reverse engineering | Hidden `cmd.exe` capability | Static Reverse Engineering — Command Execution and File Operations | None identified |
+| 14 | `TurlaNeuron_13_dnSpy_CommandScript_Type0_Execution_and_Output_Capture.png` | Static reverse engineering | Standard output and error capture | Static Reverse Engineering — Command Execution and File Operations | None identified |
+| 15 | `TurlaNeuron_14_dnSpy_CommandScript_Types1_2_File_Transfer.png` | Static reverse engineering | File writes, reads, and Base64 conversion | Static Reverse Engineering — Command Execution and File Operations | None identified |
+| 16 | `TurlaNeuron_15_dnSpy_CommandScript_Configuration_Operations.png` | Static reverse engineering | Configuration add, get, and delete functions | Static Reverse Engineering — Command Execution and File Operations | None identified |
+| 17 | `TurlaNeuron_16_dnSpy_Config_Registry_Search_and_Decryption.png` | Static reverse engineering | Recursive Registry search and decryption | Static Reverse Engineering — Registry Configuration | None identified |
+| 18 | `TurlaNeuron_17_dnSpy_Config_Fields_SubKey_ValueName.png` | Static reverse engineering | Configuration fields and location tracking | Static Reverse Engineering — Registry Configuration | None identified |
+| 19 | `TurlaNeuron_18_dnSpy_Config_Encrypted_Registry_Write.png` | Static reverse engineering | Encrypted binary Registry writing | Static Reverse Engineering — Registry Configuration | None identified |
+| 20 | `TurlaNeuron_19_dnSpy_RC4_EncryptScript_Implementation.png` | Static reverse engineering | RC4-style encryption routine | Static Reverse Engineering — Cryptography and Storage | None identified |
+| 21 | `TurlaNeuron_20_dnSpy_Storage_Five_Minute_Polling.png` | Static reverse engineering | Five-minute storage cleanup loop | Static Reverse Engineering — Cryptography and Storage | None identified |
+| 22 | `TurlaNeuron_21_dnSpy_Host_Specific_Storage_Path.png` | Static reverse engineering | Host-specific temporary path construction | Static Reverse Engineering — Cryptography and Storage | None identified |
+| 23 | `TurlaNeuron_22_Dynamic_ZoneMap_Registry_Modifications.png` | Dynamic Analysis | ZoneMap values written during the monitored run | Dynamic Analysis — Registry Modifications | None identified |
+| 24 | `TurlaNeuron_23_Noriben_Filtered_Timeline_Activity.png` | Dynamic Analysis | Filtered installer, InstallState, and ZoneMap activity | Dynamic Analysis — Noriben Timeline | None identified |
+| 25 | `TurlaNeuron_24_Dynamic_HostSpecific_SYSTEM_Storage_Directory.png` | Dynamic Analysis | MachineGuid-based directory under Windows Temp | Dynamic Analysis — Host-Specific Storage | None identified |
+| 26 | `TurlaNeuron_25_Dynamic_HTTPsys_EWS_Exchange_URL_Registration.png` | Dynamic Analysis | Active HTTP.sys queue, registered URL, and zero requests | Dynamic Analysis — HTTP.sys Listener | None identified |
+| 27 | `TurlaNeuron_26_Dynamic_Installer_Log_Service_Success.png` | Dynamic Analysis | Successful service installation and commit | Dynamic Analysis — Successful Service Installation | None identified |
+| 28 | `TurlaNeuron_27_Dynamic_MSExchangeService_EventLog_Source.png` | Dynamic Analysis | Application Event Log source registration | Dynamic Analysis — Event Log Source | None identified |
+| 29 | `TurlaNeuron_28_Dynamic_Service_Registry_Persistence.png` | Dynamic Analysis | Automatic LocalSystem service persistence | Dynamic Analysis — Service Registry Persistence | None identified |
+| 30 | `TurlaNeuron_29_Defender_DarkNeuron_Quarantined_RecycleBin.png` | Remediation and Cleanup | Defender quarantine status | Remediation — Defender Quarantine | None identified |
+| 31 | `TurlaNeuron_30_Defender_DarkNeuron_Detection_and_Remediation_History.png` | Remediation and Cleanup | Successful historical Defender actions | Remediation — Defender Detection History | None identified |
+| 32 | `TurlaNeuron_31_Defender_DarkNeuron_Inactive_Cleanup_Verification.png` | Remediation and Cleanup | Missing file and service with inactive threat | Remediation — Inactive Cleanup Verification | None identified |
+| 33 | `TurlaNeuron_32_Defender_Final_Scan_Threat_Inactive.png` | Remediation and Cleanup | Final targeted scan and inactive threat state | Remediation — Final Defender Scan | None identified |
+| 34 | `TurlaNeuron_Diagram.png` | Overview | Simplified execution flow | Executive Summary | None identified |
 
 ## References
 
