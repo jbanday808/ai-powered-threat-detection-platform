@@ -40,42 +40,42 @@ IDA Pro allows an analyst to examine the internal structure of a program without
 
 ## Evidence Reviewed
 
-### [IDA Imports](../screenshots/LummaStealer_03_IDA_Imports.png)
+### IDA Imports
 
 * **Evidence reviewed:** IDA Pro's imported-functions view.
 * **Technical observation:** The screenshot records external Windows functions and libraries available to the executable. Imports indicate potential capabilities, but the screenshot alone does not prove that every import was called.
 * **Non-technical explanation:** These imports are tools the program can ask Windows to provide.
 * **Security importance:** Reviewing them helps analysts identify possible file, process, network, encryption, or system-control activity that may require deeper investigation.
 
-### [IDA PE Overview](../screenshots/LummaStealer_04_IDA_PE_Overview.png)
+### IDA PE Overview
 
 * **Evidence reviewed:** IDA Pro's Portable Executable overview.
 * **Technical observation:** The screenshot identifies a Windows Portable Executable structure.
 * **Non-technical explanation:** The file is organized as a program intended for Windows.
 * **Security importance:** Correctly identifying the file format helps analysts choose appropriate analysis tools and interpret its internal structure.
 
-### [IDA Credential-Theft Indicators](../screenshots/LummaStealer_05_IDA_Credential_Theft_Indicators.png)
+### IDA Credential-Theft Indicators
 
 * **Evidence reviewed:** Credential-theft-related strings and references visible in IDA Pro.
 * **Technical observation:** The visible indicators appear related to credential access and browser information.
 * **Non-technical explanation:** The program contains internal labels or text associated with finding valuable login data.
 * **Security importance:** These indicators help focus analysis on credential stores and other sensitive browser data.
 
-### [IDA Credential Collection Functions](../screenshots/LummaStealer_06_IDA_Credential_Collection_Functions.png)
+### IDA Credential Collection Functions
 
 * **Evidence reviewed:** Named credential collection functions visible in IDA Pro.
 * **Technical observation:** Function names include Chrome and Edge login collection and password-protection-related functionality.
 * **Non-technical explanation:** The internal parts of the program appear designed to look for login information saved by common web browsers.
 * **Security importance:** Browser credentials may provide access to personal, financial, cloud, and company accounts.
 
-### [IDA Privilege Escalation and Credential Theft Functions](../screenshots/LummaStealer_07_IDA_Privilege_Escalation_and_Credential_Theft_Functions.png)
+### IDA Privilege Escalation and Credential Theft Functions
 
 * **Evidence reviewed:** Named privilege-related and credential-theft-related functions visible in IDA Pro.
 * **Technical observation:** The function names indicate possible privilege enabling, token access, impersonation, and credential-related capabilities. They do not independently confirm successful privilege escalation.
 * **Non-technical explanation:** The program appears to contain features for seeking more control over a computer and accessing protected information.
 * **Security importance:** Higher permissions may expose information and actions unavailable to a normal user account.
 
-### [IDA Chromium Master Keys Function Reference](../screenshots/LummaStealer_08_IDA_ChromiumMasterKeys_Function_Reference.png)
+### IDA Chromium Master Keys Function Reference
 
 * **Evidence reviewed:** The IDA Pro reference to `main.GetChromiumMasterKeys`.
 * **Technical observation:** The named function is associated with Chromium master keys used in protecting browser data.
@@ -86,8 +86,11 @@ IDA Pro allows an analyst to examine the internal structure of a program without
 
 ### Evidence
 
-* [LummaStealer_04_IDA_PE_Overview.png](../screenshots/LummaStealer_04_IDA_PE_Overview.png)
 * Portable Executable structure observed in IDA Pro
+
+![IDA Pro PE Overview showing the Lumma Stealer Windows executable structure](../screenshots/LummaStealer_04_IDA_PE_Overview.png)
+
+*Figure 1: IDA Pro confirms that the analyzed Lumma Stealer sample is a Windows executable.*
 
 ### Technical Finding
 
@@ -105,7 +108,9 @@ Confirming the file type helps analysts select the correct tools and investigati
 
 ### Evidence
 
-* [LummaStealer_03_IDA_Imports.png](../screenshots/LummaStealer_03_IDA_Imports.png)
+![IDA Pro imports reviewed during the Lumma Stealer reverse engineering investigation](../screenshots/LummaStealer_03_IDA_Imports.png)
+
+*Figure 2: The imported libraries and functions provide clues about the actions the program may perform.*
 
 ### Technical Finding
 
@@ -126,6 +131,14 @@ Suspicious imports may reveal file access, process activity, network communicati
 * `main.getChromeLogins`
 * `main.getEdgeLogins`
 * `main.GetChromiumMasterKeys`
+
+![IDA Pro credential theft indicators identified in the Lumma Stealer sample](../screenshots/LummaStealer_05_IDA_Credential_Theft_Indicators.png)
+
+*Figure 3: Password-related strings indicate that the program may target saved credentials.*
+
+![IDA Pro browser credential collection functions found in the Lumma Stealer sample](../screenshots/LummaStealer_06_IDA_Credential_Collection_Functions.png)
+
+*Figure 4: The identified functions are related to collecting and decrypting protected browser login information.*
 
 ### Technical Finding
 
@@ -158,12 +171,39 @@ The malware may try to unlock password information that Windows or a browser nor
 
 Protected passwords can become readable if malware gains access to the correct Windows user context or encryption material.
 
-## Finding 5: Chromium Master Key Access
+## Finding 5: Privilege-Related Activity
+
+### Evidence
+
+* `main.enablePrivilege`
+* `main.getSystemToken`
+* `main.impersonateSystem`
+
+![IDA Pro privilege and credential theft functions found in the Lumma Stealer sample](../screenshots/LummaStealer_07_IDA_Privilege_Escalation_and_Credential_Theft_Functions.png)
+
+*Figure 5: The internal functions indicate possible credential access, system discovery, and higher-permission activity.*
+
+### Technical Finding
+
+The function names indicate functionality related to enabling privileges, obtaining system tokens, and impersonating a higher-privileged account. The existing evidence does not confirm that privilege escalation succeeded.
+
+### Non-Technical Explanation
+
+The malware appears to contain features that could help it request more control over the computer.
+
+### Why It Matters
+
+Higher permissions could allow malware to access protected information or perform actions that a normal user cannot perform.
+
+## Finding 6: Chromium Master Key Access
 
 ### Evidence
 
 * `main.GetChromiumMasterKeys`
-* [LummaStealer_08_IDA_ChromiumMasterKeys_Function_Reference.png](../screenshots/LummaStealer_08_IDA_ChromiumMasterKeys_Function_Reference.png)
+
+![IDA Pro reference to the Chromium master key function](../screenshots/LummaStealer_08_IDA_ChromiumMasterKeys_Function_Reference.png)
+
+*Figure 6: The function is associated with keys used to protect saved information in Chromium-based browsers.*
 
 ### Technical Finding
 
@@ -177,7 +217,7 @@ The malware appears to look for a digital key that browsers use to protect saved
 
 Access to the correct browser protection key may help malware unlock protected browser data.
 
-## Finding 6: Process and System Discovery
+## Finding 7: Process and System Discovery
 
 ### Evidence
 
@@ -195,26 +235,6 @@ The malware appears to examine the computer to learn which programs are running 
 ### Why It Matters
 
 Attackers use system discovery to understand a computer before attempting additional actions.
-
-## Finding 7: Privilege-Related Activity
-
-### Evidence
-
-* `main.enablePrivilege`
-* `main.getSystemToken`
-* `main.impersonateSystem`
-
-### Technical Finding
-
-The function names indicate functionality related to enabling privileges, obtaining system tokens, and impersonating a higher-privileged account. The existing evidence does not confirm that privilege escalation succeeded.
-
-### Non-Technical Explanation
-
-The malware appears to contain features that could help it request more control over the computer.
-
-### Why It Matters
-
-Higher permissions could allow malware to access protected information or perform actions that a normal user cannot perform.
 
 ## Reverse Engineering Findings Summary
 
