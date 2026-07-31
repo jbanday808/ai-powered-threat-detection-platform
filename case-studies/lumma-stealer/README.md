@@ -46,6 +46,7 @@ This case study demonstrates the complete workflow used by a Cyber Intrusion Ana
 | Splunk Threat Hunting      | Complete      |
 | Incident Report            | Complete      |
 | Threat Intelligence Report | Complete      |
+| Reverse Engineering Report | Complete      |
 | Defender Validation        | Complete      |
 
 # Project Navigation
@@ -54,6 +55,7 @@ This case study demonstrates the complete workflow used by a Cyber Intrusion Ana
 
 * [Threat Intelligence Report](reports/threat-intelligence-report.md)
 * [Incident Report](reports/incident-report.md)
+* [Reverse Engineering Report](reports/reverse-engineering.md)
 * [MITRE ATT&CK Mapping](reports/mitre-attack.md)
 * [Splunk Threat Hunting Report](reports/splunk-threat-hunting.md)
 * [Static Analysis Summary](reports/static-analysis.md)
@@ -229,6 +231,8 @@ Reverse engineering helped identify what the malware was designed to do by revie
 
 
 # Key Findings
+
+Detailed findings are available in the [Reverse Engineering Report](reports/reverse-engineering.md).
 
 ## Reverse Engineering Findings
 
